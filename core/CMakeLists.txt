@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-find_package(Qt4 4.6 REQUIRED)
+find_package(Qt4 4.7 REQUIRED)
 
 set(_Init_LIB_SUFFIX "")
 if ("${QT_QTCORE_LIBRARY}" MATCHES lib64)
@@ -20,9 +20,16 @@ set(MULA_VERSION_PATCH     0       CACHE STRING "MULA Patch Version")
 set(MULA_VERSION_STRING "${MULA_VERSION_MAJOR}.${MULA_VERSION_MINOR}.${MULA_VERSION_PATCH}" CACHE STRING "MULA Version String")
 set(MULA_VERSION_NAME      "Electron" CACHE STRING "MULA Version Name")
 
-set(INCLUDE_INSTALL_DIR     ${CMAKE_INSTALL_PREFIX}/include             CACHE PATH "The subdirectory relative to the install prefix where header files will be installed.")
-set(LIB_INSTALL_DIR         ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}    CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed.")
-set(SHARE_INSTALL_DIR       ${CMAKE_INSTALL_PREFIX}/share               CACHE PATH "The subdiractory relative to the install prefix where data and other files will be installed.")
+set(BIN_INSTALL_DIR         bin                 CACHE INTERNAL  "The subdirectory relative to the install prefix where binary files will be installed.")
+set(INCLUDE_INSTALL_DIR     include             CACHE PATH      "The subdirectory relative to the install prefix where header files will be installed.")
+set(LIB_INSTALL_DIR         lib${LIB_SUFFIX}    CACHE PATH      "The subdirectory relative to the install prefix where libraries will be installed.")
+set(SHARE_INSTALL_DIR       share               CACHE PATH      "The subdiractory relative to the install prefix where data and other files will be installed.")
+
+if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+    set( MULA_ARCHITECTURE "64" )
+else( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+    set( MULA_ARCHITECTURE "32" )
+endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/mula_global.h.in ${CMAKE_CURRENT_BINARY_DIR}/mula_global.h)
 
