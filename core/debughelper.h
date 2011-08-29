@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the Gluon Development Platform
+ * This file is part of the MULA project
  * Copyright (c) 2010 Laszlo Papp <djszapi@archlinux.us>
  *
  * This library is free software; you can redistribute it and/or
@@ -41,6 +41,7 @@ namespace MulaCore
             ~DbgHelper();
 
             void addText( const QString& t );
+
         private:
             QString txt;
             static int indent;

@@ -17,14 +17,14 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.               #
 #############################################################################
 
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 project(MULA)
 
 #Project options, to provide a selective build process
 #Note that some of these are mutually exclusive or just
 #do not make a whole lot of sense combined.
 option(BUILD_MULA_KDE "Build with KDE Development Platform Support" ON)
-option(BUILD_MULA_PLASMA "Build KStarDict Plasma" ON)
+option(BUILD_MULA_PLASMA "Build KStarDict Plasma" OFF)
 option(BUILD_MULA_PLUGINS "Build KStarDict Plugins" ON)
 
 if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
@@ -96,15 +96,9 @@ else()
     )
 endif()
 
-#Packaging options
-set(CPACK_SET_DESTDIR ON)
-set(CPACK_GENERATOR "DEB;TGZ")
-set(CPACK_PACKAGE_NAME "MULA")
-set(CPACK_PACKAGE_FILE_NAME "MULA-${MULA_VERSION_STRING}")
-set(CPACK_PACKAGE_VERSION "${MULA_VERSION_MAJOR}.${MULA_VERSION_MINOR}.${MULA_VERSION_PATCH}")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "kdelibs")
-set(CPACK_PACKAGE_CONTACT "Laszlo Papp <djszapi@archlinux.us>")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "StarDict clone written with using KDE")
-set(CPACK_DEBIAN_PACKAGE_SECTION "Utils")
-include(InstallRequiredSystemLibraries)
+###### CPACK part ######
 include(CPack)
+
+###### CTEST part ######
+include(CTest)
+
