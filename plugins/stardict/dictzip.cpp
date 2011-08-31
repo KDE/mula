@@ -89,6 +89,7 @@ enum SystemType {
 #define GZ_RND_S1       'R'	    /* First magic for random access format    */
 #define GZ_RND_S2       'A'	    /* Second magic for random access format   */
 
+// TODO: gz_header_s usage from the zlib.h include
 enum Fields {
     GZ_ID1           = 0,	/* GZ_MAGIC1                               */
     GZ_ID2           = 1,	/* GZ_MAGIC2                               */
