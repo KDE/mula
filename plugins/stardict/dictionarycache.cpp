@@ -26,7 +26,7 @@ class DictionaryCache::Private
     public:
         Private()
             : chunk(0)
-            , inBuffer(0)
+            , byteArray(0)
             , stamp(0)
             , count(0)
         {   
@@ -37,7 +37,7 @@ class DictionaryCache::Private
         }
 
         int chunk;
-        char *inBuffer;
+        QByteArray byteArray;
         int stamp;
         int count;
 }
@@ -45,6 +45,15 @@ class DictionaryCache::Private
 DictionaryCache::DictionaryCache()
     : d( new Private )
 {
+}
+
+DictionaryCache::DictionaryCache(int chunk, QByteArray inByteArray, int stamp, int count)
+    : d( new Private )
+{
+    d->chunk = chunk;
+    d->inByteArray = inByteArray;
+    d->stamp = stamp;
+    d->count = count;
 }
 
 DictionaryCache::~DictionaryCache()
@@ -65,15 +74,15 @@ DictionaryCache::chunk() const
 }
 
 void
-DictionaryCache::setInBuffer(char *inBuffer)
+DictionaryCache::setByteArray(QByteArray byteArray)
 {
-    d->inBuffer = inBuffer
+    d->byteArray = byteArray;
 }
 
-char *
-DictionaryCache::inBuffer() const
+QByteArray
+DictionaryCache::byteArray() const
 {
-    return d->inBuffer
+    return d->byteArray;
 }
 
 void setStamp(int stamp)

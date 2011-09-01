@@ -20,15 +20,11 @@
 #ifndef MULA_PLUGIN_STARDICT_DICTIONARYZIP_LIB
 #define MULA_PLUGIN_STARDICT_DICTIONARYZIP_LIB
 
-#include <QtCore/QTime>
 #include <QtCore/QString>
-#include <QtCore/QFile>
-
-#include <zlib.h>
-
-#define DICT_CACHE_SIZE 5
 
 namespace MULAPluginStarDict {
+
+#define DICT_CACHE_SIZE 5
 
     class DictionaryZip
     {
@@ -37,7 +33,7 @@ namespace MULAPluginStarDict {
 
         bool open(const QString& fileName, int computeCRC);
         void close();
-        void read(char *buffer, unsigned long start, unsigned long size);
+        QString read(char *buffer, unsigned long start, unsigned long size);
 
     private:
         int readHeader(const QString &filename, int computeCRC);

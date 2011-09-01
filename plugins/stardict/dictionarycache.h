@@ -26,13 +26,14 @@ namespace MULAPluginStardict
     {
         public:
             DictionaryCache();
+            DictionaryCache(int chunk, QByteArray inByteArray, int stamp, int count);
             virtual ~DictionaryCache();
 
             void setChunk(int chunk);
             int chunk() const;
 
-            void setInBuffer(char *inBuffer);
-            char *inBuffer() const;
+            void setByteArray(QByteArray inByteArray);
+            char *byteArray() const;
 
             void setStamp(int stamp);
             int stamp() const;
