@@ -116,19 +116,81 @@ enum DictionaryFormat {
     DICT_DZIP       = 3,
 }
 
-DictionaryData::DictionaryData()
-    : m_type(DICT_UNKNOWN)
-    , m_headerLength(GZ_XLEN - 1)
+
+class DictionaryZip::Private
+{
+    public:
+        Private()
+            : start(0)
+            , end(0)
+            , size(0)
+            , type(DICTIONARY_UNKNOWN)
+            , initialized(0)
+            , headerLength(GZ_XLEN - 1)
+            , extraLength(0)
+            , subLength(0)
+            , method(0)
+            , flags(0)
+            , mtime(0)
+            , extraFlags(0)
+            , os(0)
+            , version(0)
+            , chuckLength(0)
+            , chunkCount(0)
+            , chunks(0)
+            , offsets(0)
+            , crc(0)
+            , originalLength(0)
+            , compressedLength(0)
+        {   
+        }   
+
+        ~Private()
+        {   
+        }   
+ 
+        const unsigned char *start;	    /* start of mmap'd area */
+        const unsigned char *end;	    /* end of mmap'd area */
+        unsigned long size;		        /* size of mmap */
+
+        int type;
+        z_stream zStream;
+        int initialized;
+
+        int headerLength;
+        int extraLength;
+        int subLength;
+        int method;
+        int flags;
+        time_t mtime;
+        int extraFlags;
+        int os;
+        int version;
+        int chunkLength;
+        int chunkCount;
+        int *chunks;
+        unsigned long *offsets;	/* Sum-scan of chunks. */
+        QString originalFileName;
+        QString comment;
+        unsigned long crc;
+        unsigned long originalLength;
+        unsigned long compressedLength;
+        DictionaryCache *cache;
+        QFile mapFile;
+}
+
+DictionaryZip::DictionaryZip()
+    : d(new Private)
 {
 }
 
-DictionaryData::~DictionaryData()
+DictionaryZip::~DictionaryZip()
 {
     close();
 }
 
 int
-DictionaryData::readHeader(const QString &fileName, int computeCRC)
+DictionaryZip::readHeader(const QString &fileName, int computeCRC)
 {
     int id1;
     int id2;
@@ -379,7 +441,7 @@ DictionaryData::readHeader(const QString &fileName, int computeCRC)
 }
 
 bool
-DictionaryData::open(const QString& fileName, int computeCRC)
+DictionaryZip::open(const QString& fileName, int computeCRC)
 {
     struct stat sb;
     int j;
@@ -440,7 +502,7 @@ DictionaryData::open(const QString& fileName, int computeCRC)
 }
 
 void
-DictionaryData::close()
+DictionaryZip::close()
 {
     int i;
 
@@ -466,7 +528,7 @@ DictionaryData::close()
 }
 
 void
-DictionaryData::read(char *buffer, unsigned long start, unsigned long size)
+DictionaryZip::read(char *buffer, unsigned long start, unsigned long size)
 {
     char *pt;
     unsigned long end;
@@ -483,15 +545,15 @@ DictionaryData::read(char *buffer, unsigned long start, unsigned long size)
 
     switch (m_type)
     {
-    case DICT_GZIP:
+    case DICTIONARY_GZIP:
         qWarning() << Q_FUNC << "Cannot seek on pure gzip format files." << endl
         << "Use plain text (for performance) or dzip format (for space savings)." << endl;
         break;
-    case DICT_TEXT:
+    case DICTIONARY_TEXT:
         memcpy( buffer, m_start + start, size );
         //buffer[size] = '\0';
         break;
-    case DICT_DZIP:
+    case DICTIONARY_DZIP:
         if (!m_initialized)
         {
             ++m_initialized;
@@ -614,7 +676,7 @@ DictionaryData::read(char *buffer, unsigned long start, unsigned long size)
         }
         //*pt = '\0';
         break;
-    case DICT_UNKNOWN:
+    case DICTIONARY_UNKNOWN:
         qWarning() << Q_FUNC << "Cannot read unknown file type" << endl;
         break;
     }
