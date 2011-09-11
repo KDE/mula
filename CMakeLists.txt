@@ -60,7 +60,7 @@ add_subdirectory(core)
 # endif()
 
 ####### Plugins #######
-# add_subdirectory(plugins)
+add_subdirectory(plugins)
 
 ####### MULA Plasma #######
 # if(BUILD_MULA_PLASMA)
