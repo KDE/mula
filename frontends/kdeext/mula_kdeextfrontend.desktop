@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Mula KDE Extended Frontend
+Name[x-test]=xxMula KDE Extended Frontendxx
+GenericName=Mula KDE Extended Frontend Launcher
+GenericName[x-test]=xxMula KDE Extended Frontend Launcherxx
+Exec=mula_kdeextfrontend
+Icon=mula-kdeextfrontend
+Type=Application
+Categories=Qt;KDE;Game;
+Terminal=false

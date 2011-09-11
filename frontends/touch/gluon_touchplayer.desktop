@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Mula Touch Player
+Name[x-test]=xxMula Touch Playerxx
+GenericName=Mula Touch Player Launcher
+GenericName[x-test]=xxMula Touch Player Launcherxx
+Exec=mula_touchplayer
+Icon=mula-touchplayer
+Type=Application
+Categories=Qt;KDE;Game;
+Terminal=false

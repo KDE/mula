@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Gluon Player Plasmoid
+Name[x-test]=xxGluon Player Plasmoidxx
+Comment=Gluon Player Plasmoid
+Comment[x-test]=xxGluon Player Plasmoidxx
+Type=Service
+ServiceTypes=Plasma/Applet
+
+X-KDE-Library=plasma_applet_mulafrontend
+X-KDE-PluginInfo-Author=Laszlo Papp
+X-KDE-PluginInfo-Email=lpapp@kde.org
+X-KDE-PluginInfo-Name=org.kde.mulafrontend
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=
+X-KDE-PluginInfo-Category=Utils
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
