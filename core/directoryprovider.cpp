@@ -29,6 +29,7 @@ using namespace MulaCore;
 MULA_DEFINE_SINGLETON( DirectoryProvider )
 
 DirectoryProvider::DirectoryProvider( QObject* parent )
+    : MulaCore::Singleton< MulaCore::DirectoryProvider >( parent )
 {
     m_userDataPath = QDesktopServices::storageLocation( QDesktopServices::DataLocation );
     m_userDataPath.remove( QCoreApplication::organizationName() + "/" + QCoreApplication::applicationName() );
