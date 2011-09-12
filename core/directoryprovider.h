@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -27,10 +27,10 @@
 
 #include <QtCore/QHash>
 
-namespace MULACore
+namespace MulaCore
 {
 
-    class MULA_CORE_EXPORT DirectoryProvider : public Singleton<DirectoryProvider>
+    class MULA_CORE_EXPORT DirectoryProvider : public MulaCore::Singleton<DirectoryProvider>
     {
             Q_OBJECT
             MULA_SINGLETON( DirectoryProvider )
@@ -43,6 +43,8 @@ namespace MULACore
             QString libDirectory() const;
 
             QString userDirectory( const QString& name );
+
+            QStringList pluginDirectoryPaths() const;
 
         private:
             QString m_userDataPath;

@@ -86,4 +86,44 @@ QString DirectoryProvider::userDirectory( const QString& name )
     return m_userDirs[name];
 }
 
+QStringList DirectoryProvider::pluginDirectoryPaths() const
+{
+    QStringList pluginDirectoryPaths;
+
+    QString pluginDirectoryPath = QCoreApplication::instance()->applicationDirPath();
+
+#if defined(Q_OS_WIN)
+    if( pluginDirectoryPath.endsWith("/debug", Qt::CaseInsensitive) )
+        pluginDirectoryPath.chop(QByteArray("/debug").size());
+
+    else if( pluginDirectoryPath.endsWith("release", Qt::CaseInsensitive) )
+        pluginDirectoryPath.chop(QByteArray("/release").size());
+
+#elif defined(Q_OS_MAC)
+    if( pluginDirectoryPath.endsWith("/MacOS") )
+        pluginDirectoryPath.chop(QByteArray("/MacOS").size());
+
+#endif
+
+    if( QFile( pluginDirectoryPath + "/PlugIns" ).exists() )
+        pluginDirectoryPaths.append( pluginDirectoryPath );
+
+    QString libraryDirectoryPath = libDirectory();
+
+    if( QFile( libraryDirectoryPath ).exists() )
+        pluginDirectoryPaths.append( libraryDirectoryPath );
+
+    // This is the plugin dir on windows
+    if( QFile( libraryDirectoryPath + "/kde4" ).exists() )
+        pluginDirectoryPaths.append( libraryDirectoryPath + "/kde4" );
+
+    if( QFile( libraryDirectoryPath + "/mula" ).exists() )
+        pluginDirectoryPaths.append( libraryDirectoryPath + "/mula" );
+
+    if( QFile( QDir::homePath() + "/mulaplugins" ).exists() )
+        pluginDirectoryPaths.append( QDir::homePath() + "/mulaplugins" );
+
+    return pluginDirectoryPaths;
+}
+
 #include "directoryprovider.moc"
