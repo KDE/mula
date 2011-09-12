@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -24,19 +24,18 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 
-using namespace MULACore;
+using namespace MulaCore;
 
 MULA_DEFINE_SINGLETON( DirectoryProvider )
 
 DirectoryProvider::DirectoryProvider( QObject* parent )
 {
     m_userDataPath = QDesktopServices::storageLocation( QDesktopServices::DataLocation );
-    m_userDataPath.remove( QCoreApplication::applicationName() );
-    m_userDataPath.remove( QCoreApplication::organizationName() );
-    m_userDataPath.append( "/mula/" );
+    m_userDataPath.remove( QCoreApplication::organizationName() + "/" + QCoreApplication::applicationName() );
+    m_userDataPath.append( "mula/" );
 
     //Define standard dirs Mula recommends
-    m_userDirs["data"] =  QDir::fromNativeSeparators( m_userDataPath + "/data" );
+    m_userDirs["data"] =  QDir::fromNativeSeparators( m_userDataPath + "data" );
 
     //Create standard dirs Mula recommends
     QDir dir;
