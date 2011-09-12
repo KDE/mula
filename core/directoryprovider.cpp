@@ -32,11 +32,11 @@ DirectoryProvider::DirectoryProvider( QObject* parent )
     : MulaCore::Singleton< MulaCore::DirectoryProvider >( parent )
 {
     m_userDataPath = QDesktopServices::storageLocation( QDesktopServices::DataLocation );
-    m_userDataPath.remove( QCoreApplication::organizationName() + "/" + QCoreApplication::applicationName() );
-    m_userDataPath.append( "mula/" );
+    m_userDataPath.chop( QString(QCoreApplication::organizationName() + "/" + QCoreApplication::applicationName()).size() );
+    m_userDataPath.append( "mula" );
 
     //Define standard dirs Mula recommends
-    m_userDirs["data"] =  QDir::fromNativeSeparators( m_userDataPath + "data" );
+    m_userDirs["data"] =  QDir::fromNativeSeparators( m_userDataPath + "/data" );
 
     //Create standard dirs Mula recommends
     QDir dir;
