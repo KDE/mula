@@ -160,9 +160,9 @@ PluginManager::setLoadedPlugins(const QStringList &loadedPlugins)
 }
 
 DictionaryPlugin*
-PluginManager::plugin(const QString &plugin)
+PluginManager::plugin(const QString &pluginName)
 {
-    return d->plugins.contains(plugin) ? qobject_cast<DictionaryPlugin*>(d->plugins[plugin]->instance()) : 0;
+    return d->plugins.contains(pluginName) ? qobject_cast<DictionaryPlugin*>(d->plugins[plugin]->instance()) : 0;
 }
 
 void

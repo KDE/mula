@@ -19,7 +19,7 @@
 
 #include "dictionarymanager.h"
 
-#include "dictionarydata.h"
+#include "pluginmanager.h"
 
 #include <QtCore/QFileInfoList>
 #include <QtCore/QDir>
@@ -44,183 +44,116 @@ class DictionaryManager::Private
         QList<DictionaryData> loadedDictionaries;
 };
 
-DirectoryManager::DirectoryManager(QObject *parent)
-    : QObject(parent)
+DictionaryManager::DictionaryManager(QObject *parent)
+    : MulaCore::Singleton< MulaCore::DictionaryManager >( parent )
+    , d(new Private)
 {
-    loadDirectorySettings();
+    loadDictionarySettings();
 }
 
-DirectoryManager::~DictionaryManager()
+DictionaryManager::~DictionaryManager()
 {
-    saveDirectorySettings();
+    saveDictionarySettings();
 }
 
-bool DictCore::isTranslatable(const QString &word)
+bool
+DictionaryManager::isTranslatable(const QString &word)
 {
-    foreach (const Dictionary& dictionary, d->loadedDictionaries)
+    foreach (const DictionaryData& dictionary, d->loadedDictionaries)
     {
-        if (!d->plugins.contains(dictionary->plugin()))
+        MulaCore::DictionaryPlugin* dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(dictionary.plugin());
+        if (!dictionaryPlugin)
             continue;
 
-        if (qobject_cast<DictPlugin*>(d->plugins[dictionary->plugin()]->instance())->isTranslatable(dictionary->name(), word))
+        if (dictionaryPlugin->isTranslatable(dictionary.name(), word))
             return true;
     }
+
     return false;
 }
 
-QString DictCore::translate(const QString &word)
+QString
+DictionaryManager::translate(const QString &word)
 {
     QString simplifiedWord = word.simplified();
-    QString result;
+    QString translatedWord;
 
-    foreach (const Dictionary& dictionary, d->loadedDictionaries)
+    foreach (const DictionaryData& dictionary, d->loadedDictionaries)
     {
-        if (! d->plugins.contains(dictionary->plugin()))
+        MulaCore::DictionaryPlugin* dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(dictionary.plugin());
+        if (!dictionaryPlugin)
             continue;
 
-        DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>(d->plugins[dictionary->plugin()]->instance());
-        if (!plugin->isTranslatable(dictionary->name(), simplifiedWord))
+        if (!dictionaryPlugin->isTranslatable(dictionary.name(), simplifiedWord))
             continue;
 
-        DictionaryPlugin::Translation translation = plugin->translate(i->name(), simplifiedWord);
-        result.append("<p>" + endl
-            + "<font class=\"dict_name\">" + translation.dictName() + "</font><br>" + endl
-            + "<font class=\"title\">" + translation.title() + "</font><br>" + endl
-            + translation.translation() + "</p>" + endl;
+        MulaCore::Translation translation = dictionaryPlugin->translate(dictionary.name(), simplifiedWord);
+        translatedWord.append("<p>" + std::endl
+            + "<font class=\"dict_name\">" + translation.dictionaryName() + "</font><br>" + std::endl
+            + "<font class=\"title\">" + translation.title() + "</font><br>" + std::endl
+            + translation.translation() + "</p>" + std::endl;
     }
 
-    return result;
+    return translatedWord;
 }
 
-QStringList DictCore::findSimilarWords(const QString &word)
+QStringList
+DictionaryManager::findSimilarWords(const QString &word)
 {
     QString simplifiedWord = word.simplified();
-    QStringList result;
+    QStringList similarWords;
 
-    foreach (const Dictionary& dictionary, d->loadedDictionaries)
+    foreach (const DictionaryData& dictionary, d->loadedDictionaries)
     {
-        if (!d->plugins.contains(dictionary->plugin()))
+        MulaCore::DictionaryPlugin* dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(dictionary.plugin());
+        if (!dictionaryPlugin)
             continue;
 
-        DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>(d->plugins[dictionary->plugin()]->instance());
-        if (!plugin->features().testFlag(DictionaryPlugin::SearchSimilar))
+        if (!dictionaryPlugin->features().testFlag(DictionaryPlugin::SearchSimilar))
             continue;
 
-        QStringList similarWords = plugin->findSimilarWords(dictionary->name(), simplifiedWord);
+        QStringList similarWords = dictionaryPlugin->findSimilarWords(dictionary.name(), simplifiedWord);
         foreach (const QString& similarWord, similarWords)
         {
-            if (!result.contains(similarWord, Qt::CaseSensitive))
-                result.append(similarWord);
+            if (!similarWords.contains(similarWord, Qt::CaseSensitive))
+                similarWords.append(similarWord);
         }
     }
 
-    return result;
+    return similarWords;
 }
 
-QStringList PluginManager::availablePlugins() const
+QList<DictionaryData>
+DictionaryManager::availableDictionaries() const
 {
-    QStringList result;
-
-#ifdef Q_WS_X11
-    QFileInfoList fileInfoList = QDir(MULA_PLUGINS_DIR).entryInfoList(QStringList("lib*.so"),
-                  QDir::Files | QDir::NoDotAndDotDot);
-
-    for (const QFileInfo& fileInfo, fileInfoList)
-        result.append(fileInfo->baseName().mid(3));
-
-#elif defined Q_WS_WIN
-    QFileInfoList fileInfoList = QDir(MULA_PLUGINS_DIR).entryInfoList(QStringList("*0.dll"),
-                  QDir::Files | QDir::NoDotAndDotDot);
-
-    for (const QFileInfo& fileInfo, fileInfoList)
-        result.append(fileInfo->fileName().left(fileInfo->fileName.length(5)));
-
-#elif defined Q_WS_MAC
-    QStringList macFilters;
-    // Various Qt versions.
-    macFilters << "*.dylib" << "*.bundle" << "*.so";
-    QString binPath = QCoreApplication::applicationDirPath();
-    // Navigate through mac's bundle tree structure
-    QDir d(binPath + "/../lib/");
-
-    QFileInfoList fileInfoList = d.entryInfoList(macFilters, QDir::Files | QDir::NoDotAndDotDot);
-    for (const QFileInfo& fileInfo, fileInfoList)
-        result.append(fileInfo->fileName());
-
-#else
-#error "Function DictCore::availablePlugins() is not implemented on this platform"
-#endif
-
-    return result;
-}
-
-void DictCore::setLoadedPlugins(const QStringList &loadedPlugins)
-{
-    for (QHash <QString, QPluginLoader*>::iterator i = m_plugins.begin(); i != m_plugins.end(); ++i)
-    {
-        delete (*i)->instance();
-        delete *i;
-    }
-    m_plugins.clear();
-
-    foreach (const QString& plugin, loadedPlugins)
-    {
-#ifdef Q_WS_X11
-        QString pluginFileName = MULA_PLUGIN_DIR + "/lib" + plugin + ".so";
-
-#elif defined Q_WS_WIN
-        QString pluginFileName = MULA_PLUGIN_DIR + "/" + plugin + "0.dll";
-
-#elif defined Q_WS_MAC
-        // Follow mac's bundle tree.
-        QString pluginFileName = QDir(QCoreApplication::applicationDirPath()+ "/../lib/" + plugin).absolutePath();
-
-#else
-#error "Function DictCore::setLoadedPlugins(const QStringList &loadedPlugins) is not available on this platform"
-#endif
-
-        QPluginLoader *pluginLoader = new QPluginLoader(pluginFilename);
-        if (!pluginLoader->load())
-        {
-            qWarning() << pluginLoader->errorString();
-            delete pluginLoader;
-        }
-        else
-        {
-            d->plugins[plugin] = pluginLoader;
-        }
-    }
-}
-
-QList<Dictionary> DictCore::availableDictionaries() const
-{
-    QList<Dictionary> result;
+    QList<DictionaryData> availableDictionaries;
 
     for (QHash<QString, QPluginLoader*>::const_iterator i = m_plugins.begin(); i != m_plugins.end(); ++i)
     {
         DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>((*i)->instance());
         QStringList dictionaries = plugin->availableDictionaries();
-        foreach (const QString& dictionaryName, dictionaries)
-            result.append(Dictionary(i.key(), dictionary));
+        foreach (const QString& dictionary, dictionaries)
+            availableDictionaries.append(DictionaryData(i.key(), dictionary));
     }
 
-    return result;
+    return availableDictionaries;
 }
 
-void DictCore::setLoadedDictionaries(const QList<Dictionary> &loadedDictionaries)
+void
+DictionaryManager::setLoadedDictionaries(const QList<DictionaryData> &loadedDictionaries)
 {
     QHash<QString, QStringList> dictionaries;
-    foreach (const Dictionary& dictionary, loadedDictionaries)
+    foreach (const DictionaryData& dictionary, loadedDictionaries)
         dictionaries[dictionary.plugin()] = dictionary.name();
 
     for (QHash<QString, QStringList>::const_iterator i = dictionaries.begin(); i != dictionaries.end(); ++i)
     {
-        if (!d->plugins.contains(i.key()))
+        MulaCore::DictionaryPlugin* dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(i.key());
+        if (!dictionaryPlugin)
             continue;
 
-        DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>(d->plugins[i.key()]->instance());
-        plugin->setLoadedDictionaries(*i);
-        dictionaries[i.key()] = plugin->loadedDictionaries();
+        dictionaryPlugin->setLoadedDictionaries(*i);
+        dictionaries[i.key()] = dictionaryPlugin->loadedDictionaries();
     }
 
     d->loadedDictionaries.clear();
@@ -231,35 +164,34 @@ void DictCore::setLoadedDictionaries(const QList<Dictionary> &loadedDictionaries
     }
 }
 
-void DictCore::saveSettings()
+void
+DictionaryManager::saveDictionarySettings()
 {
-    QSettings settings;
-    settings.setValue("DictionaryManager/loadedPlugins", loadedPlugins());
-
     QStringList rawDictionaryList;
 
-    foreach (const Dictionary& dictionary, d->loadedDictionaries)
+    foreach (const DictionaryData& dictionary, d->loadedDictionaries)
     {
         rawDictionaryList.append(dictionary.plugin());
         rawDictionaryList.append(dictionary.name());
     }
 
+    QSettings settings;
     settings.setValue("DictionaryManager/loadedDictionaries", rawDictionaryList);
 }
 
-void DictCore::loadSettings()
+void
+DictionaryManager::loadDictionarySettings()
 {
     QSettings settings;
-    setLoadedPlugins(config.value("DictionaryManager/loadedPlugins", availablePlugins()).toStringList());
-
     QStringList rawDictionaryList = settings.value("DictionaryManager/loadedDictionaries").toStringList();
+
     if (rawDictionaryList.isEmpty())
     {
         setLoadedDictionaries(availableDictionaries());
     }
     else
     {
-        QList<Dictionary> dictionaries;
+        QList<DictionaryData> dictionaries;
         for (QStringList::const_iterator i = rawDictionaryList.begin(); i != rawDictionaryList.end(); i += 2)
             dictionaries.append(Dictionary(*i, *(i + 1)));
 
@@ -267,24 +199,25 @@ void DictCore::loadSettings()
     }
 }
 
-void DictCore::reloadDictionaries()
+void
+DictionaryManager::reloadDictionaries()
 {
-    QList<Dictionary> loaded;
+    QList<DictionaryData> loadedDictionary;
     for (QHash<QString, QPluginLoader*>::const_iterator i = d->plugins.begin(); i != d->plugins.end(); ++i)
     {
         DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>((*i)->instance());
         plugin->setLoadedDicts(plugin->loadedDictionaries());
 
         foreach(const QString& dictionaryName, plugin->loadedDictionaries())
-            loaded.append(Dictionary(i.key(), dictionaryName);
+            loadedDictionaries.append(Dictionary(i.key(), dictionaryName);
     }
 
-    QList<Dictionary> oldLoaded = d->loadedDictionaries;
-    d->loadedDicts.clear();
+    QList<DictionaryData> oldDictionaries = d->loadedDictionaries;
+    d->loadedDictionaries.clear();
 
-    foreach (const QString& dictionary, oldLoaded)
+    foreach (const QString& dictionary, oldDictionaries)
     {
-        if (loaded.contains(dictionary))
+        if (loadedDictionaries.contains(dictionary))
             d->loadedDictionaries.append(dictionary);
     }
 }

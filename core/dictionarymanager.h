@@ -22,6 +22,9 @@
 
 #include "dictionaryplugin.h"
 
+#include "dictionarydata.h"
+#include "singleton.h"
+
 #include <QtCore/QStringList>
 #include <QtCore/QPair>
 #include <QtCore/QHash>
@@ -29,16 +32,61 @@
 
 namespace MulaCore
 {
-    class DictionaryManager: public MulaCore::Singleton<DirectoryManager>
+    class DictionaryManager: public MulaCore::Singleton<DictionaryManager>
     {
         Q_OBJECT
-        MULA_SINGLETON( DirectoryManager )
+        MULA_SINGLETON( DictionaryManager )
 
         public:
             /**
-             * Save settings.
+             * Saves the dictionary settings.
              */
             void saveDictionarySettings();
+
+            /** 
+             * Returns true if word exists in dictionaries,
+             * otherwise false.
+             */
+            bool isTranslatable(const QString &word);
+
+            /** 
+             * Returns translation for word. If word not found, returns
+             * "Not found!"
+             */
+            QString translate(const QString &word);
+
+            /** 
+             * Returns a list of similar words contained in dictionaries.
+             */
+            QStringList findSimilarWords(const QString &word);
+
+            /** 
+             * Returns a list of available dictionaries.
+             * The first item in pair is a plugin name, the second item
+             * in pair is a dictionary name.
+             */
+            QList<DictionaryData> availableDictionaries() const;
+
+            /** 
+             * Returns a list of loaded dictionaries. 
+             * The first item in pair is a plugin name, the second item
+             * in pair is a dictionary name.
+             */
+            const QList<DictionaryData> &loadedDictionaries() const;
+
+            /** 
+             * Sets a loaded dictionaries.
+             * The first item in pair is a plugin name, the second item
+             * in pair is a dictionary name.
+             * If dictionary cannot be loaded it will not be added to 
+             * availableDicts list.
+             */
+            void setLoadedDictionaries(const QList<DictionaryData> &loadedDictionaries);
+
+            /**
+             * Reloads the loaded dictionaries.
+             */
+            void reloadDictionaries();
 
         private:
             /**

@@ -21,6 +21,7 @@
 #define MULA_CORE_PLUGINMANAGER_H
 
 #include "mula_core_export.h"
+
 #include "singleton.h"
 #include "dictionaryplugin.h"
 
