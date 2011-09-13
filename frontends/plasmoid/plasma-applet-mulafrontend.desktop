@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=Gluon Player Plasmoid
-Name[x-test]=xxGluon Player Plasmoidxx
-Comment=Gluon Player Plasmoid
-Comment[x-test]=xxGluon Player Plasmoidxx
+Name=Mula Plasmoid Frontend
+Name[x-test]=xxMula Plasmoid Frontendxx
+Comment=Mula Plasmoid Frontend
+Comment[x-test]=xxMula Plasmoid Frontendxx
 Type=Service
 ServiceTypes=Plasma/Applet
 

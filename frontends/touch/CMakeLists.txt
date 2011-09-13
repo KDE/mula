@@ -10,7 +10,7 @@ set(touchfrontend_SRCS
     main.cpp
 )
 
-SET(GLUON_TOUCHFRONTEND_RCCS
+SET(MULA_TOUCHFRONTEND_RCCS
     mula_touchfrontend.qrc
 )
 
@@ -27,12 +27,12 @@ if(APPLE)
     #MACOSX_BUNDLE_ICON_FILE
     #MACOSX_BUNDLE_GUI_IDENTIFIER
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MULA_VERSION_STRING})
-    set(MACOSX_BUNDLE_BUNDLE_NAME GluonPlayer)
+    set(MACOSX_BUNDLE_BUNDLE_NAME MulaTouchFrontend)
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MULA_VERSION_STRING})
     set(MACOSX_BUNDLE_BUNDLE_VERSION ${MULA_VERSION_STRING})
     #MACOSX_BUNDLE_COPYRIGHT
 
-    add_custom_command(TARGET gluon_qmlplayer
+    add_custom_command(TARGET mula_touchfrontend
         COMMAND mkdir ARGS -p ${CMAKE_CURRENT_BINARY_DIR}/$(CONFIGURATION)/MulaTouchFrontend.app/Contents/Frameworks/
         COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp ARGS -exclude .DS_Store -exclude CVS -exclude .svn -exclude 'CMakeLists.txt' -resolve-src-symlinks ${CMAKE_BINARY_DIR}/core/$(CONFIGURATION)/MulaCore.framework ${CMAKE_CURRENT_BINARY_DIR}/$(CONFIGURATION)/MulaTouchFrontend.app/Contents/Frameworks/
     )

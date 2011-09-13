@@ -18,7 +18,7 @@ if(APPLE)
     set(MACOSX_BUNDLE_BUNDLE_VERSION ${MULA_VERSION_STRING})
 	#MACOSX_BUNDLE_COPYRIGHT
 
-	add_custom_command(TARGET gluon_kdeplayer
+	add_custom_command(TARGET mula_kdefrontend
         COMMAND mkdir ARGS -p ${CMAKE_CURRENT_BINARY_DIR}/$(CONFIGURATION)/MulaKDEPLayer.app/Contents/Frameworks/
 		COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp ARGS -exclude .DS_Store -exclude CVS -exclude .svn -exclude 'CMakeLists.txt' -resolve-src-symlinks ${CMAKE_BINARY_DIR}/core/$(CONFIGURATION)/MulaCore.framework ${CMAKE_CURRENT_BINARY_DIR}/$(CONFIGURATION)/MulaKDEFrontend.app/Contents/Frameworks/
 	)

@@ -1,21 +1,21 @@
-#############################################################################
-# main.cpp - MULA, Multi Language Dictionary and Translator application     #
-# Copyright (C) 2010 Laszlo Papp	                                        #
-#                                                                           #
-# This program is free software; you can redistribute it and/or modify      #
-# it under the terms of the GNU General Public License as published by      #
-# the Free Software Foundation; either version 2 of the License, or         #
-# (at your option) any later version.                                       #
-#                                                                           #
-# This program is distributed in the hope that it will be useful,           #
-# but WITHOUT ANY WARRANTY; without even the implied warranty of            #
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
-# GNU General Public License for more details.                              #
-#                                                                           #
-# You should have received a copy of the GNU General Public License along   #
-# with this program; if not, write to the Free Software Foundation, Inc.,   #
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.               #
-#############################################################################
+#################################################################################
+# This file is part of the MULA project
+# Copyright (c) 2010 Laszlo Papp <lpapp@kde.org>
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#/
 
 cmake_minimum_required(VERSION 2.8)
 project(MULA)
@@ -53,7 +53,9 @@ if(NOT KDE4_FOUND)
     message(STATUS)
 endif(NOT KDE4_FOUND)
 
+####### Core #######
 add_subdirectory(core)
+
 ####### MULA ########
 # if(BUILD_MULA_KDE)
 # add_subdirectory(kde)
