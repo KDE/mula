@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2009-2011 Arjen Hiemstra <ahiemstra@heimr.nl>
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
@@ -63,7 +63,7 @@
  *
  * <blockquote>
  * #include <core/singleton.h>
- * class Example : public MULACore::Singleton< Example > //Inherit template
+ * class Example : public MulaCore::Singleton< Example > //Inherit template
  * {
  *      Q_OBJECT
  *      MULA_SINGLETON( Example ) //Declare constructor and disable copying
@@ -75,7 +75,7 @@
  * MULA_DEFINE_SINGLETON( Example ) //Define the static variables
  *
  * Example::Example( QObject* parent ) //Constructor definition
- *     : MULACore::Singleton< Example >( parent )
+ *     : MulaCore::Singleton< Example >( parent )
  * {
  * }
  *
@@ -85,7 +85,7 @@
  * </blockquote>
  *
  */
-namespace MULACore
+namespace MulaCore
 {
     template <typename T>
     class Singleton : public QObject
@@ -156,19 +156,19 @@ namespace MULACore
 
 #ifdef Q_CC_MSVC
 #define MULA_DEFINE_SINGLETON(Type)\
-    template<> Type* MULACore::Singleton<Type>::sm_instance = 0;\
-    template<> QBasicAtomicPointer<QMutex> MULACore::Singleton<Type>::sm_mutex = Q_BASIC_ATOMIC_INITIALIZER(0);\
-    template<> bool MULACore::Singleton<Type>::sm_guard = false;
+    template<> Type* MulaCore::Singleton<Type>::sm_instance = 0;\
+    template<> QBasicAtomicPointer<QMutex> MulaCore::Singleton<Type>::sm_mutex = Q_BASIC_ATOMIC_INITIALIZER(0);\
+    template<> bool MulaCore::Singleton<Type>::sm_guard = false;
 #else
 #define MULA_DEFINE_SINGLETON(Type)\
-    template<> Q_DECL_EXPORT Type* MULACore::Singleton<Type>::sm_instance = 0;\
-    template<> Q_DECL_EXPORT QBasicAtomicPointer<QMutex> MULACore::Singleton<Type>::sm_mutex = Q_BASIC_ATOMIC_INITIALIZER(0);\
-    template<> Q_DECL_EXPORT bool MULACore::Singleton<Type>::sm_guard = false;
+    template<> Q_DECL_EXPORT Type* MulaCore::Singleton<Type>::sm_instance = 0;\
+    template<> Q_DECL_EXPORT QBasicAtomicPointer<QMutex> MulaCore::Singleton<Type>::sm_mutex = Q_BASIC_ATOMIC_INITIALIZER(0);\
+    template<> Q_DECL_EXPORT bool MulaCore::Singleton<Type>::sm_guard = false;
 #endif
 
 #define MULA_SINGLETON(Type) \
     private:\
-        friend class MULACore::Singleton<Type>;\
+        friend class MulaCore::Singleton<Type>;\
         Type( QObject* parent );\
         Q_DISABLE_COPY(Type)
 

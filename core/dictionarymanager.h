@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -20,79 +20,40 @@
 #ifndef MULA_CORE_DICTIONARYMANAGER_H
 #define MULA_CORE_DICTIONARYMANAGER_H
 
-#include <plugins/dictplugin.h>
+#include "dictionaryplugin.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QPair>
 #include <QtCore/QHash>
 #include <QtCore/QPluginLoader>
 
-namespace QStarDict
+namespace MulaCore
 {
+    class DictionaryManager: public MulaCore::Singleton<DirectoryManager>
+    {
+        Q_OBJECT
+        MULA_SINGLETON( DirectoryManager )
 
-/**
- * The DictCore is a base dictionary class.
- */
-class DictCore: public QObject
-{
-    Q_OBJECT
+        public:
+            /**
+             * Save settings.
+             */
+            void saveDictionarySettings();
 
-    public:
-        /**
-         * This class represents a dictionary.
-         */
-        class Dictionary
-        {
-            public:
-                Dictionary(const QString &plugin, const QString &name)
-                    : m_plugin(plugin),
-                      m_name(name)
-                {  }
-                Dictionary()
-                { }
-                
-                const QString &plugin() const
-                { return m_plugin; }
-                const QString &name() const
-                { return m_name; }
-                void setPlugin(const QString &plugin)
-                { m_plugin = plugin; }
-                void setName(const QString &name)
-                { m_name = name; }
-                bool operator == (const Dictionary &dict)
-                { return m_name == dict.m_name && m_plugin == dict.m_plugin; }
+        private:
+            /**
+             * Destructor.
+             */
+            ~DictionaryManager();
 
-            private:
-                QString m_plugin;
-                QString m_name;
-        };
+            /**
+             * Load settings.
+             */
+            void loadDictionarySettings();
 
-        /**
-         * Construct the DictionaryManager.
-         */
-        DictionaryManager(QObject *parent = 0);
-
-        /**
-         * Destructor.
-         */
-        ~DictionaryManager();
-
-        /**
-         * Save settings.
-         */
-        void saveSettings();
-
-    private:
-
-        /**
-         * Load settings.
-         */
-        void loadSettings();
-
-        class Private;
-        Private *const d;
-};
-
+            class Private;
+            Private *const d;
+    };
 }
 
 #endif // MULA_CORE_DICTIONARYMANAGER_H

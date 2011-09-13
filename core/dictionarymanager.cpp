@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -17,19 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "pluginmanager.h"
+#include "dictionarymanager.h"
+
+#include "dictionarydata.h"
 
 #include <QtCore/QFileInfoList>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtCore/QPluginLoader>
 
-using namespace MULACore;
+using namespace MulaCore;
 
-class PluginManager::Private
+MULA_DEFINE_SINGLETON( DictionaryManager )
+
+class DictionaryManager::Private
 {
     public:
-        PluginManagerPrivate()
+        Private()
         {
         }
 
@@ -37,23 +41,18 @@ class PluginManager::Private
         {
         }
 
-        QHash<QString, QPluginLoader*> plugins;
+        QList<DictionaryData> loadedDictionaries;
 };
 
-PluginManager::PluginManager(QObject *parent)
+DirectoryManager::DirectoryManager(QObject *parent)
     : QObject(parent)
 {
-    loadSettings();
+    loadDirectorySettings();
 }
 
-PluginManager::~PluginManager()
+DirectoryManager::~DictionaryManager()
 {
-    saveSettings();
-    foreach (QPluginLoader *loader, d->plugins)
-    {
-        delete loader->instance();
-        delete loader;
-    }
+    saveDirectorySettings();
 }
 
 bool DictCore::isTranslatable(const QString &word)
@@ -202,13 +201,13 @@ QList<Dictionary> DictCore::availableDictionaries() const
         DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>((*i)->instance());
         QStringList dictionaries = plugin->availableDictionaries();
         foreach (const QString& dictionaryName, dictionaries)
-            result << Dictionary(i.key(), dictionary);
+            result.append(Dictionary(i.key(), dictionary));
     }
 
     return result;
 }
 
-void DictCore::setLoadedDicts(const QList<Dictionary> &loadedDictionaries)
+void DictCore::setLoadedDictionaries(const QList<Dictionary> &loadedDictionaries)
 {
     QHash<QString, QStringList> dictionaries;
     foreach (const Dictionary& dictionary, loadedDictionaries)
@@ -220,7 +219,7 @@ void DictCore::setLoadedDicts(const QList<Dictionary> &loadedDictionaries)
             continue;
 
         DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>(d->plugins[i.key()]->instance());
-        plugin->setLoadedDicts(*i);
+        plugin->setLoadedDictionaries(*i);
         dictionaries[i.key()] = plugin->loadedDictionaries();
     }
 
@@ -228,7 +227,7 @@ void DictCore::setLoadedDicts(const QList<Dictionary> &loadedDictionaries)
     foreach (const Dictionary& dictionary, loadedDictionaries)
     {
         if (dictionaries.contains(dictionary.plugin()) && dictionaries[dictionary.plugin()].contains(dictionary.name()))
-            d->loadedDicts.append(dictionary);
+            d->loadedDictionaries.append(dictionary);
     }
 }
 
@@ -256,7 +255,7 @@ void DictCore::loadSettings()
     QStringList rawDictionaryList = settings.value("DictionaryManager/loadedDictionaries").toStringList();
     if (rawDictionaryList.isEmpty())
     {
-        setLoadedDicts(availableDictionaries());
+        setLoadedDictionaries(availableDictionaries());
     }
     else
     {

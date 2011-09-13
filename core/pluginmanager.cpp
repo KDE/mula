@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -19,16 +19,23 @@
 
 #include "pluginmanager.h"
 
+#include "directoryprovider.h"
+#include "debughelper.h"
+
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
+#include <QtCore/QDebug>
+#include <QtCore/QSettings>
 
-using namespace MULACore;
+using namespace MulaCore;
+
+MULA_DEFINE_SINGLETON( PluginManager )
 
 class PluginManager::Private
 {
     public:
-        PluginManagerPrivate()
+        Private()
         {
         }
 
@@ -40,17 +47,20 @@ class PluginManager::Private
 };
 
 PluginManager::PluginManager(QObject *parent)
-    : QObject(parent)
+    : MulaCore::Singleton< MulaCore::PluginManager >( parent )
+    , d(new Private)
 {
-    loadSettings();
+    loadPluginSettings();
 }
 
 PluginManager::~PluginManager()
 {
-    saveSettings();
+    savePluginSettings();
     foreach (QPluginLoader *loader, d->plugins)
     {
-        delete loader->instance();
+        if (!loader->unload())
+            qDebug() << "The plugin could not be unloaded:" << loader->errorString();
+
         delete loader;
     }
 }
@@ -58,39 +68,40 @@ PluginManager::~PluginManager()
 QStringList
 PluginManager::availablePlugins() const
 {
-    QStringList result;
+    DEBUG_FUNC_NAME
+    QStringList pluginNameList;
+
+    QStringList pluginDirectoryPaths = MulaCore::DirectoryProvider::instance()->pluginDirectoryPaths();
+
+    DEBUG_TEXT2( "Number of plugin locations: %1", pluginDirectoryPaths.count() )
+    foreach( const QString& pluginDirectoryPath, pluginDirectoryPaths )
+    {
+        QDir pluginDirectory( pluginDirectoryPath );
+        DEBUG_TEXT( QString( "Looking for pluggable components in %1" ).arg( pluginDirectory.absolutePath() ) )
 
 #ifdef Q_WS_X11
-    QFileInfoList fileInfoList = QDir(MULA_PLUGINS_DIR).entryInfoList(QStringList("lib*.so"),
-                  QDir::Files | QDir::NoDotAndDotDot);
-
-    for (const QFileInfo& fileInfo, fileInfoList)
-        result.append(fileInfo->baseName().mid(3));
-
-#elif defined Q_WS_WIN
-    QFileInfoList fileInfoList = QDir(MULA_PLUGINS_DIR).entryInfoList(QStringList("*0.dll"),
-                  QDir::Files | QDir::NoDotAndDotDot);
-
-    for (const QFileInfo& fileInfo, fileInfoList)
-        result.append(fileInfo->fileName().left(fileInfo->fileName.length(5)));
-
-#elif defined Q_WS_MAC
-    QStringList macFilters;
-    // Various Qt versions.
-    macFilters << "*.dylib" << "*.bundle" << "*.so";
-    QString binPath = QCoreApplication::applicationDirPath();
-    // Navigate through mac's bundle tree structure
-    QDir d(binPath + "/../lib/");
-
-    QFileInfoList fileInfoList = d.entryInfoList(macFilters, QDir::Files | QDir::NoDotAndDotDot);
-    for (const QFileInfo& fileInfo, fileInfoList)
-        result.append(fileInfo->fileName());
-
-#else
-#error "Function DictCore::availablePlugins() is not implemented on this platform"
+        //Only attempt to load our current version. This makes it possible to have different versions
+        //of the plugins in the plugin dir.
+        pluginDirectory.setNameFilters( QStringList() << QString( "*.so.%1.%2.%3" ).arg( MULA_VERSION_MAJOR ).arg( MULA_VERSION_MINOR ).arg( MULA_VERSION_PATCH ) );
 #endif
+        pluginDirectory.setFilter( QDir::AllEntries| QDir::NoDotAndDotDot );
 
-    return result;
+        DEBUG_TEXT2( "Found %1 potential plugins. Attempting to load...", pluginDirectory.count() )
+        foreach( const QString & fileName, pluginDirectory.entryList( QDir::Files ) )
+        {
+            // Do not attempt to load non-mula_plugin prefixed libraries
+            if( !fileName.contains( "mula" ) )
+                continue;
+
+            // Don't attempt to load non-libraries
+            if( !QLibrary::isLibrary( pluginDirectory.absoluteFilePath( fileName ) ) )
+                continue;
+
+            pluginNameList.append(pluginDirectory.absoluteFilePath( fileName ) );
+        }
+    }
+
+    return pluginNameList;
 }
 
 QStringList
@@ -113,35 +124,59 @@ PluginManager::setLoadedPlugins(const QStringList &loadedPlugins)
     foreach (const QString& plugin, loadedPlugins)
     {
 #ifdef Q_WS_X11
-        QString pluginFileName = MULA_PLUGIN_DIR + "/lib" + plugin + ".so";
+        QString pluginFileName = "lib" + plugin + ".so";
 
 #elif defined Q_WS_WIN
-        QString pluginFileName = MULA_PLUGIN_DIR + "/" + plugin + "0.dll";
+        QString pluginFileName = plugin + "0.dll";
 
 #elif defined Q_WS_MAC
         // Follow Mac's bundle tree.
-        QString pluginFileName = QDir(QCoreApplication::applicationDirPath()+ "/../lib/" + plugin).absolutePath();
+        QString pluginFileName = plugin;
 
 #else
-#error "Function DictCore::setLoadedPlugins(const QStringList &loadedPlugins) is not available on this platform"
+        qWarning() << "Function DictCore::setLoadedPlugins(const QStringList &loadedPlugins) is not available on this platform"
 #endif
 
-        QPluginLoader *pluginLoader = new QPluginLoader(pluginFilename);
-        if (!pluginLoader->load())
+       QStringList pluginDirectoryPaths = MulaCore::DirectoryProvider::instance()->pluginDirectoryPaths();
+
+        foreach( const QString& pluginDirectoryPath, pluginDirectoryPaths )
         {
-            qWarning() << pluginLoader->errorString();
-            delete pluginLoader;
-        }
-        else
-        {
-            d->plugins[plugin] = pluginLoader;
+            // Do not attempt to load non-libraries
+            if( !QLibrary::isLibrary( pluginDirectoryPath + "/" + pluginFileName ) )
+                continue;
+
+            QPluginLoader *pluginLoader = new QPluginLoader(pluginDirectoryPath + "/" + pluginFileName);
+            if (!pluginLoader->load())
+            {
+                qWarning() << pluginLoader->errorString();
+                delete pluginLoader;
+            }
+            else
+            {
+                d->plugins[plugin] = pluginLoader;
+            }
         }
     }
 }
 
-DictPlugin*
+DictionaryPlugin*
 PluginManager::plugin(const QString &plugin)
 {
-    return d->plugins.contains(plugin) ? qobject_cast<DictPlugin*>(d->plugins[plugin]->instance()) : 0;
+    return d->plugins.contains(plugin) ? qobject_cast<DictionaryPlugin*>(d->plugins[plugin]->instance()) : 0;
 }
 
+void
+PluginManager::savePluginSettings()
+{
+    QSettings settings;
+    settings.setValue("PluginManager/loadedPlugins", loadedPlugins());
+}
+
+void
+PluginManager::loadPluginSettings()
+{
+    QSettings settings;
+    setLoadedPlugins(settings.value("PluginManager/loadedPlugins", availablePlugins()).toStringList());
+}
+
+#include "pluginmanager.moc"

@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -17,137 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MULA_PLUGIN_IDICTPLUGIN_H
-#define MULA_PLUGIN_IDICTPLUGIN_H
+#ifndef MULA_CORE_DICTIONARYPLUGIN_H
+#define MULA_CORE_DICTIONARYPLUGIN_H
+
+#include "dictionaryinfo.h"
+#include "translation.h"
 
 #include <QtPlugin>
-#include <QCore/QStringList>
-#include <QCore/QDir>
-#include <QCore/QCoreApplication>
-#include <QCore/QVariant>
+#include <QtCore/QUrl>
 
-namespace MULAPlugin
+namespace MulaCore
 {
-
-    /**
-     * This class represents information about dictionary.
-     */
-    class DictionaryData
-    {
-        public:
-            /**
-             * Construct an empty DictionaryData object.
-             */
-            DictionaryData()
-                : m_wordsCount(-1L)
-            {
-            }
-
-            /**
-             * Construct a DictionaryData object from the desired data.
-             * @param plugin A plugin name
-             * @param name A dictionary name
-             * @param author A dictionary author
-             * @param desription A dictionary description
-             * @param wordsCount A count of words that available in dictionary
-             */
-            DictionaryData(const QString &plugin, const QString &name, const QString &author = QString(), 
-                            const QString &description = QString(), long wordsCount = -1L);
-
-            const QString &plugin() const;
-
-            const QString &name() const;
-
-            const QString &author() const;
-
-            const QString &description() const;
-
-            long wordsCount() const;
-
-            void setPlugin(const QString &plugin);
-
-            void setName(const QString &name);
-
-            void setAuthor(const QString &author);
-
-            void setDescription(const QString &description);
-
-            void setWordsCount(long wordsCount);
-
-        private:
-            QString m_plugin;
-            QString m_name;
-            QString m_author;
-            QString m_description;
-            long m_wordsCount;
-    };
-
-    /**
-     * This class represent a translation.
-     */
-    class Translation
-    {
-        public:
-
-            /**
-             * Construct an empty translation.
-             */
-            Translation()
-            {
-            }
-
-            /**
-             * Construct a translation from data.
-             * @param title A translation title
-             * @param dictionaryName A full dictionary name
-             * @param translation A translation
-             */
-            Translation(const QString &title, const QString &dictionaryName,
-                        const QString &translation);
-
-            /**
-             * Return the translation title.
-             */
-            const QString &title() const;
-
-            /**
-             * Return the dictionary name.
-             */
-            const QString &dictName() const;
-
-            /**
-             * Return the translation.
-             */
-            const QString &translation() const;
-
-            /**
-             * Set a translation title.
-             */
-            void setTitle(const QString &title);
-
-            /**
-             * Set a dictionary name.
-             */
-            void setDictName(const QString &dictName);
-
-            /**
-             * Set a translation.
-             */
-            void setTranslation(const QString &translation);
-
-        private:
-            QString m_title;
-            QString m_dictName;
-            QString m_translation;
-    };
-
     /**
      * This is a base, interface class for all the dictionary plugins classes.
      */
-    class IDictionaryPlugin
+    class DictionaryPlugin
     {
         public:
-
             /**
              * This enum describes the features of a dictionary plugin.
              */
@@ -173,9 +59,14 @@ namespace MULAPlugin
             Q_DECLARE_FLAGS(Features, Feature)
 
             /**
+             * Constructor.
+             */
+            DictionaryPlugin();
+
+            /**
              * Destructor.
              */
-            virtual ~IDictonaryPlugin();
+            virtual ~DictionaryPlugin();
 
             /**
              * Return the plugin name.
@@ -245,7 +136,7 @@ namespace MULAPlugin
              * Return information about the dictionary. The dictionary may be not loaded
              * but available.
              */
-            virtual DictionaryInfo dictInfo(const QString &dictionary) = 0;
+            virtual DictionaryInfo dictionaryInfo(const QString &dictionary) = 0;
 
             /**
              * Run a settings dialog and return QDialog::DialogCode.
@@ -259,11 +150,10 @@ namespace MULAPlugin
             QString workPath() const;
     };
 
-    Q_DECLARE_OPERATORS_FOR_FLAGS(IDictPlugin::Features)
-
+    Q_DECLARE_OPERATORS_FOR_FLAGS(DictionaryPlugin::Features)
 }
 
-Q_DECLARE_INTERFACE(MULAPlugin::IDictionaryPlugin, "org.mula.IDictionaryPlugin/1.0")
+Q_DECLARE_INTERFACE(MulaCore::DictionaryPlugin, "org.mula.DictionaryPlugin/1.0")
 
-#endif // MULA_PLUGIN_IDICTIONARYPLUGIN_H
+#endif // MULA_CORE_DICTIONARYPLUGIN_H
 

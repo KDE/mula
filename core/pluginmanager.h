@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -20,83 +20,23 @@
 #ifndef MULA_CORE_PLUGINMANAGER_H
 #define MULA_CORE_PLUGINMANAGER_H
 
+#include "mula_core_export.h"
 #include "singleton.h"
-
-#include <plugins/dictplugin.h>
+#include "dictionaryplugin.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QPair>
 #include <QtCore/QHash>
 #include <QtCore/QPluginLoader>
 
-namespace QStarDict
+namespace MulaCore
 {
-
-    /**
-     * The DictCore is a base dictionary class.
-     */
-    class MULA_CORE_EXPORT PluginManager: public MULACore::Singleton<PluginManager>
+    class MULA_CORE_EXPORT PluginManager : public MulaCore::Singleton<PluginManager>
     {
         Q_OBJECT
         MULA_SINGLETON( PluginManager )
 
         public:
-            /**
-             * This class represents a dictionary.
-             */
-            class Dictionary
-            {
-                public:
-                    Dictionary(const QString &plugin, const QString &name)
-                        : m_plugin(plugin)
-                        , m_name(name)
-                    {
-                    }
-
-                    Dictionary()
-                    {
-                    }
-
-                    const QString &plugin() const
-                    {
-                        return m_plugin;
-                    }
-
-                    const QString &name() const
-                    {
-                        return m_name;
-                    }
-
-                    void setPlugin(const QString &plugin)
-                    {
-                        m_plugin = plugin;
-                    }
-
-                    void setName(const QString &name)
-                    {
-                        m_name = name;
-                    }
-
-                    bool operator == (const Dictionary &dict)
-                    {
-                        return m_name == dict.m_name && m_plugin == dict.m_plugin;
-                    }
-
-                private:
-                    QString m_plugin;
-                    QString m_name;
-            };
-
-            /**
-             * Construct the PluginManager.
-             */
-            PluginManager(QObject *parent = 0);
-
-            /**
-             * Destructor.
-             */
-            ~PluginManager();
-
             /**
              * Returns a list of available dictionary plugins.
              */
@@ -108,24 +48,33 @@ namespace QStarDict
             QStringList loadedPlugins() const;
 
             /**
-             * Sets a loaded plugins.
+             * Sets the loaded plugins.
              * If plugin cannot be loaded it will not be added to
-             * loadedPlugins list.
+             * the list.
              */
             void setLoadedPlugins(const QStringList &loadedPlugins);
 
             /**
-             * 
              * Returns pointer to plugin instance or 0 if not loaded.
              */
-            DictPlugin *plugin(const QString &plugin);
+            DictionaryPlugin *plugin(const QString &plugin);
+
+            /** 
+             * Save the plugin settings.
+             */
+            void savePluginSettings();
 
         private:
+            ~PluginManager();
+
+            /** 
+             * Load the plugin settings.
+             */
+            void loadPluginSettings();
 
             class Private;
             Private *const d;
     };
-
 }
 
 #endif // MULA_CORE_PLUGINMANAGER_H

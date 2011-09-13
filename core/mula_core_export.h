@@ -1,6 +1,6 @@
 /******************************************************************************
- * MULA - Multi Language Dictionary and Translator application
- * Copyright (C) 2010 Laszlo Papp <djszapi@archlinux.us>
+ * This file is part of the Mula project
+ * Copyright (c) 2010 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,7 @@
 #endif
 
 #ifndef MULA_CORE_EXPORT_DEPRECATED
-#define MULA_CORE_EXPORT_DEPRECATED Q_DECL_DEPRECATED GLUON_CORE_EXPORT
+#define MULA_CORE_EXPORT_DEPRECATED Q_DECL_DEPRECATED MULA_CORE_EXPORT
 #endif
 
 #endif // MULA_CORE_EXPORT_H

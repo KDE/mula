@@ -2,7 +2,7 @@
 @mainpage MulaCore
 
 MulaCore is a thin library which provides the core functionality for standalone
-and plugin development
+and plugin development purpose
 
 @authors
 Laszlo Papp \<lpapp@kde.org\>

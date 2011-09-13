@@ -1,6 +1,6 @@
 /******************************************************************************
- * MULA - Multi Language Dictionary and Translator application
- * Copyright (c) 2010 Laszlo Papp <djszapi@archlinux.us>
+ * Mula - Multi Language Dictionary and Translator application
+ * Copyright (c) 2010 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,28 +32,15 @@
 
 #define MULA_PLATFORM_NAME     "Mula Platform"
 
+#define MULA_ARCHITECTURE       QString("${MULA_ARCHITECTURE}")
+
 #include <QtCore/QString>
 
-namespace GluonCore
+namespace MulaCore
 {
     class Global
     {
         public:
-            static QString installPrefix()
-            {
-                return MULA_INSTALL_PREFIX;
-            }
-
-            static QString dataDirectory()
-            {
-                return MULA_SHARE_INSTALL_DIR;
-            }
-
-            static QString libDirectory()
-            {
-                return MULA_LIB_INSTALL_DIR;
-            }
-
             static QString versionString()
             {
                 return MULA_VERSION_STRING;

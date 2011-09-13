@@ -37,19 +37,31 @@ include_directories(${QT_INCLUDES})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-set(GLUON_CORE_INCLUDES
+set(MULA_CORE_INCLUDES
     ${QT_INCLUDES}
-    CACHE PATHS "Includes required for Gluon Core"
+    CACHE PATHS "Includes required for Mula Core"
 )
 
 set(MulaCore_SRCS
     debughelper.cpp
+    dictionarydata.cpp
+    dictionaryinfo.cpp
+    dictionarymanager.cpp
+    dictionaryplugin.cpp
+    directoryprovider.cpp
+    pluginmanager.cpp
+    translation.cpp
 )
 
 set(MulaCore_HEADERS
     debughelper.h
-    singleton.h
+    dictionarydata.h
+    dictionaryinfo.h
+    dictionaryplugin.h
     mula_core_export.h
+    pluginmanager.h
+    singleton.h
+    translation.h
 	${CMAKE_CURRENT_BINARY_DIR}/mula_global.h
 )
 
