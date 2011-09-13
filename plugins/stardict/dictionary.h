@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #ifndef MULA_PLUGIN_STARDICT_DICTIONARY_H
 #define MULA_PLUGIN_STARDICT_DICTIONARY_H
 
-namespace MULAPluginStardict
+namespace MulaPluginStardict
 {
     class Dictionary : public DictionaryBase
     {
@@ -42,9 +42,9 @@ namespace MULAPluginStardict
 
             void keyAndData(qlong index, const QStringList key, quint32 *offset, quint32 *size);
 
-            bool Lookup(const QString str, qlong &index);
+            bool lookup(const QString str, qlong &index);
 
-            bool LookupWithRule(GPatternSpec *pspec, glong *aIndex, int iBuffLen);
+            bool lookupWithRule(GPatternSpec *pspec, glong *aIndex, int iBuffLen);
 
         private:
             bool loadIfoFile(const QString& ifoFileName, ulong &indexFileSize);

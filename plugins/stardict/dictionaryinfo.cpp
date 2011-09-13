@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -25,9 +25,9 @@ class DictionaryInfo::Private
 {
     public:
         Private()
-            : m_wordcount
-            , m_indexFileSize
-            , m_indexOffsetBits
+            : wordcount(0)
+            , indexFileSize(0)
+            , indexOffsetBits(0)
         {   
         }
 
@@ -49,7 +49,7 @@ class DictionaryInfo::Private
 }
 
 DictionaryInfo::DictionaryInfo()
-    : d( new Private )
+    : d(new Private)
 {
 }
 
@@ -61,7 +61,7 @@ bool
 DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
                                 bool isTreeDictionary)
 {
-    m_ifoFileName = ifoFileName;
+    d->ifoFileName = ifoFileName;
     QFile ifoFile(ifoFileName);
     QByteArray buffer = ifoFile.readAll();
     if (buffer.isEmpty())
@@ -86,9 +86,9 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
     index += sizeof("\nwordcount=") - 1; 
 
     bool ok;
-    m_wordCount = byteArray.mid(index, p1.indexOf('\n', index) - index).toLong(&ok, 10);
+    d->wordCount = byteArray.mid(index, p1.indexOf('\n', index) - index).toLong(&ok, 10);
 
-    if (m_isTreeDictionary)
+    if (d->isTreeDictionary)
     {
         index = byteArray.indexOf("\ntdxfilesize=");
         if (index == -1)
@@ -96,7 +96,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
 
         index += sizeof("\ntdxfilesize=");
 
-        m_indexFileSize = byteArray.mid(index, p1.indexOf('\n', index) - index).toLong(&ok, 10);
+        d->indexFileSize = byteArray.mid(index, p1.indexOf('\n', index) - index).toLong(&ok, 10);
     }
     else
     {
@@ -106,7 +106,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
 
         index += sizeof("\nidxfilesize=");
 
-        m_indexFileSize = byteArray.mid(index, p1.indexOf('\n', index) - index).toLong(&ok, 10);
+        d->indexFileSize = byteArray.mid(index, p1.indexOf('\n', index) - index).toLong(&ok, 10);
     }
 
     // bookname
@@ -115,7 +115,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\nbookname=");
-    m_bookname.assign(index, p1.indexOf('\n', index));
+    d->bookname.assign(index, p1.indexOf('\n', index));
 
     // author
     index = byteArray.indexOf("\nauthor=");
@@ -123,7 +123,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\nauthor=");
-    m_author.assign(index, p1.indexOf('\n', index));
+    d->author.assign(index, p1.indexOf('\n', index));
 
     // email
     index = byteArray.indexOf("\nemail=");
@@ -131,7 +131,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\nemail=");
-    m_email.assign(index, p1.indexOf('\n', index));
+    d->email.assign(index, p1.indexOf('\n', index));
 
     // website
     index = byteArray.indexOf("\nwebsite=");
@@ -139,7 +139,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\nwebsite=");
-    m_website.assign(index, p1.indexOf('\n', index));
+    d->website.assign(index, p1.indexOf('\n', index));
 
     // date
     index = byteArray.indexOf("\ndate=");
@@ -147,7 +147,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\ndate=");
-    m_date.assign(index, p1.indexOf('\n', index));
+    d->date.assign(index, p1.indexOf('\n', index));
 
     // description
     index = byteArray.indexOf("\ndescription=");
@@ -155,7 +155,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\ndescription=");
-    m_description.assign(index, p1.indexOf('\n', index));
+    d->description.assign(index, p1.indexOf('\n', index));
 
     // description
     index = byteArray.indexOf("\nsametypesequence=");
@@ -163,7 +163,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\nsametypesequence=");
-    m_sameTypeSequence.assign(index, p1.indexOf('\n', index));
+    d->sameTypeSequence.assign(index, p1.indexOf('\n', index));
 
     return true;
 }

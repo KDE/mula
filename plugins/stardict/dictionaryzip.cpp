@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "dictziplib.h"
+#include "dictionaryzip.h"
 
 #include <QtGlobal>
 
@@ -402,7 +402,7 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
 
     if (file.pos() != d->headerLength + 1)
     {
-        qDebug() << Q_FUNC << QString("File position (%1) != header length + 1 (%2)").arg(file.pos()).arg(d->headerLength + 1 ) << endl; 
+        qDebug() << Q_FUNC << QString("File position (%1) != header length + 1 (%2)").arg(file.pos()).arg(d->headerLength + 1 ); 
     }
 
     file.seek(file.size() - 8);
@@ -454,13 +454,13 @@ DictionaryZip::open(const QString& fileName, int computeCRC)
     if (_stat(fname.c_str(), &sb) || !(sb.stMode & _S_IFREG))
 #endif
     {
-        qDebug() << Q_FUNC << QString("%1 is not a regular file -- ignoring").arg(fname) << endl;
+        qDebug() << Q_FUNC << QString("%1 is not a regular file -- ignoring").arg(fname);
         return false;
     }
 
     if (readHeader(fileName, computeCRC))
     {
-        qDebug() << Q_FUNC << QString("\"%1\" not in text or dzip format").arg(fileName) << endl;
+        qDebug() << Q_FUNC << QString("\"%1\" not in text or dzip format").arg(fileName);
         return false;
     }
 
@@ -483,7 +483,7 @@ DictionaryZip::open(const QString& fileName, int computeCRC)
     data = QFile.map(0, d->size);
     if (data == NULL)
     {   
-        QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(d->indexFileName) << endl;
+        QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(d->indexFileName);
         return false;
     }   
 
@@ -517,7 +517,7 @@ DictionaryZip::close()
     {
         if (inflateEnd( &d->zStream ))
         {
-            qDebug() << Q_FUNC << QString("Cannot shut down inflation engine: %1").arg(d->zStream.msg) << endl;
+            qDebug() << Q_FUNC << QString("Cannot shut down inflation engine: %1").arg(d->zStream.msg);
         }
     }
 
@@ -550,8 +550,8 @@ DictionaryZip::read(unsigned long start, unsigned long size)
     switch (d->type)
     {
     case DICTIONARY_GZIP:
-        qWarning() << Q_FUNC << "Cannot seek on pure gzip format files." << endl
-        qWarning() << "Use plain text (for performance) or dzip format (for space savings)." << endl;
+        qWarning() << Q_FUNC << "Cannot seek on pure gzip format files.";
+        qWarning() << "Use plain text (for performance) or dzip format (for space savings).";
         break;
 
     case DICTIONARY_TEXT:
@@ -572,7 +572,7 @@ DictionaryZip::read(unsigned long start, unsigned long size)
 
             if (inflateInit2( &d->zStream, -15 ) != Z_OK)
             {
-                qWarning() << Q_FUNC << QString("Cannot initialize inflation engine: %1").arg(d->zStream.msg) << endl;
+                qWarning() << Q_FUNC << QString("Cannot initialize inflation engine: %1").arg(d->zStream.msg);
             }
         }
 
@@ -622,7 +622,7 @@ DictionaryZip::read(unsigned long start, unsigned long size)
 
                 if (d->chunks[i] >= OUT_BUFFER_SIZE )
                 {
-                    qDebug << Q_FUNC <<QString("this->chunks[%1] = %2 >= %3 (OUT_BUFFER_SIZE)".arg(i).arg(d->chunks[i]).arg(OUT_BUFFER_SIZE) << endl;
+                    qDebug << Q_FUNC <<QString("this->chunks[%1] = %2 >= %3 (OUT_BUFFER_SIZE)".arg(i).arg(d->chunks[i]).arg(OUT_BUFFER_SIZE);
                 }
 
                 outByteArray = QByteArray(d->start + d->offsets[i], d->chunks[i]);
@@ -634,12 +634,12 @@ DictionaryZip::read(unsigned long start, unsigned long size)
 
                 if (inflate( &d->zStream, Z_PARTIAL_FLUSH ) != Z_OK)
                 {
-                    qWarning() << Q_FUNC << QString("inflate: %1").arg(zStream.msg) << endl;
+                    qWarning() << Q_FUNC << QString("inflate: %1").arg(zStream.msg);
                 }
 
                 if (d->zStream.avail_in)
                 {
-                    qWarning() << Q_FUNC << QString("inflate did not flush (%1 pending, %2 avail)").arg(d->zStream.avail_in).arg(d->zStream.avail_out) << endl;
+                    qWarning() << Q_FUNC << QString("inflate did not flush (%1 pending, %2 avail)").arg(d->zStream.avail_in).arg(d->zStream.avail_out);
                 }
 
                 count = IN_BUFFER_SIZE - d->zStream.avail_out;
@@ -657,7 +657,7 @@ DictionaryZip::read(unsigned long start, unsigned long size)
                 {
                     if (count != d->chunkLength )
                     {
-                        qDebug() << Q_FUNC << QString("Length = %1 instead of %2").arg(count).arg(d->chunkLength) << endl;
+                        qDebug() << Q_FUNC << QString("Length = %1 instead of %2").arg(count).arg(d->chunkLength);
                     }
 
                     str.append(inBuffer.mid(firstOffset, d->chunkLength - firstOffset);
@@ -676,7 +676,7 @@ DictionaryZip::read(unsigned long start, unsigned long size)
         break;
 
     case DICTIONARY_UNKNOWN:
-        qWarning() << Q_FUNC << "Cannot read unknown file type" << endl;
+        qWarning() << Q_FUNC << "Cannot read unknown file type";
         break;
     }
 

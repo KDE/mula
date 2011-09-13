@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 
 #include <QtCore/QStringList>
 
-namespace MULAPluginStardict
+namespace MulaPluginStardict
 {
     class DictionaryBase
     {
@@ -31,8 +31,8 @@ namespace MULAPluginStardict
             virtual ~DictionaryBase();
 
             QString wordData(quint32 indexItemOffset, quint32 indexItemSize);
-            bool containSearchData();
-            bool searchData(const QStringList &searchWords, quint32 indexItemOffset, quint32 indexItemSize, QString originalData);
+            bool containFindData();
+            bool fineData(const QStringList &searchWords, quint32 indexItemOffset, quint32 indexItemSize, QString originalData);
 
         private:
             class Private;

@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -39,37 +39,32 @@ class WordListIndex::Private
 
 WordListIndex::~WordListIndex()
 {
-    delete QByteArray();
 }
 
 bool
-WordListIndex::load(const QString& url, qulonglong wc, qulonglong fsize)
+WordListIndex::load(const QString& filePath, qulonglong wc, qulonglong sfile)
 {
-    Qfile file(url);
+    Qfile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
     {
-        qDebug() << Q_FUNC << "Failed to open file:" << fileName;
+        qDebug() << Q_FUNC << "Failed to open file:" << filePath;
         return -1;
     }
 
-    d->indexDataBuf = file.read(fsize);
+    d->indexDataBuf = file.read(sfile);
 
     file.close();
 
-    if (len != fsize)
-        return false;
-
-    d->wordList.resize(wc + 1);
-
     // To avoid the calculation in each iteration
     int calculatedConst = 1 + 2 * sizeof(quint32);
+
     for (int i = 0, j = 0; i < wc; ++i)
     {
         d->wordList[i] = d->indexDataBuf.at(j);
         j += d->indexDataBuf.at(j) + calculatedConst;
     }
 
-    d->wordList[wc] = d->indexDataBuf.at(j);
+    d->wordList.insert(wc, d->indexDataBuf.at(j));
 
     return true;
 }
@@ -77,7 +72,7 @@ WordListIndex::load(const QString& url, qulonglong wc, qulonglong fsize)
 const QString
 WordListIndex::key(qlong index) const
 {
-    return d->wordList(index);
+    return d->wordList.at(index);
 }
 
 void

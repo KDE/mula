@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -57,8 +57,7 @@ void for_each_file(const QStringList& dirList, const QString& suffix,
     QStringList::const_iterator it;
     for (it = orderList.begin(); it != orderList.end(); ++it)
     {
-        bool disable = qFind(disableList.begin(), disableList.end(),
-                                 *it) != disableList.end();
+        bool disable = qFind(disableList.begin(), disableList.end(), *it) != disableList.end();
         f(*it, disable);
     }
 

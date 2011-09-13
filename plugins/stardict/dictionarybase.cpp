@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -19,14 +19,15 @@
 
 #include "dictionarybase.h"
 
+#include <QtCore/QScopedPointer>
+
 using namespace MulaPluginStarDict;
 
 class DictionaryBase::Private
 {
     public:
         Private()
-            : m_dictionaryFile(NULL)
-            , m_cacheCur(0)
+            : cacheCur(0)
         {   
         }
 
@@ -36,7 +37,7 @@ class DictionaryBase::Private
 
         QString sameTypeSequence;
         QFile dictionaryFile;
-        QSharedPointer<DictionaryZip> dictionaryDZFile;
+        QScopedPointer<DictionaryZip> dictionaryDZFile;
 
         QList<CacheItem> cacheItemList;
         qint cacheCur;
@@ -54,29 +55,31 @@ DictionaryBase::~DictionaryBase()
 QString
 DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
 {
-    foreach(CacheItem cacheItem, d->cacheItemList) 
+    foreach(CacheItem cacheItem, d->cacheItemList)
+    {
         if (cacheItem.data() && cacheItem.offset() == indexItemOffset)
             return d->cacheItem.data();
+    }
 
-    if (m_dictionaryFile.isOpen())
-        m_dictionaryFile.seek(indexItemOffset);
+    if (d->dictionaryFile.isOpen())
+        d->dictionaryFile.seek(indexItemOffset);
 
     QByteArray data;
-    if (!m_sameTypeSequence.isEmpty())
+    if (!d->sameTypeSequence.isEmpty())
     {    
         QByteArray originalData;
 
-        if (m_dictionaryFile.isOpen())
-            originalData = m_dictionaryFile.read(indexItemSize);
+        if (d->dictionaryFile.isOpen())
+            originalData = d->dictionaryFile.read(indexItemSize);
         else 
-            originalData = m_dictionaryDZFile->read(indexItemOffset, indexItemSize);
+            originalData = d->dictionaryDZFile->read(indexItemOffset, indexItemSize);
 
         quint32 sdata;
-        qint sameTypeSequenceLength = m_sameTypeSequence.length();
+        qint sameTypeSequenceLength = d->sameTypeSequence.length();
         sdata = indexItemSize + sizeof(quint32) + sameTypeSequenceLength;
         //if the last item's size is determined by the end up '\0',then +=sizeof(gchar);
         //if the last item's size is determined by the head guint32 type data,then +=sizeof(guint32);
-        switch (m_sameTypeSequence[sameTypeSequenceLength - 1])
+        switch (d->sameTypeSequence[sameTypeSequenceLength - 1])
         {
         case 'm':
         case 't':
@@ -91,13 +94,14 @@ DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
             sdata += sizeof(quint32);
             break;
         default:
-            if (m_sameTypeSequence[sameTypesequenceLength - 1].isUpper())
+            if (d->sameTypeSequence[sameTypesequenceLength - 1].isUpper())
                 sdata += sizeof(quint32);
             else
                 sdata += sizeof(char);
             break;
         }
-        data = (gchar *)g_malloc(data_size);
+
+        data = (char *)g_malloc(data_size);
         char *p1;
         char *p2;
         p1 = data + sizeof(quint32);
@@ -106,9 +110,9 @@ DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
         //copy the head items.
         for (int i = 0; i < sameTypeSequenceLength - 1; ++i)
         {
-            *p1 = m_sameTypeSequence[i];
+            *p1 = d->sameTypeSequence[i];
             p1 += sizeof(char);
-            switch (m_sameTypeSequence.at(i))
+            switch (d->sameTypeSequence.at(i))
             {
             case 'm':
             case 't':
@@ -130,7 +134,7 @@ DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
                 p2 += ssec;
                 break;
             default:
-                if (m_sameTypeSequence[i].isUpper())
+                if (d->sameTypeSequence[i].isUpper())
                 {
                     ssec = *reinterpret_cast<quint32 *>(p2);
                     ssec += sizeof(quint32);
@@ -139,17 +143,19 @@ DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
                 {
                     ssec = strlen(p2) + 1;
                 }
+
                 memcpy(p1, p2, sec_size);
                 p1 += ssec;
                 p2 += ssec;
                 break;
             }
         }
-        //calculate the last item 's size.
+
+        // Calculate the last item 's size.
         ssec = indexItemSize - (p2 - originalData);
-        *p1 = m_sameTypeSequence[sameTypeSequenceLength - 1];
+        *p1 = d->sameTypeSequence[sameTypeSequenceLength - 1];
         p1 += sizeof(char);
-        switch (m_sameTypeSequence[sameTypeSequenceLength - 1])
+        switch (d->sameTypeSequence[sameTypeSequenceLength - 1])
         {
         case 'm':
         case 't':
@@ -168,7 +174,7 @@ DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
             memcpy(p1, p2, ssec);
             break;
         default:
-            if (m_sameTypeSequence[sameTypeSequenceLength - 1].isUpper())
+            if (d->sameTypeSequence[sameTypeSequenceLength - 1].isUpper())
             {
                 *reinterpret_cast<quint32 *>(p1) = ssec;
                 p1 += sizeof(quint32);
@@ -186,10 +192,10 @@ DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
     }
     else
     {
-        if (m_dictionaryFile)
-            data = m_dictionaryfile.read(indexItemSize);
+        if (d->dictionaryFile)
+            data = d->dictionaryfile.read(indexItemSize);
         else
-            m_dictionaryDZFile->read(data[1], indexItemOffset, indexItemSize);
+            d->dictionaryDZFile->read(data[1], indexItemOffset, indexItemSize);
 
         *reinterpret_cast<quint32 *>(data) = idxitem_size + sizeof(guint32);
     }
@@ -197,7 +203,7 @@ DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
 
     cache[cacheCur].data = data;
     cache[cacheCur].offset = indexItemOffset;
-    cache_cur++;
+    d->cacheCur++;
 
     if (cacheCur == WORDDATA_CACHE_NUM)
         cacheCur = 0;
@@ -220,18 +226,18 @@ bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset,
     QVector<bool> wordFind(nWord, false);
     int nfound = 0;
 
-    if (m_dictionaryFile.isOpen())
-        m_dictionaryFile.seek(indexItemOffset);
+    if (d->dictionaryFile.isOpen())
+        d->dictionaryFile.seek(indexItemOffset);
 
-    if (m_dictionaryFile.isOpen())
-        m_dictionaryFile.read(originData, 1*indexItemSize);
+    if (d->dictionaryFile.isOpen())
+        d->dictionaryFile.read(originalData, 1*indexItemSize);
     else
-        m_dictionaryDZFile->read(origin_data, indexItemOffset, indexItemSize);
+        d->dictionaryDZFile->read(originalData, indexItemOffset, indexItemSize);
 
     char *p = originalData;
     quint32 ssec;
     int j;
-    if (!m_sameTypeSequence.empty())
+    if (!d->sameTypeSequence.empty())
     {
         qint sSametypeSequence = sameTypeSequence.length();
         for (int i = 0; i < sSameTypeSequence - 1; ++i)
@@ -273,7 +279,7 @@ bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset,
             }
         }
 
-        switch (m_sameTypeSequence[sSameTypeSequence - 1])
+        switch (d->sameTypeSequence[sSameTypeSequence - 1])
         {
         case 'm':
         case 't':
@@ -292,6 +298,7 @@ bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset,
 
             if (nfound == nWord)
                 return true;
+
             break;
         }
     }

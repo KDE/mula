@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -22,6 +22,8 @@
 #include "stardict.h"
 
 #include <QtGui/QFileDialog>
+
+using namespace MulaCore;
 
 SettingsDialog::SettingsDialog(StarDict *plugin, QWidget *parent)
     : QDialog(parent)

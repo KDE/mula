@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 #include <QtCore/QString>
 
 #include <zlib.h>
+
+using namespace MulaCore;
 
 // Notice: read src/tools/DICTFILE_FORMAT for the dictionary
 // file's format information!
@@ -291,7 +293,7 @@ Libs::poNextWord(const char *sWord, qlong *iCurrent)
     {
         iCurrent[iCurrentLib]
         ++;
-        for (std::vector<Dict *>::size_type iLib = 0;iLib<oLib.size();iLib++)
+        for (std::vector<Dict *>::size_type iLib = 0; iLib < oLib.size(); ++iLib)
         {
             if (iLib == iCurrentLib)
                 continue;
@@ -315,7 +317,7 @@ const char *
 Libs::poPreviousWord(qlong *iCurrent)
 {
     // used by TopWin::PreviousCallback(); the iCurrent is cached by AppCore::TopWinWordChange();
-    const gchar *poCurrentWord = NULL;
+    const char *poCurrentWord = NULL;
     QVector<Dict *>::size_type iCurrentLib = 0;
     const char *word;
 
@@ -469,7 +471,7 @@ bool Libs::lookupSimilarWord(const QString sWord, qlong & iWordIndex, int iLib)
     {
         // If not Found, try other status of sWord.
         int iWordLen = strlen(sWord);
-        bool isupcase;
+        bool iUpperCase;
 
         gchar *sNewWord = (gchar *)g_malloc(iWordLen + 1);
 
@@ -501,8 +503,8 @@ bool Libs::lookupSimilarWord(const QString sWord, qlong & iWordIndex, int iLib)
         //cut "ly"
         if (!found && iWordLen > 2)
         {
-            isupcase = !strncmp(&sWord[iWordLen - 2], "LY", 2);
-            if (isupcase || (!strncmp(&sWord[iWordLen - 2], "ly", 2)))
+            isUpperCase = !strncmp(&sWord[iWordLen - 2], "LY", 2);
+            if (isUpperCase || (!strncmp(&sWord[iWordLen - 2], "ly", 2)))
             {
                 sNewWord = sWord;
                 sNewWord[iWordLen - 2] = '\0';  // cut "ly"
@@ -968,7 +970,7 @@ qint Libs::lookupWithRule(const gchar *word, gchar **ppMatchWord)
         //if(oLibs.LookdupWordsWithRule(pspec,aiIndex,MAX_MATCH_ITEM_PER_LIB+1-iMatchCount,iLib))
         // -iMatchCount,so save time,but may got less result and the word may repeat.
 
-        if (oLib[iLib]->LookupWithRule(pspec, aiIndex, MAX_MATCH_ITEM_PER_LIB + 1))
+        if (oLib[iLib]->lookupWithRule(pspec, aiIndex, MAX_MATCH_ITEM_PER_LIB + 1))
         {
             if (progress_func)
                 progress_func();

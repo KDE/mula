@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -20,31 +20,13 @@
 #ifndef MULA_PLUGIN_STARDICT_LIB_H
 #define MULA_PLUGIN_STARDICT_LIB_H
 
-#include "dictziplib.h"
+#include "dictionaryzip.h"
 
 #include <QtCore/QList>
 #include <QtCore/QStringList>
 
 const int MAX_MATCH_ITEM_PER_LIB = 100;
 const int MAX_FUZZY_DISTANCE = 3; // at most MAX_FUZZY_DISTANCE-1 differences allowed when find similar words
-
-struct cacheItem
-{
-    //write code here to make it inline
-    cacheItem()
-        : data(NULL)
-        , offset(0)
-    {
-    }
-
-    ~cacheItem()
-    {
-        free(data);
-    }
-
-    quint32 offset;
-    char *data;
-};
 
 const int WORDDATA_CACHE_NUM = 10;
 const int INVALID_INDEX = -100;

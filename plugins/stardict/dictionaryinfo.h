@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -17,15 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MULA_PLUGIN_STARDICT_DICTIONARY_INFO_H
-#define MULA_PLUGIN_STARDICT_DICTIONARY_INFO_H
+#ifndef MULA_PLUGIN_STARDICT_DICTIONARYINFO_H
+#define MULA_PLUGIN_STARDICT_DICTIONARYINFO_H
 
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
 
-namespace MULAPluginStardict
+namespace MulaPluginStardict
 {
     // This class contains all information about the dictionary
+    // Note that the dictionary must have at least a bookname, a wordcount and a 
+    // idxfilesize, or the load will fail.
     class DictonaryInfo
     {
         public:
@@ -73,4 +75,4 @@ namespace MULAPluginStardict
     };
 }
 
-#endif // MULA_PLUGIN_STARDICT_DICTIONARY_INFO_H
+#endif // MULA_PLUGIN_STARDICT_DICTIONARYINFO_H

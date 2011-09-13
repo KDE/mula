@@ -70,8 +70,8 @@ int EditDistance::CalEditDistance(const QString s, const QString t, const int li
     int n = 0, m = 0, iLenDif, k, i, j, cost;
     // Remove leftmost matching portion of strings
     while ( s[i] && (s[i] == t[i]) ) ++i;
-    s = s.right(s.size() - i);
-    t = t.right(t.size() - i);
+    s = s.mid(i);
+    t = t.mid(i);
 
     while (s[n])
     {

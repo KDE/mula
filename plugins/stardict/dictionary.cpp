@@ -37,7 +37,7 @@ class Dictionary::Private
         ulong wordCount;
         QString bookName;
 
-        QSharedPointer<indexFile> indexFile;
+        QScopedPointer<IndexFile> indexFile;
 }
 
 Dictionary::Dictionary()
@@ -89,20 +89,19 @@ Dictionary::keyAndData(qlong index, const QStringList key, quint32 *offset, quin
 }
 
 bool
-Dictionary::Lookup(const QString str, qlong &index)
+Dictionary::lookup(const QString str, qlong &index)
 {
     return d->indexFile->lookup(str, index);
 }
 
 bool
-Dictionary::load(const QString& ifoFileName)
+Dictionary::load(const QString& ifoFilePath)
 {
-    qulonglong indexFileSize;
-    if (!loadIfoFile(ifoFileName, indexFileSize))
+    if (!loadIfoFile(ifoFilePath))
         return false;
 
-    QString completeFilePath(ifoFileName);
-    completeFileName.replace(completeFilePath.length() - sizeof("ifo") + 1, sizeof("ifo") - 1, "dict.dz");
+    QString completeFilePath = ifoFilePath;
+    completeFilePath.replace(completeFilePath.length() - sizeof("ifo") + 1, sizeof("ifo") - 1, "dict.dz");
 
     if (completeFilePath.exists())
     {
@@ -124,27 +123,27 @@ Dictionary::load(const QString& ifoFileName)
         }
     }
 
-    completeFileName = ifoFileName;
-    completeFileName.replace(completeFileName.length() - sizeof("ifo") + 1, sizeof("ifo") - 1, "idx.gz");
+    completeFilePath = ifoFilePath;
+    completeFilePath.replace(completeFilePath.length() - sizeof("ifo") + 1, sizeof("ifo") - 1, "idx.gz");
 
-    if (completeFileName.exists())
+    if (completeFilePath.exists())
     {
         d->indexFile.reset(new wordListIndex);
     }
     else
     {
-        completeFileName.remove(completeFileName.length() - sizeof(".gz") + 1, sizeof(".gz") - 1);
+        completeFilePath.remove(completeFilePath.length() - sizeof(".gz") + 1, sizeof(".gz") - 1);
         d->indexFile.reset(new offsetIndex);
     }
 
-    if (!d->indexFile->load(completeFilename, wordCount, indexFileSize))
+    if (!d->indexFile->load(completeFilePath, wordCount, indexFileSize))
         return false;
 
     return true;
 }
 
 bool
-Dictionary::loadIfoFile(const QString& ifoFileName, ulong &indexFileSize)
+Dictionary::loadIfoFile(const QString& ifoFileName)
 {
     DictonaryInfo dictionaryInfo;
     if (!dictionaryInfo.loadFromIfoFile(ifoFileName, false))
@@ -165,12 +164,15 @@ Dictionary::loadIfoFile(const QString& ifoFileName, ulong &indexFileSize)
 }
 
 bool
-Dictionary::lookupWithRule(GPatternSpec *pspec, qlong *aIndex, int iBuffLen)
+Dictionary::lookupWithRule(const QString *pattern, qlong *aIndex, int iBuffLen)
 {
     int indexCount = 0;
 
+    QRegExp rx(pattern);
+    rx.setPatternSyntax(QRegExp::Wildcard);
+
     for (int i = 0; i < narticles() && indexCount < iBuffLen - 1; ++i)
-        if (g_pattern_match_string(pspec, key(i)))
+        if (rx.exactMatch(key(i)))
             aIndex[indexCount++] = i;
 
     aIndex[indexCount] = -1; // -1 is the end.

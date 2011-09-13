@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mul project
  * Copyright (C) 2004 Stanislav Ievlev
  * Copyright (C) 2008 Nick Shaforostoff
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>

@@ -1,5 +1,5 @@
 /******************************************************************************
- * This file is part of the MULA project
+ * This file is part of the Mula project
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -153,7 +153,7 @@ OffsetIndex::loadCache(const QString& url)
         data = d->mapFile.map(0, file_size);
         if (data == NULL)
         {
-            QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(fileName) << endl;
+            QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(fileName);
             return false;
         }
 
@@ -220,7 +220,7 @@ OffsetIndex::saveCache(const QString& url)
         data = d->mapFile.map(0, m_size);
         if (data == NULL)
         {
-            QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(it) << endl;
+            QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(it);
             return false;
         }
 
@@ -234,7 +234,7 @@ OffsetIndex::saveCache(const QString& url)
             continue;
         fclose(out);
 
-        QDebug() << "Save to cache" << url << endl;
+        QDebug() << "Save to cache" << url;
         return true;
     }
 
@@ -259,7 +259,7 @@ OffsetIndex::load(const QString& url, qlonglong wc, qlonglong fsize)
         data = QFile.map(0, m_mapFile.size());
         if (data == NULL)
         {
-            QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(idxfilename) << endl;
+            QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(idxfilename);
             return false;
         }
 
@@ -297,9 +297,9 @@ OffsetIndex::load(const QString& url, qlonglong wc, qlonglong fsize)
     return true;
 }
 
-inline gulong offset_index::load_page(glong page_idx)
+inline ulong offset_index::load_page(glong page_idx)
 {
-    gulong nentr = ENTR_PER_PAGE;
+    ulong nentr = ENTR_PER_PAGE;
     if (page_idx == glong(wordoffset.size() - 2))
         if ((nentr = wordcount % ENTR_PER_PAGE) == 0)
             nentr = ENTR_PER_PAGE;
