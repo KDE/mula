@@ -23,7 +23,7 @@
 #include "dictionaryinfo.h"
 #include "translation.h"
 
-#include <QtPlugin>
+#include <QtCore/QtPlugin>
 #include <QtCore/QUrl>
 
 namespace MulaCore
