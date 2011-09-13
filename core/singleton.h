@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MULA_CORE_SINGLETON
-#define MULA_CORE_SINGLETON
+#ifndef MULA_CORE_SINGLETON_H
+#define MULA_CORE_SINGLETON_H
 
 #include <QtCore/QObject>
 #include <QtCore/QMutex>
@@ -172,4 +172,4 @@ namespace MulaCore
         Type( QObject* parent );\
         Q_DISABLE_COPY(Type)
 
-#endif // MULA_CORE_SINGLETON
+#endif // MULA_CORE_SINGLETON_H
