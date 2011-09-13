@@ -21,7 +21,6 @@
 #define MULA_CORE_DICTIONARYMANAGER_H
 
 #include "dictionaryplugin.h"
-
 #include "dictionarydata.h"
 #include "singleton.h"
 
