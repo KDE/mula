@@ -47,3 +47,10 @@ IndexFile::~IndexFile()
 {
 }
 
+IndexFile::wordEntryOffset() const
+{
+}
+
+IndexFile::wordEntrysize() const
+{
+}

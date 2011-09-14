@@ -20,40 +20,47 @@
 #ifndef MULA_PLUGIN_STARDICT_DICTIONARY_H
 #define MULA_PLUGIN_STARDICT_DICTIONARY_H
 
-namespace MulaPluginStardict
+#include "dictionarybase.h"
+
+#include <QtCore/QString>
+
+namespace MulaPluginStarDict
 {
     class Dictionary : public DictionaryBase
     {
         public:
-            Dictionary() {}
-            virtual ~Dictionary() {}
+            Dictionary();
+            virtual ~Dictionary();
 
             bool load(const QString& ifoFileName);
 
-            ulong articlesCount();
+            int articlesCount() const;
 
-            const QString& dictionaryName();
+            const QString& dictionaryName() const;
 
-            const QString& ifoFileName();
+            const QString& ifoFileName() const;
 
-            const QString key(qlong index);
+            const QString& key(ulong index) const;
 
-            QString data(qlong index);
+            const QString& data(ulong index);
 
-            void keyAndData(qlong index, const QStringList key, quint32 *offset, quint32 *size);
+            void keyAndData(ulong index, QString& key, quint32 *offset, quint32 *size);
 
-            bool lookup(const QString str, qlong &index);
+            bool lookup(const QString string, ulong &index);
 
-            bool lookupWithRule(GPatternSpec *pspec, glong *aIndex, int iBuffLen);
+            bool lookupWithRule(const QString& pattern, ulong *aIndex, int iBuffLen);
+
+            DictionaryZip* compressedDictionaryFile() const;
+            QFile* dictionaryFile() const;
+
+            QString sameTypeSequence() const;
+            void setSameTypeSequence(const QString& sameTypeSequence);
 
         private:
-            bool loadIfoFile(const QString& ifoFileName, ulong &indexFileSize);
+            bool loadIfoFile(const QString& ifoFileName);
 
-            QString m_ifoFileName;
-            ulong m_wordCount;
-            QString m_bookName;
-
-            QSharedPointer<indexFile> m_indexFile;
+            class Private;
+            Private *const d;
     };
 }
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(multitran_SRCS
-    stardict.cpp
+    multitran.cpp
 )
 
 qt4_automoc(${multitran_SRCS})

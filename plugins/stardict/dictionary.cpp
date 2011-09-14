@@ -19,6 +19,16 @@
 
 #include "dictionary.h"
 
+#include "dictionaryzip.h"
+#include "dictionaryinfo.h"
+#include "indexfile.h"
+#include "wordlistindex.h"
+#include "offsetindex.h"
+
+#include <QtCore/QScopedPointer>
+#include <QtCore/QFile>
+#include <QtCore/QDebug>
+
 using namespace MulaPluginStarDict;
 
 class Dictionary::Private
@@ -26,6 +36,7 @@ class Dictionary::Private
     public:
         Private()
             : wordCount(0)
+            , indexFileSize(0)
         {   
         }
 
@@ -38,18 +49,19 @@ class Dictionary::Private
         QString bookName;
 
         QScopedPointer<IndexFile> indexFile;
-}
+        int indexFileSize;
+};
 
 Dictionary::Dictionary()
     : d(new Private)
 {
 }
 
-Dictoinary::~Dictionary()
+Dictionary::~Dictionary()
 {
 }
 
-ulong
+int
 Dictionary::articlesCount() const
 {   
     return d->wordCount;
@@ -58,7 +70,7 @@ Dictionary::articlesCount() const
 const QString&
 Dictionary::dictionaryName() const
 {   
-    return d->bookname;
+    return d->bookName;
 }   
 
 const QString&
@@ -68,30 +80,30 @@ Dictionary::ifoFileName() const
 }   
 
 const QString&
-Dictionary::key(qlong index) const
+Dictionary::key(ulong index) const
 {   
     return d->indexFile->key(index);
 }   
 
-QString
-Dictionary::data(qlong index)
+const QString&
+Dictionary::data(ulong index)
 {
     d->indexFile->data(index);
-    return DictionaryBase::wordData(d->indexFile->wordEntryOffset, d->indexFile->wordEntrySize);
+    return DictionaryBase::wordData(d->indexFile->wordEntryOffset(), d->indexFile->wordEntrySize());
 }
 
 void
-Dictionary::keyAndData(qlong index, const QStringList key, quint32 *offset, quint32 *size)
+Dictionary::keyAndData(ulong index, QString& key, quint32 *offset, quint32 *size)
 {
-    *key = d->indexFile->keyAndData(index);
-    *offset = d->indexFile->wordEntryOffset;
-    *size = d->indexFile->wordEntrySize;
+    key = d->indexFile->keyAndData(index);
+    *offset = d->indexFile->wordEntryOffset();
+    *size = d->indexFile->wordEntrySize();
 }
 
 bool
-Dictionary::lookup(const QString str, qlong &index)
+Dictionary::lookup(const QString string, ulong &index)
 {
-    return d->indexFile->lookup(str, index);
+    return d->indexFile->lookup(string, index);
 }
 
 bool
@@ -103,10 +115,17 @@ Dictionary::load(const QString& ifoFilePath)
     QString completeFilePath = ifoFilePath;
     completeFilePath.replace(completeFilePath.length() - sizeof("ifo") + 1, sizeof("ifo") - 1, "dict.dz");
 
-    if (completeFilePath.exists())
+    if (QFile(completeFilePath).exists())
     {
-        d->dictionaryDZFile.reset(new DictionaryZip);
-        if (!d->dictionaryDZFile->open(completeFilePath, 0))
+        DictionaryZip *dictionaryZip = compressedDictionaryFile();
+        if (!dictionaryZip)
+        {
+            delete dictionaryZip;
+            dictionaryZip = 0;
+        }
+        
+        dictionaryZip = new DictionaryZip();
+        if (!dictionaryZip->open(completeFilePath, 0))
         {
             qDebug() << "Failed to open file:" << completeFilePath;
             return false;
@@ -115,8 +134,16 @@ Dictionary::load(const QString& ifoFilePath)
     else
     {
         completeFilePath.remove(completeFilePath.length() - sizeof(".dz") + 1, sizeof(".dz") - 1);
-        d->dictionaryFile(completeFilePath);
-        if( !d->dictionaryFile.open( QIODevice::ReadOnly ) )
+
+        QFile *uncompressedDictionaryFile = dictionaryFile();
+        if (!uncompressedDictionaryFile)
+        {
+            delete uncompressedDictionaryFile;
+            uncompressedDictionaryFile = 0;
+        }
+        
+        uncompressedDictionaryFile = new QFile(completeFilePath);
+        if( uncompressedDictionaryFile->open( QIODevice::ReadOnly ) )
         {
             qDebug() << "Failed to open file:" << completeFilePath;
             return -1;
@@ -126,17 +153,17 @@ Dictionary::load(const QString& ifoFilePath)
     completeFilePath = ifoFilePath;
     completeFilePath.replace(completeFilePath.length() - sizeof("ifo") + 1, sizeof("ifo") - 1, "idx.gz");
 
-    if (completeFilePath.exists())
+    if (QFile(completeFilePath).exists())
     {
-        d->indexFile.reset(new wordListIndex);
+        d->indexFile.reset(new WordListIndex);
     }
     else
     {
         completeFilePath.remove(completeFilePath.length() - sizeof(".gz") + 1, sizeof(".gz") - 1);
-        d->indexFile.reset(new offsetIndex);
+        d->indexFile.reset(new OffsetIndex);
     }
 
-    if (!d->indexFile->load(completeFilePath, wordCount, indexFileSize))
+    if (!d->indexFile->load(completeFilePath, d->wordCount, d->indexFileSize))
         return false;
 
     return true;
@@ -145,33 +172,33 @@ Dictionary::load(const QString& ifoFilePath)
 bool
 Dictionary::loadIfoFile(const QString& ifoFileName)
 {
-    DictonaryInfo dictionaryInfo;
+    DictionaryInfo dictionaryInfo;
     if (!dictionaryInfo.loadFromIfoFile(ifoFileName, false))
         return false;
 
-    if (dictionaryInfo.wordcount() == 0)
+    if (dictionaryInfo.wordCount() == 0)
         return false;
 
     d->ifoFileName = dictionaryInfo.ifoFileName();
-    d->wordcount = dictionaryInfo.wordcount();
-    d->bookname = dictionaryInfo.bookname();
+    d->wordCount = dictionaryInfo.wordCount();
+    d->bookName = dictionaryInfo.bookName();
 
     d->indexFileSize = dictionaryInfo.indexFileSize();
 
-    d->sameTypeSequence = dictionaryInfo.sameTypeSequence();
+    setSameTypeSequence(dictionaryInfo.sameTypeSequence());
 
     return true;
 }
 
 bool
-Dictionary::lookupWithRule(const QString *pattern, qlong *aIndex, int iBuffLen)
+Dictionary::lookupWithRule(const QString& pattern, ulong *aIndex, int iBuffLen)
 {
     int indexCount = 0;
 
     QRegExp rx(pattern);
     rx.setPatternSyntax(QRegExp::Wildcard);
 
-    for (int i = 0; i < narticles() && indexCount < iBuffLen - 1; ++i)
+    for (int i = 0; i < articlesCount() && indexCount < iBuffLen - 1; ++i)
         if (rx.exactMatch(key(i)))
             aIndex[indexCount++] = i;
 
@@ -180,3 +207,26 @@ Dictionary::lookupWithRule(const QString *pattern, qlong *aIndex, int iBuffLen)
     return (indexCount > 0);
 }
 
+DictionaryZip*
+Dictionary::compressedDictionaryFile() const
+{
+    return DictionaryBase::compressedDictionaryFile();
+}
+
+QFile*
+Dictionary::dictionaryFile() const
+{
+    return DictionaryBase::dictionaryFile();
+}
+
+QString
+Dictionary::sameTypeSequence() const
+{
+    return DictionaryBase::sameTypeSequence();
+}
+
+void
+Dictionary::setSameTypeSequence(const QString& sameTypeSequence)
+{
+    DictionaryBase::setSameTypeSequence(sameTypeSequence);
+}

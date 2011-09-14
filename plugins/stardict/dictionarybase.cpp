@@ -19,7 +19,10 @@
 
 #include "dictionarybase.h"
 
-#include <QtCore/QScopedPointer>
+#include "cacheitem.h"
+#include "dictionaryzip.h"
+
+#include <QtCore/QFile>
 
 using namespace MulaPluginStarDict;
 
@@ -27,7 +30,9 @@ class DictionaryBase::Private
 {
     public:
         Private()
-            : cacheCur(0)
+            : dictionaryFile(new QFile)
+            , compressedDictionaryFile(0)
+            , cacheCur(0)
         {   
         }
 
@@ -36,12 +41,12 @@ class DictionaryBase::Private
         }
 
         QString sameTypeSequence;
-        QFile dictionaryFile;
-        QScopedPointer<DictionaryZip> dictionaryDZFile;
+        QFile *dictionaryFile;
+        DictionaryZip *compressedDictionaryFile;
 
         QList<CacheItem> cacheItemList;
-        qint cacheCur;
-}
+        int cacheCur;
+};
 
 DictionaryBase::DictionaryBase()
     : d(new Private)
@@ -50,36 +55,39 @@ DictionaryBase::DictionaryBase()
 
 DictionaryBase::~DictionaryBase()
 {
+    delete d->compressedDictionaryFile;
+    delete d->dictionaryFile;
+    delete d;
 }
 
-QString
+const QByteArray&
 DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
 {
     foreach(CacheItem cacheItem, d->cacheItemList)
     {
-        if (cacheItem.data() && cacheItem.offset() == indexItemOffset)
-            return d->cacheItem.data();
+        if (!cacheItem.data().isEmpty() && cacheItem.offset() == indexItemOffset)
+            return cacheItem.data();
     }
 
-    if (d->dictionaryFile.isOpen())
-        d->dictionaryFile.seek(indexItemOffset);
+    if (d->dictionaryFile->isOpen())
+        d->dictionaryFile->seek(indexItemOffset);
 
     QByteArray data;
     if (!d->sameTypeSequence.isEmpty())
     {    
-        QByteArray originalData;
+        QString originalData;
 
-        if (d->dictionaryFile.isOpen())
-            originalData = d->dictionaryFile.read(indexItemSize);
+        if (d->dictionaryFile->isOpen())
+            originalData = d->dictionaryFile->read(indexItemSize);
         else 
-            originalData = d->dictionaryDZFile->read(indexItemOffset, indexItemSize);
+            originalData = d->compressedDictionaryFile->read(indexItemOffset, indexItemSize);
 
         quint32 sdata;
-        qint sameTypeSequenceLength = d->sameTypeSequence.length();
+        int sameTypeSequenceLength = d->sameTypeSequence.length();
         sdata = indexItemSize + sizeof(quint32) + sameTypeSequenceLength;
         //if the last item's size is determined by the end up '\0',then +=sizeof(gchar);
         //if the last item's size is determined by the head guint32 type data,then +=sizeof(guint32);
-        switch (d->sameTypeSequence[sameTypeSequenceLength - 1])
+        switch (d->sameTypeSequence[sameTypeSequenceLength - 1].toAscii())
         {
         case 'm':
         case 't':
@@ -94,7 +102,7 @@ DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
             sdata += sizeof(quint32);
             break;
         default:
-            if (d->sameTypeSequence[sameTypesequenceLength - 1].isUpper())
+            if (d->sameTypeSequence[sameTypeSequenceLength - 1].isUpper())
                 sdata += sizeof(quint32);
             else
                 sdata += sizeof(char);
@@ -195,7 +203,7 @@ DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
         if (d->dictionaryFile)
             data = d->dictionaryfile.read(indexItemSize);
         else
-            d->dictionaryDZFile->read(data[1], indexItemOffset, indexItemSize);
+            d->compressedDictionaryFile->read(data[1], indexItemOffset, indexItemSize);
 
         *reinterpret_cast<quint32 *>(data) = idxitem_size + sizeof(guint32);
     }
@@ -214,10 +222,14 @@ DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
 bool
 DictionaryBase::containFindData()
 {
-    if (m_sameTypeSequence.isEmpty())
+    if (d->sameTypeSequence.isEmpty())
         return true;
 
-    return m_sameTypeSequence.findFirstOf("mlgxty") != std::string::npos;
+    foreach (const QChar& ch, QString("mlgxty"))
+    {
+        if (d->sameTypeSequence.contains(ch))
+            return true;
+    }
 }
 
 bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset, quint32 indexItemSize, char *originalData)
@@ -226,23 +238,23 @@ bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset,
     QVector<bool> wordFind(nWord, false);
     int nfound = 0;
 
-    if (d->dictionaryFile.isOpen())
-        d->dictionaryFile.seek(indexItemOffset);
+    if (d->dictionaryFile->isOpen())
+        d->dictionaryFile->seek(indexItemOffset);
 
-    if (d->dictionaryFile.isOpen())
-        d->dictionaryFile.read(originalData, 1*indexItemSize);
+    if (d->dictionaryFile->isOpen())
+        d->dictionaryFile->read(originalData, 1*indexItemSize);
     else
-        d->dictionaryDZFile->read(originalData, indexItemOffset, indexItemSize);
+        d->compressedDictionaryFile->read(originalData, indexItemOffset, indexItemSize);
 
     char *p = originalData;
     quint32 ssec;
     int j;
     if (!d->sameTypeSequence.empty())
     {
-        qint sSametypeSequence = sameTypeSequence.length();
+        int sSametypeSequence = sameTypeSequence.length();
         for (int i = 0; i < sSameTypeSequence - 1; ++i)
         {
-            switch (m_sameTypeSequence[i])
+            switch (d->sameTypeSequence[i])
             {
             case 'm':
             case 't':
@@ -266,7 +278,7 @@ bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset,
                 break;
 
             default:
-                if (m_sameTypeSequence[i].isUpper())
+                if (d->sameTypeSequence[i].isUpper())
                 {
                     ssec = *reinterpret_cast<quint32 *>(p);
                     ssec += sizeof(quint32);
@@ -323,6 +335,7 @@ bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset,
 
                 if (nfound == nWord)
                     return true;
+
                 ssec = strlen(p) + 1;
                 p += ssec;
                 break;
@@ -343,3 +356,20 @@ bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset,
     return false;
 }
 
+DictionaryZip*
+DictionaryBase::compressedDictionaryFile() const
+{
+    return d->compressedDictionaryFile;
+}
+
+DictionaryZip*
+DictionaryBase::sameTypeSequence() const
+{
+    return d->sameTypeSequence;
+}
+
+void
+DictionaryBase::setSameTypeSequence(const QString& sameTypeSequence)
+{
+    d->sameTypeSequence = sameTypeSequence;
+}

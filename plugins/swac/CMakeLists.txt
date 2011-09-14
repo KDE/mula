@@ -12,7 +12,7 @@ if(MULA_BUILD_ALL)
 endif()
 
 set_target_properties(mula_plugin_swac PROPERTIES VERSION ${MULA_VERSION_STRING} SOVERSION ${MULA_VERSION_STRING} DEFINE_SYMBOL MAKE_MULA_PLUGIN_SWAC_LIB)
-target_link_libraries(mula_plugin_sawc ${MULA_CORE_LIBS})
+target_link_libraries(mula_plugin_swac ${MULA_CORE_LIBS})
 
 install(
     TARGETS

@@ -20,66 +20,28 @@
 #ifndef MULA_PLUGIN_STARDICT_OFFSETINDEX_H
 #define MULA_PLUGIN_STARDICT_OFFSETINDEX_H
 
-namespace MulaPluginStardict
+namespace MulaPluginStarDict
 {
-    class OffsetIndex : public indexFile
+    class OffsetIndex : public IndexFile
     {
         public:
-            offsetIndex();
-            virtual ~offsetIndex();
+            OffsetIndex();
+            virtual ~OffsetIndex();
 
-            bool load(const QString& url, ulong wordCount, ulong fsize);
-            const char *key(qlong index);
+            bool load(const QString& url, ulong wordCount, qulonglong sfile);
+            const QString& key(ulong index);
 
-            void data(qlong index);
-            const char *keyAndData(qlong index);
-            bool lookup(const char *str, qlong &index);
+            void data(ulong index);
+            const QString& keyAndData(ulong index);
+            bool lookup(const QString &string, ulong &index);
+
+            virtual quint32 wordEntryOffset() const;
+            virtual quint32 wordEntrySize() const;
 
         private:
-            static const qint ENTR_PER_PAGE = 32;
-            static const char *CACHE_MAGIC;
-
-            QVector<quint32> wordOffset;
-            QFile indexFile;
-            ulong wordCount;
-
-            char wordEntryBuf[256 + sizeof(quint32)*2]; // The length of "word_str" should be less than 256. See src/tools/DICTFILE_FORMAT.
-            struct indexEntry
-            {    
-                qlong index;
-                QString keyStr;
-                void assign(qlong i, const QString& str) 
-                {    
-                    index = i; 
-                    keystr.assign(str);
-                }    
-            };   
-            indexEntry first, last, middle, realLast;
-
-            struct pageEntry
-            {    
-                char *keyStr;
-                quint32 off; 
-                quint32 size;
-            };   
-
-            QByteArray pageData;
-            struct page_t
-            {    
-                page_t()
-                    :index(-1)
-                {    
-                }    
-
-                void fill(gchar *data, gint nent, glong idx_);
-
-                qlong index;
-                pageEntry entries[ENTR_PER_PAGE];
-            } page;
-
-            ulong loadPage(qlong pageIndex);
-            const char *readFirstOnPageKey(qlong pageIndex);
-            const char *firstOnPageKey(qlong pageIndex);
+            ulong loadPage(ulong pageIndex);
+            const QString& readFirstOnPageKey(ulong pageIndex);
+            const QString& firstOnPageKey(ulong pageIndex);
             bool loadCache(const QString& url);
             bool saveCache(const QString& url);
             static QStringList cacheVariant(const QString& url);

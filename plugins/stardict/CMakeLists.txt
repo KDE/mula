@@ -1,7 +1,18 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(stardict_SRCS
+    cacheitem.cpp
+    dictionary.cpp
+    dictionarybase.cpp
+    dictionarycache.cpp
+    dictionaryinfo.cpp
+    dictionaryzip.cpp
+    distance.cpp
+    indexfile.cpp
+    lib.cpp
+    offsetindex.cpp
     stardict.cpp
+    wordlistindex.cpp
 )
 
 qt4_automoc(${stardict_SRCS})

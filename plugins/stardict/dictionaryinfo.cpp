@@ -199,7 +199,7 @@ DictionaryInfo::setBookName(const QString& bookname)
 }
 
 QString
-DictionaryInfo::bookname() const
+DictionaryInfo::bookName() const
 {
     return d->bookname;
 }

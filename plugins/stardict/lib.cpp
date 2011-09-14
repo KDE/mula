@@ -49,9 +49,9 @@ static bool isPureEnglish(const QString str)
     return true;
 }
 
-static inline qint stardictStringCompare(const QString str1, const QString str2)
+static inline int stardictStringCompare(const QString str1, const QString str2)
 {
-    qint a = s1.compare(s2, Qt::CaseInsensitive);
+    int a = s1.compare(s2, Qt::CaseInsensitive);
     if (a == 0)
         return s1.compare(s2);
     else
@@ -95,7 +95,7 @@ void Libs::loadDictionary(const QString& url)
         delete lib;
 }
 
-qlong
+ulong
 Libs::articleCount(int dictionaryIndex) const
 {
     return oLib.at(dictionaryIndex)->articleCount();
@@ -107,20 +107,20 @@ Libs::dictionaryName(int index) const
     return oLib.at(index)->dictionaryName();
 }
 
-qint
+int
 Libs::dictionaryCount() const
 {
     return oLib.size();
 }
 
 const QByteArray
-Libs::poWord(qlong keyIndex, int libIndex) const
+Libs::poWord(ulong keyIndex, int libIndex) const
 {
     return oLib.at(libIndex)->key(keyIndex);
 }
 
 QString
-Libs::poWordData(qlong dataIndex, int libIndex)
+Libs::poWordData(ulong dataIndex, int libIndex)
 {
     if (iIndex == INVALID_INDEX)
         return NULL;
@@ -129,7 +129,7 @@ Libs::poWordData(qlong dataIndex, int libIndex)
 }
 
 bool
-Libs::lookupWord(const char* sWorda, qlong& iWordIndex, int libIndex)
+Libs::lookupWord(const char* sWorda, ulong& iWordIndex, int libIndex)
 {
     return oLib.at(libIndex)->lookup(sWord, iWordIndex);
 }
@@ -223,7 +223,7 @@ Libs::reload(const QStringList& dictionaryDirs,
 }
 
 const char *
-Libs::poCurrentWord(qlong * iCurrent)
+Libs::poCurrentWord(ulong *iCurrent)
 {
     const char *poCurrentWord = NULL;
     const char *word;
@@ -252,7 +252,7 @@ Libs::poCurrentWord(qlong * iCurrent)
 }
 
 const char *
-Libs::poNextWord(const char *sWord, qlong *iCurrent)
+Libs::poNextWord(const char *sWord, ulong *iCurrent)
 {
     // the input can be:
     // (word,iCurrent),read word,write iNext to iCurrent,and return next word. used by TopWin::NextCallback();
@@ -314,7 +314,7 @@ Libs::poNextWord(const char *sWord, qlong *iCurrent)
 }
 
 const char *
-Libs::poPreviousWord(qlong *iCurrent)
+Libs::poPreviousWord(ulong *iCurrent)
 {
     // used by TopWin::PreviousCallback(); the iCurrent is cached by AppCore::TopWinWordChange();
     const char *poCurrentWord = NULL;
@@ -427,9 +427,9 @@ bool Libs::removePattern(QString pattern, QString originalWord, bool found)
         }
 }
 
-bool Libs::lookupSimilarWord(const QString sWord, qlong & iWordIndex, int iLib)
+bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
 {
-    qlong iIndex;
+    ulong iIndex;
     bool found = false;
     QString caseString;
 
@@ -824,7 +824,7 @@ bool Libs::lookupSimilarWord(const QString sWord, qlong & iWordIndex, int iLib)
     return found;
 }
 
-bool Libs::simpleLookupWord(const QString sWord, qlong &iWordIndex, int iLib)
+bool Libs::simpleLookupWord(const QString sWord, ulong &iWordIndex, int iLib)
 {
     bool found = oLib[iLib]->lookup(sWord, iWordIndex);
     if (!found)
@@ -868,7 +868,7 @@ bool Libs::lookupWithFuzzy(const QString sWord, QString reslist[], int sresList,
     bool found = false;
     EditDistance oEditDistance;
 
-    qlong iCheckWordLen;
+    ulong iCheckWordLen;
     const QString sCheck;
     QString ucs4Str1;
     QString ucs4Str2;
@@ -959,10 +959,10 @@ inline bool lessForCompare(const char *lh, const char *rh)
     return stardict_strcmp(lh, rh) < 0;
 }
 
-qint Libs::lookupWithRule(const gchar *word, gchar **ppMatchWord)
+int Libs::lookupWithRule(const gchar *word, gchar **ppMatchWord)
 {
-    glong aiIndex[MAX_MATCH_ITEM_PER_LIB + 1];
-    gint iMatchCount = 0;
+    ulong aiIndex[MAX_MATCH_ITEM_PER_LIB + 1];
+    int iMatchCount = 0;
     GPatternSpec *pspec = g_pattern_spec_new(word);
 
     for (QVector<Dict *>::size_type iLib = 0; iLib<oLib.size(); ++iLib)

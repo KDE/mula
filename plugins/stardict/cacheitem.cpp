@@ -35,8 +35,8 @@ class CacheItem::Private
         }
  
         quint32 offset;
-        char *data;
-}
+        QByteArray data;
+};
 
 CacheItem::CacheItem()
     : d(new Private)
@@ -45,16 +45,21 @@ CacheItem::CacheItem()
 
 CacheItem::~CacheItem()
 {
-    ::free(data);
 }
 
 void
 CacheItem::setData(char *data)
 {
+    d->data.setRawData(data, QByteArray(data).size());
+}
+
+void
+CacheItem::setData(QByteArray data)
+{
     d->data = data;
 }
 
-char *
+QByteArray&
 CacheItem::data() const
 {
     return d->data;

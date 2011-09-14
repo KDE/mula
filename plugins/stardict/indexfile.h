@@ -20,19 +20,22 @@
 #ifndef MULA_PLUGIN_STARDICT_INDEXFILE_H
 #define MULA_PLUGIN_STARDICT_INDEXFILE_H
 
-namespace MulaPluginStardict
+namespace MulaPluginStarDict
 {
-    class indexFile
+    class IndexFile
     {
         public:
-            indexFile(QObject *object);
-            virtual ~indexFile();
+            IndexFile(QObject *object);
+            virtual ~IndexFile();
 
-            virtual bool load(const QString& url, ulong wc, ulong fsize) = 0;
-            virtual const QString key(qlong idx) = 0;
-            virtual void data(qlong idx) = 0;
-            virtual const QString keyAndData(qlong idx) = 0;
-            virtual bool lookup(const QString str, qlong &index) = 0;
+            virtual bool load(const QString& url, ulong wc, qulonglong sfile) = 0;
+            virtual const QString& key(ulong index) = 0;
+            virtual void data(ulong index) = 0;
+            virtual const QString& keyAndData(ulong index) = 0;
+            virtual bool lookup(const QString& string, ulong &index) = 0;
+
+            virtual quint32 wordEntryOffset() const;
+            virtual quint32 wordEntrySize() const;
 
         private:
             class Private;

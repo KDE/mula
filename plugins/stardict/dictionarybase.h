@@ -22,17 +22,27 @@
 
 #include <QtCore/QStringList>
 
-namespace MulaPluginStardict
+class QFile;
+
+namespace MulaPluginStarDict
 {
+    class DictionaryZip;
+
     class DictionaryBase
     {
         public:
             DictionaryBase();
             virtual ~DictionaryBase();
 
-            QString wordData(quint32 indexItemOffset, quint32 indexItemSize);
+            const QByteArray& wordData(quint32 indexItemOffset, quint32 indexItemSize);
             bool containFindData();
             bool fineData(const QStringList &searchWords, quint32 indexItemOffset, quint32 indexItemSize, QString originalData);
+
+            DictionaryZip* compressedDictionaryFile() const;
+            QFile* dictionaryFile() const;
+
+            QString sameTypeSequence() const;
+            void setSameTypeSequence(const QString& sameTypeSequence);
 
         private:
             class Private;

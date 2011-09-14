@@ -20,19 +20,22 @@
 #ifndef MULA_PLUGIN_STARDICT_WORDLISTINDEX_H
 #define MULA_PLUGIN_STARDICT_WORDLISTINDEX_H
 
-namespace MulaPluginStardict
+namespace MulaPluginStarDict
 {
-    class WordListIndex : public indexFile
+    class WordListIndex : public IndexFile
     {       
         public:
             WordListIndex();
             virtual ~WordListIndex();
 
-            bool load(const QString& url, ulong wc, ulong fsize);
-            const char *key(qlong index);
-            void data(qlong index);
-            const char *keyAndData(qlong index);
-            bool lookup(const char *str, qlong &index);
+            bool load(const QString& url, ulong wc, qulonglong sffile);
+            const QString& key(ulong index);
+            void data(ulong index);
+            const QString& keyAndData(ulong index);
+            bool lookup(const QString& string, ulong &index);
+
+            virtual quint32 wordEntryOffset() const;
+            virtual quint32 wordEntrySize() const;
 
         private:
             class Private;

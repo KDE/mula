@@ -69,14 +69,14 @@ WordListIndex::load(const QString& filePath, qulonglong wc, qulonglong sfile)
     return true;
 }
 
-const QString
-WordListIndex::key(qlong index) const
+const QString&
+WordListIndex::key(ulong index) const
 {
     return d->wordList.at(index);
 }
 
 void
-WordListIndex::data(qlong index)
+WordListIndex::data(ulong index)
 {
     char *p1 = d->wordList[idx] + strlen(wordlist[idx]) + sizeof(char);
     wordentry_offset = g_ntohl(*reinterpret_cast<quint32 *>(p1));
@@ -84,36 +84,36 @@ WordListIndex::data(qlong index)
     wordentry_size = g_ntohl(*reinterpret_cast<quint32 *>(p1));
 }
 
-const QByteArray
-WordListIndex::keyAndData(qlong index)
+const QByteArray&
+WordListIndex::keyAndData(ulong index)
 {
     data(index);
     return key(index);
 }
 
 bool
-WordListIndex::lookup(const char *str, qlong &index)
+WordListIndex::lookup(const QString &string, ulong &index)
 {
     bool found = false;
-    qlong iTo = d->wordList.size() - 2;
+    ulong iTo = d->wordList.size() - 2;
 
-    if (stardictStringCompare(str, key(0)) < 0)
+    if (stardictStringCompare(string, key(0)) < 0)
     {
         index = 0;
     }
-    else if (stardictStringCompare(str, key(iTo)) > 0)
+    else if (stardictStringCompare(string, key(iTo)) > 0)
     {
         index = INVALID_INDEX;
     }
     else
     {
-        qlong iThisIndex = 0;
-        qlong iFrom = 0;
-        qint cmpint;
+        ulong iThisIndex = 0;
+        ulong iFrom = 0;
+        int cmpint;
         while (iFrom <= iTo)
         {
             iThisIndex = (iFrom + iTo) / 2;
-            cmpint = stardictStringCompare(str, key(iThisIndex));
+            cmpint = stardictStringCompare(string, key(iThisIndex));
             if (cmpint > 0)
             {
                 iFrom = iThisIndex + 1;
@@ -137,3 +137,14 @@ WordListIndex::lookup(const char *str, qlong &index)
     return found;
 }
 
+quint32
+WordListIndex::wordEntryOffset() const
+{
+    return IndexFile::wordEntryOffset();
+}
+
+quint32
+WordListIndex::wordEntrySize() const
+{
+    return IndexFile::wordEntrySize();
+}

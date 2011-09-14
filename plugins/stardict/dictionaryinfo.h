@@ -23,12 +23,12 @@
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
 
-namespace MulaPluginStardict
+namespace MulaPluginStarDict
 {
     // This class contains all information about the dictionary
     // Note that the dictionary must have at least a bookname, a wordcount and a 
     // idxfilesize, or the load will fail.
-    class DictonaryInfo
+    class DictionaryInfo
     {
         public:
             DictionaryInfo();
@@ -43,10 +43,10 @@ namespace MulaPluginStardict
             quint32 wordCount() const;
 
             void setBookName(const QString& bookname);
-            QString bookname() const;
+            QString bookName() const;
 
             void setAuthor(const QString& author);
-            QString author() const
+            QString author() const;
 
             void setEmail(const QString& email);
             QString email() const;

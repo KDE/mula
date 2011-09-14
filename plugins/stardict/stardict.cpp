@@ -32,7 +32,7 @@
 #include <QtCore/QStack>
 #include <QtCore/QDebug>
 
-using namespace MulaPluginStardict;
+using namespace MulaPluginStarDict;
 
 const int MaxFuzzy = 24;
 

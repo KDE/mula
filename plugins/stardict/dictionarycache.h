@@ -20,7 +20,7 @@
 #ifndef MULA_PLUGIN_STARDICT_DICTIONARYCACHE_H
 #define MULA_PLUGIN_STARDICT_DICTIONARYCACHE_H
 
-namespace MulaPluginStardict
+namespace MulaPluginStarDict
 {
     class DictionaryCache
     {

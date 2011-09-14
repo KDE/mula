@@ -28,18 +28,20 @@ namespace MulaPluginStarDict {
 
     class DictionaryZip
     {
-        DictionaryZip();
-        virtual ~DictionaryZip();
+        public:
+            DictionaryZip();
+            virtual ~DictionaryZip();
 
-        bool open(const QString& fileName, int computeCRC);
-        void close();
-        QString read(char *buffer, unsigned long start, unsigned long size);
+            bool open(const QString& fileName, int computeCRC);
+            void close();
 
-    private:
-        int readHeader(const QString &filename, int computeCRC);
+            QString read(unsigned long start, unsigned long size);
 
-        class Private;
-        Private *const d;
+        private:
+            int readHeader(const QString &filename, int computeCRC);
+
+            class Private;
+            Private *const d;
     };
 }
 

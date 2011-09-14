@@ -47,27 +47,27 @@ class Libs
                     const QStringList& orderList,
                     const QStringList& disableList);
 
-        qlong articleCount(int idict);
+        ulong articleCount(int idict);
 
         const QString& dictionaryName(int idict);
 
-        qint dictionaryCount();
+        int dictionaryCount();
 
-        const char *poWord(qlong iIndex, int iLib);
+        const char *poWord(ulong iIndex, int iLib);
 
-        QString poWordData(qlong iIndex, int iLib);
+        QString poWordData(ulong iIndex, int iLib);
 
-        const char *poCurrentWord(qlong *iCurrent);
-        const char *poNextWord(const char *word, qlong *iCurrent);
-        const char *poPreviousWord(qlong *iCurrent);
+        const char *poCurrentWord(ulong *iCurrent);
+        const char *poNextWord(const char *word, ulong *iCurrent);
+        const char *poPreviousWord(ulong *iCurrent);
 
-        bool lookupWord(const char* sWorda, qlong& iWordIndex, int iLib);
+        bool lookupWord(const char* sWorda, ulong& iWordIndex, int iLib);
 
-        bool lookupSimilarWord(const char* sWord, glong & iWordIndex, int iLib);
-        bool simpleLookupWord(const char* sWord, glong & iWordIndex, int iLib);
+        bool lookupSimilarWord(const char* sWord, ulong & iWordIndex, int iLib);
+        bool simpleLookupWord(const char* sWord, ulong & iWordIndex, int iLib);
 
-        bool lookupWithFuzzy(const char *sWord, QStringList reslist, qint reslistSize, gint iLib);
-        qint lookupWithRule(const char *sWord, QStringList reslist);
+        bool lookupWithFuzzy(const char *sWord, QStringList reslist, int reslistSize, int iLib);
+        int lookupWithRule(const char *sWord, QStringList reslist);
         bool lookupData(const char *sWord, QStringList reslist);
 
     private:

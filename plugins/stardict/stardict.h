@@ -21,16 +21,17 @@
 #define MULA_PLUGIN_STARDICT_STARDICT_H
 
 #include "lib.h"
+#include "dictionaryinfo.h"
 
-#include "dictplugin.h"
+#include <core/dictionaryplugin.h>
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtCore/QHash>
 
-namespace MulaPluginStardict
+namespace MulaPluginStarDict
 {
-    class StarDict: public QObject, public Mula::DictionaryPlugin
+    class StarDict: public QObject, public MulaCore::DictionaryPlugin
     {
         Q_OBJECT
         Q_INTERFACES(MULA::IDictionaryPlugin)
@@ -43,7 +44,7 @@ namespace MulaPluginStardict
             QString version() const;
             QString description() const;
             QStringList authors() const;
-            Features features() const;
+            MulaCore::DictionaryPlugin::Features features() const;
 
             QStringList availableDictionaries() const;
 
@@ -52,7 +53,7 @@ namespace MulaPluginStardict
             DictionaryInfo dictionaryInfo(const QString &dictionaryUrl);
 
             bool isTranslatable(const QString &dict, const QString &word);
-            Translation translate(const QString &dict, const QString &word);
+            MulaCore::Translation translate(const QString &dict, const QString &word);
 
             virtual QStringList findSimilarWords(const QString &dict, const QString &word);
 

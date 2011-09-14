@@ -33,7 +33,7 @@ class OffsetIndex::Private
         {
         }
 
-        static const qint ENTR_PER_PAGE = 32;
+        static const int ENTR_PER_PAGE = 32;
         static const char *CACHE_MAGIC;
 
         QVector<quint32> wordOffset;
@@ -43,9 +43,9 @@ class OffsetIndex::Private
         char wordEntryBuf[256 + sizeof(quint32)*2]; // The length of "word_str" should be less than 256. See src/tools/DICTFILE_FORMAT.
         struct indexEntry
         {
-            qlong index;
+            ulong index;
             QString keyStr;
-            void assign(qlong i, const QString& str)
+            void assign(ulong i, const QString& str)
             {
                 index = i;
                 keystr.assign(str);
@@ -68,9 +68,9 @@ class OffsetIndex::Private
             {
             }
 
-            void fill(gchar *data, gint nent, glong idx_);
+            void fill(QByteArray data, int nent, ulong index_);
 
-            qlong index;
+            ulong index;
             pageEntry entries[ENTR_PER_PAGE];
         } page;
 }
@@ -78,11 +78,11 @@ class OffsetIndex::Private
 const QString offsetIndex::CACHE_MAGIC = "StarDict's Cache, Version: 0.1";
 
 void
-offsetIndex::page_t::fill(char *data, int nent, qlong index)
+offsetIndex::page_t::fill(char *data, int nent, ulong index)
 {
     idx = index;
     char *p = data;
-    qlong len; 
+    ulong len; 
     for (int i = 0; i < nent; ++i) 
     {    
         entries[i].keystr = p; 
@@ -100,7 +100,7 @@ OffsetIndex::~OffsetIndex()
 }
 
 const QByteArray
-OffsetIndex::readFirstOnPageKey(qlong pageIndex)
+OffsetIndex::readFirstOnPageKey(ulong pageIndex)
 {
     d->indexFile.seek(d->wordoffset[pageIndx]);
     quint spage = d->wordOffset[pageIndex + 1] - d->wordOffset[pageIndex];
@@ -109,7 +109,7 @@ OffsetIndex::readFirstOnPageKey(qlong pageIndex)
 }
 
 const QString
-OffsetIndex::firstOnPageKey(qlonglong pageIndex)
+OffsetIndex::firstOnPageKey(ulonglong pageIndex)
 {
     if (pageIndex < middle.idx)
     {
@@ -242,10 +242,10 @@ OffsetIndex::saveCache(const QString& url)
 }
 
 bool
-OffsetIndex::load(const QString& url, qlonglong wc, qlonglong fsize)
+OffsetIndex::load(const QString& url, ulonglong wc, ulonglong fsize)
 {
     wordcount = wc;
-    qlonglong npages = (wc - 1) / ENTR_PER_PAGE + 2;
+    ulonglong npages = (wc - 1) / ENTR_PER_PAGE + 2;
     wordoffset.resize(npages);
     if (!load_cache(url))
     { //map file will close after finish of block
@@ -297,30 +297,31 @@ OffsetIndex::load(const QString& url, qlonglong wc, qlonglong fsize)
     return true;
 }
 
-inline ulong offset_index::load_page(glong page_idx)
+ulong
+OffsetIndex::loadPage(ulong page_idx)
 {
     ulong nentr = ENTR_PER_PAGE;
-    if (page_idx == glong(wordoffset.size() - 2))
+    if (page_idx == ulong(wordoffset.size() - 2))
         if ((nentr = wordcount % ENTR_PER_PAGE) == 0)
             nentr = ENTR_PER_PAGE;
 
 
     if (page_idx != page.idx)
     {
-        page_data.resize(wordoffset[page_idx + 1] - wordoffset[page_idx]);
-        fseek(idxfile, wordoffset[page_idx], SEEK_SET);
-        fread(&page_data[0], 1, page_data.size(), idxfile);
-        page.fill(&page_data[0], nentr, page_idx);
+        page_data.resize(wordoffset[pageIndex + 1] - wordoffset[page_idx]);
+        fseek(indexFile, wordoffset[pageIndex], SEEK_SET);
+        fread(&pageData[0], 1, pageData.size(), indexFile);
+        page.fill(&pageData[0], nentr, pageIndex);
     }
 
     return nentr;
 }
 
 const QString
-offsetIndex::key(qlong index)
+OffsetIndex::key(ulong index)
 {
     loadPage(idx / ENTR_PER_PAGE);
-    qlong indexInPage = idx % ENTR_PER_PAGE;
+    ulong indexInPage = idx % ENTR_PER_PAGE;
     wordentryOffset = page.entries[idx_in_page].off;
     wordentrySize = page.entries[idx_in_page].size;
 
@@ -328,33 +329,33 @@ offsetIndex::key(qlong index)
 }
 
 void
-offsetIndex::data(qlong index)
+OffsetIndex::data(ulong index)
 {
    key(index);
 }
 
 const QByteArray
-offsetIndex::keyAndData(qlong index)
+OffsetIndex::keyAndData(ulong index)
 {
     return key(index);
 }
 
 bool
-offsetIndex::lookup(const char *str, glong &idx)
+OffsetIndex::lookup(const char *str, ulong &idx)
 {
     bool found = false;
-    qlong iFrom;
-    qlong iTo = m_wordOffset.size() - 2;
-    qint cmpint;
-    qlong iThisIndex;
-    if (stardict_strcmp(str, first.keystr.c_str()) < 0)
+    ulong iFrom;
+    ulong iTo = d->wordOffset.size() - 2;
+    int cmpint;
+    ulong iThisIndex;
+    if (stardictStringCompare(str, first.keystr.c_str()) < 0)
     {
         idx = 0;
         return false;
     }
-    else if (stardict_strcmp(str, real_last.keystr.c_str()) > 0)
+    else if (stardictStringCompare(string, real_last.keystr.c_str()) > 0)
     {
-        idx = INVALID_INDEX;
+        index = INVALID_INDEX;
         return false;
     }
     else
@@ -371,14 +372,14 @@ offsetIndex::lookup(const char *str, glong &idx)
                 iTo = iThisIndex - 1;
             else
             {
-                bFound = true;
+                found = true;
                 break;
             }
         }
-        if (!bFound)
-            idx = iTo;    //prev
+        if (!found)
+            index = iTo;    //prev
         else
-            idx = iThisIndex;
+            index = iThisIndex;
     }
 
     if (!found)
@@ -390,28 +391,40 @@ offsetIndex::lookup(const char *str, glong &idx)
         while (iFrom <= iTo)
         {
             iThisIndex = (iFrom + iTo) / 2;
-            cmpint = stardict_strcmp(str, page.entries[iThisIndex].keystr);
+            cmpint = stardictStringCompare(string, page.entries[iThisIndex].keystr);
             if (cmpint > 0)
                 iFrom = iThisIndex + 1;
             else if (cmpint < 0)
                 iTo = iThisIndex - 1;
             else
             {
-                bFound = true;
+                found = true;
                 break;
             }
         }
 
-        idx *= ENTR_PER_PAGE;
-        if (!bFound)
-            idx += iFrom;    //next
+        index *= ENTR_PER_PAGE;
+        if (!found)
+            index += iFrom;    //next
         else
-            idx += iThisIndex;
+            index += iThisIndex;
     }
     else
     {
-        idx *= ENTR_PER_PAGE;
+        index *= ENTR_PER_PAGE;
     }
+
     return found;
+}
+
+quint32
+OffsetIndex::wordEntryOffset() const
+{
+    return IndexFile::wordEntryOffset();
+}
+
+quint32 wordEntrySize() const
+{
+    return IndexFile::wordEntrySize();
 }
 

@@ -20,16 +20,19 @@
 #ifndef MULA_PLUGIN_STARDICT_CACHEITEM_H
 #define MULA_PLUGIN_STARDICT_CACHEITEM_H
 
-namespace MulaPluginStardict
+#include <QtCore/QByteArray>
+
+namespace MulaPluginStarDict
 {
     class CacheItem
     {
         public:
-            cacheItem();
+            CacheItem();
             virtual ~CacheItem();
 
             void setData(char *data);
-            char *data() const;
+            void setData(QByteArray data);
+            QByteArray& data() const;
 
             void setOffset(quint32 offset);
             quint32 offset() const;
