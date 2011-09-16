@@ -85,7 +85,7 @@ Dictionary::key(ulong index) const
     return d->indexFile->key(index);
 }   
 
-const QString&
+const QString
 Dictionary::data(ulong index)
 {
     d->indexFile->data(index);

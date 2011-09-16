@@ -26,7 +26,7 @@ class CacheItem::Private
     public:
         Private()
             : offset(0)
-            , data(0)
+            , dataSize(0)
         {   
         }
 
@@ -36,6 +36,7 @@ class CacheItem::Private
  
         quint32 offset;
         QByteArray data;
+        quint32 dataSize;
 };
 
 CacheItem::CacheItem()
@@ -75,4 +76,16 @@ quint32
 CacheItem::offset() const
 {
     return d->offset;
+}
+
+void
+CacheItem::setDataSize(quint32 dataSize)
+{
+    d->dataSize = dataSize;
+}
+
+quint32
+CacheItem::dataSize() const
+{
+    return d->dataSize;
 }

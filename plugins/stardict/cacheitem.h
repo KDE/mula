@@ -37,6 +37,9 @@ namespace MulaPluginStarDict
             void setOffset(quint32 offset);
             quint32 offset() const;
 
+            void setDataSize(quint32 dataSize);
+            quint32 dataSize() const;
+
         private:
             class Private;
             Private *const d;

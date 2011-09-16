@@ -40,25 +40,24 @@ class DictionaryCache::Private
         QByteArray byteArray;
         int stamp;
         int count;
-}
+};
 
 DictionaryCache::DictionaryCache()
     : d( new Private )
 {
 }
 
-DictionaryCache::DictionaryCache(int chunk, QByteArray inByteArray, int stamp, int count)
+DictionaryCache::DictionaryCache(int chunk, QByteArray byteArray, int stamp, int count)
     : d( new Private )
 {
     d->chunk = chunk;
-    d->inByteArray = inByteArray;
+    d->byteArray = byteArray;
     d->stamp = stamp;
     d->count = count;
 }
 
 DictionaryCache::~DictionaryCache()
 {
-    ::free(inBuffer);
 }
 
 void
@@ -79,7 +78,7 @@ DictionaryCache::setByteArray(QByteArray byteArray)
     d->byteArray = byteArray;
 }
 
-QByteArray
+QByteArray&
 DictionaryCache::byteArray() const
 {
     return d->byteArray;

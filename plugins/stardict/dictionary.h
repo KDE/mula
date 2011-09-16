@@ -42,7 +42,7 @@ namespace MulaPluginStarDict
 
             const QString& key(ulong index) const;
 
-            const QString& data(ulong index);
+            const QString data(ulong index);
 
             void keyAndData(ulong index, QString& key, quint32 *offset, quint32 *size);
 

@@ -19,10 +19,16 @@
 
 #include "dictionaryzip.h"
 
-#include <QtGlobal>
+#include "dictionarycache.h"
 
-#include <QtCore/QDebug>>
+#include <QtCore/QtGlobal>
+
+#include <QtCore/QDebug>
 #include <QtCore/QString>
+#include <QtCore/QFile>
+
+#include <zlib.h>
+
 #ifdef Q_OS_UNIX
 #include <unistd.h>
 #endif
@@ -33,6 +39,8 @@
 #include <fcntl.h>
 
 #include <sys/stat.h>
+
+using namespace MulaPluginStarDict;
 
 #define USE_CACHE 1
 
@@ -114,8 +122,7 @@ enum DictionaryFormat {
     DICTIONARY_TEXT       = 1,
     DICTIONARY_GZIP       = 2,
     DICTIONARY_DZIP       = 3,
-}
-
+};
 
 class DictionaryZip::Private
 {
@@ -149,8 +156,8 @@ class DictionaryZip::Private
         {   
         }   
  
-        const unsigned char *start;	    /* start of mmap'd area */
-        const unsigned char *end;	    /* end of mmap'd area */
+        unsigned char *start;	    /* start of mmap'd area */
+        unsigned char *end;	    /* end of mmap'd area */
         unsigned long size;		        /* size of mmap */
 
         int type;
@@ -177,7 +184,7 @@ class DictionaryZip::Private
         unsigned long compressedLength;
         QList<DictionaryCache> cache;
         QFile mapFile;
-}
+};
 
 DictionaryZip::DictionaryZip()
     : d(new Private)
@@ -378,7 +385,7 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
     }
     else
     {
-        d->origFilename = "";
+        d->originalFileName = "";
     }
 
     if (d->flags & GZ_COMMENT)
@@ -528,7 +535,7 @@ DictionaryZip::close()
     }
 }
 
-QString
+QByteArray
 DictionaryZip::read(unsigned long start, unsigned long size)
 {
     unsigned long end;
@@ -543,7 +550,7 @@ DictionaryZip::read(unsigned long start, unsigned long size)
     int target;
     int lastStamp;
     static int stamp = 0;
-    QString str;
+    QByteArray resultString;
 
     end = start + size;
 
@@ -555,7 +562,7 @@ DictionaryZip::read(unsigned long start, unsigned long size)
         break;
 
     case DICTIONARY_TEXT:
-        str = QString::fromUtf8(d->start, size);
+        resultString = QByteArray::fromRawData(d->start, size);
         break;
 
     case DICTIONARY_DZIP:
@@ -651,7 +658,7 @@ DictionaryZip::read(unsigned long start, unsigned long size)
             {
                 if (i == lastChunk)
                 {
-                    str.append(inByteArray.mid(firstOffset, lastOffset - firstOffset));
+                    QByteArray.append(inByteArray.mid(firstOffset, lastOffset - firstOffset));
                 }
                 else
                 {
@@ -660,17 +667,17 @@ DictionaryZip::read(unsigned long start, unsigned long size)
                         qDebug() << Q_FUNC << QString("Length = %1 instead of %2").arg(count).arg(d->chunkLength);
                     }
 
-                    str.append(inBuffer.mid(firstOffset, d->chunkLength - firstOffset);
+                    QByteArray.append(inBuffer.mid(firstOffset, d->chunkLength - firstOffset);
                 }
             }
             else if (i == lastChunk)
             {
-                str.append(nBuffer.left(lastOffset);
+                QByteArray.append(nBuffer.left(lastOffset);
             }
             else
             {
                 Q_ASSERT(count == d->chunkLength);
-                str.append(inBuffer.left(d->chunkLength);
+                QByteArray.append(inBuffer.left(d->chunkLength);
             }
         }
         break;
@@ -680,5 +687,5 @@ DictionaryZip::read(unsigned long start, unsigned long size)
         break;
     }
 
-    return str;
+    return resultString;
 }

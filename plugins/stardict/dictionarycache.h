@@ -20,20 +20,22 @@
 #ifndef MULA_PLUGIN_STARDICT_DICTIONARYCACHE_H
 #define MULA_PLUGIN_STARDICT_DICTIONARYCACHE_H
 
+#include <QtCore/QByteArray>
+
 namespace MulaPluginStarDict
 {
     class DictionaryCache
     {
         public:
             DictionaryCache();
-            DictionaryCache(int chunk, QByteArray inByteArray, int stamp, int count);
+            DictionaryCache(int chunk, QByteArray byteArray, int stamp, int count);
             virtual ~DictionaryCache();
 
             void setChunk(int chunk);
             int chunk() const;
 
             void setByteArray(QByteArray inByteArray);
-            char *byteArray() const;
+            QByteArray& byteArray() const;
 
             void setStamp(int stamp);
             int stamp() const;

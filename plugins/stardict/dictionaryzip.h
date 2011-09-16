@@ -35,7 +35,7 @@ namespace MulaPluginStarDict {
             bool open(const QString& fileName, int computeCRC);
             void close();
 
-            QString read(unsigned long start, unsigned long size);
+            QByteArray read(unsigned long start, unsigned long size);
 
         private:
             int readHeader(const QString &filename, int computeCRC);

@@ -23,7 +23,51 @@
 #include "dictionaryzip.h"
 
 #include <QtCore/QFile>
+#include <QtCore/QVector>
 
+// Word's pure text meaning.
+// The data should be a utf-8 string ending with '\0'.
+// case 'm':
+
+// Word's pure text meaning.
+// The data is NOT a utf-8 string, but is instead a string in locale
+// encoding, ending with '\0'.  Sometimes using this type will save disk
+// space, but its use is discouraged.
+// case 'l':
+
+// English phonetic string.
+// The data should be a utf-8 string ending with '\0'.
+// case 't':
+
+// Chinese YinBiao or Japanese KANA.
+// The data should be a utf-8 string ending with '\0'.
+// case 'y':
+
+// A utf-8 string which is marked up with the Pango text markup language.
+// For more information about this markup language, See the "Pango
+// Reference Manual."
+// You might have it installed locally at:
+// file:///usr/share/gtk-doc/html/pango/PangoMarkupFormat.html
+// case 'g':
+
+// A utf-8 string which is marked up with the xdxf language.
+// See http://xdxf.sourceforge.net
+// StarDict have these extention:
+// <rref> can have "type" attribute, it can be "image", "sound", "video" 
+// and "attach".
+// <kref> can have "k" attribute.
+// case 'x':
+
+// wav file.
+// The data begins with a network byte-ordered guint32 to identify the wav
+// file's size, immediately followed by the file's content.
+// case 'W':
+
+// Picture file.
+// The data begins with a network byte-ordered guint32 to identify the picture
+// file's size, immediately followed by the file's content.
+// case 'P':
+        
 using namespace MulaPluginStarDict;
 
 class DictionaryBase::Private
@@ -32,7 +76,7 @@ class DictionaryBase::Private
         Private()
             : dictionaryFile(new QFile)
             , compressedDictionaryFile(0)
-            , cacheCur(0)
+            , currentCacheItemIndex(0)
         {   
         }
 
@@ -45,12 +89,13 @@ class DictionaryBase::Private
         DictionaryZip *compressedDictionaryFile;
 
         QList<CacheItem> cacheItemList;
-        int cacheCur;
+        int currentCacheItemIndex;
 };
 
 DictionaryBase::DictionaryBase()
     : d(new Private)
 {
+    d->cacheItemList.reserve(WORDDATA_CACHE_NUM);
 }
 
 DictionaryBase::~DictionaryBase()
@@ -60,8 +105,8 @@ DictionaryBase::~DictionaryBase()
     delete d;
 }
 
-const QByteArray&
-DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
+const QByteArray
+DictionaryBase::wordData(quint32 indexItemOffset, qint32 indexItemSize)
 {
     foreach(CacheItem cacheItem, d->cacheItemList)
     {
@@ -72,151 +117,69 @@ DictionaryBase::wordData(quint32 indexItemOffset, quint32 indexItemSize)
     if (d->dictionaryFile->isOpen())
         d->dictionaryFile->seek(indexItemOffset);
 
-    QByteArray data;
+    QByteArray resultData;
+    QByteArray originalData;
+
     if (!d->sameTypeSequence.isEmpty())
     {    
-        QString originalData;
-
         if (d->dictionaryFile->isOpen())
             originalData = d->dictionaryFile->read(indexItemSize);
         else 
             originalData = d->compressedDictionaryFile->read(indexItemOffset, indexItemSize);
 
-        quint32 sdata;
         int sameTypeSequenceLength = d->sameTypeSequence.length();
-        sdata = indexItemSize + sizeof(quint32) + sameTypeSequenceLength;
-        //if the last item's size is determined by the end up '\0',then +=sizeof(gchar);
-        //if the last item's size is determined by the head guint32 type data,then +=sizeof(guint32);
-        switch (d->sameTypeSequence[sameTypeSequenceLength - 1].toAscii())
-        {
-        case 'm':
-        case 't':
-        case 'y':
-        case 'l':
-        case 'g':
-        case 'x':
-            sdata += sizeof(char);
-            break;
-        case 'W':
-        case 'P':
-            sdata += sizeof(quint32);
-            break;
-        default:
-            if (d->sameTypeSequence[sameTypeSequenceLength - 1].isUpper())
-                sdata += sizeof(quint32);
-            else
-                sdata += sizeof(char);
-            break;
-        }
 
-        data = (char *)g_malloc(data_size);
-        char *p1;
-        char *p2;
-        p1 = data + sizeof(quint32);
-        p2 = originalData;
-        quint32 ssec;
+        int sectionSize = 0;
+        int sectionPosition = 0;
+        
         //copy the head items.
-        for (int i = 0; i < sameTypeSequenceLength - 1; ++i)
+        foreach (const QChar& ch, d->sameTypeSequence.left(sameTypeSequenceLength - 1))
         {
-            *p1 = d->sameTypeSequence[i];
-            p1 += sizeof(char);
-            switch (d->sameTypeSequence.at(i))
+            if (ch.isUpper())
             {
-            case 'm':
-            case 't':
-            case 'y':
-            case 'l':
-            case 'g':
-            case 'x':
-                ssec = strlen(p2) + 1;
-                memcpy(p1, p2, ssec);
-                p1 += ssec;
-                p2 += ssec;
-                break;
-            case 'W':
-            case 'P':
-                ssec = *reinterpret_cast<quint32 *>(p2);
-                ssec += sizeof(quint32);
-                memcpy(p1, p2, ssec);
-                p1 += ssec;
-                p2 += ssec;
-                break;
-            default:
-                if (d->sameTypeSequence[i].isUpper())
-                {
-                    ssec = *reinterpret_cast<quint32 *>(p2);
-                    ssec += sizeof(quint32);
-                }
-                else
-                {
-                    ssec = strlen(p2) + 1;
-                }
-
-                memcpy(p1, p2, sec_size);
-                p1 += ssec;
-                p2 += ssec;
-                break;
-            }
-        }
-
-        // Calculate the last item 's size.
-        ssec = indexItemSize - (p2 - originalData);
-        *p1 = d->sameTypeSequence[sameTypeSequenceLength - 1];
-        p1 += sizeof(char);
-        switch (d->sameTypeSequence[sameTypeSequenceLength - 1])
-        {
-        case 'm':
-        case 't':
-        case 'y':
-        case 'l':
-        case 'g':
-        case 'x':
-            memcpy(p1, p2, ssec);
-            p1 += ssec;
-            *p1 = '\0'; //add the end up '\0';
-            break;
-        case 'W':
-        case 'P':
-            *reinterpret_cast<quint32 *>(p1) = ssec;
-            p1 += sizeof(quint32);
-            memcpy(p1, p2, ssec);
-            break;
-        default:
-            if (d->sameTypeSequence[sameTypeSequenceLength - 1].isUpper())
-            {
-                *reinterpret_cast<quint32 *>(p1) = ssec;
-                p1 += sizeof(quint32);
-                memcpy(p1, p2, ssec);
+                sectionSize = *reinterpret_cast<quint32 *>(originalData.mid(sectionPosition).data());
+                sectionSize += sizeof(quint32);
             }
             else
             {
-                memcpy(p1, p2, ssec);
-                p1 += ssec;
-                *p1 = '\0';
+                sectionSize = originalData.indexOf(QChar('\0'), sectionPosition) + 1;
             }
-            break;
+
+            resultData.append(originalData.mid(sectionPosition, sectionSize));
+            sectionPosition += sectionSize;
         }
-        *reinterpret_cast<quint32 *>(data) = sdata;
+
+        // Calculate the last item's size.
+        sectionSize = indexItemSize - sectionPosition;
+        if (d->sameTypeSequence[sameTypeSequenceLength - 1].isUpper())
+        {
+            originalData.fromRawData(reinterpret_cast<char*>(&sectionSize), 4);
+            sectionSize += sizeof(quint32);
+            resultData.append(originalData.mid(sectionPosition, sectionSize));
+        }
+        else
+        {
+            resultData.append(originalData.mid(sectionPosition, sectionSize));
+            sectionPosition += sectionSize;
+            resultData.append('\0');
+        }
     }
     else
     {
-        if (d->dictionaryFile)
-            data = d->dictionaryfile.read(indexItemSize);
+        if (d->dictionaryFile->isOpen())
+            originalData = d->dictionaryFile->read(indexItemSize);
         else
-            d->compressedDictionaryFile->read(data[1], indexItemOffset, indexItemSize);
-
-        *reinterpret_cast<quint32 *>(data) = idxitem_size + sizeof(guint32);
+            originalData = d->compressedDictionaryFile->read(indexItemOffset, indexItemSize);
     }
-    g_free(cache[cache_cur].data);
 
-    cache[cacheCur].data = data;
-    cache[cacheCur].offset = indexItemOffset;
-    d->cacheCur++;
+    d->cacheItemList[d->currentCacheItemIndex].setData(resultData);
+    d->cacheItemList[d->currentCacheItemIndex].setOffset(indexItemOffset);
+    ++d->currentCacheItemIndex;
 
-    if (cacheCur == WORDDATA_CACHE_NUM)
-        cacheCur = 0;
+    if (d->currentCacheItemIndex == WORDDATA_CACHE_NUM)
+        d->currentCacheItemIndex = 0;
 
-    return data;
+    return resultData;
 }
 
 bool
@@ -230,31 +193,35 @@ DictionaryBase::containFindData()
         if (d->sameTypeSequence.contains(ch))
             return true;
     }
+
+    return false;
 }
 
-bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset, quint32 indexItemSize, char *originalData)
+bool DictionaryBase::findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize)
 {
-    int nWord = sarchWords.size();
-    QVector<bool> wordFind(nWord, false);
-    int nfound = 0;
+    int wordCount = searchWords.size();
+    QVector<bool> wordFind(wordCount, false);
 
     if (d->dictionaryFile->isOpen())
         d->dictionaryFile->seek(indexItemOffset);
 
-    if (d->dictionaryFile->isOpen())
-        d->dictionaryFile->read(originalData, 1*indexItemSize);
-    else
-        d->compressedDictionaryFile->read(originalData, indexItemOffset, indexItemSize);
+    QByteArray originalData;
 
-    char *p = originalData;
-    quint32 ssec;
-    int j;
-    if (!d->sameTypeSequence.empty())
+    if (d->dictionaryFile->isOpen())
+        originalData = d->dictionaryFile->read(indexItemSize);
+    else
+        originalData = d->compressedDictionaryFile->read(indexItemOffset, indexItemSize);
+
+    int sectionSize = 0;
+    int sectionPosition = 0;
+    int foundCount = 0;
+
+    if (!d->sameTypeSequence.isEmpty())
     {
-        int sSametypeSequence = sameTypeSequence.length();
-        for (int i = 0; i < sSameTypeSequence - 1; ++i)
+        int sameTypeSequenceLength = d->sameTypeSequence.length();
+        foreach (const QChar& ch, d->sameTypeSequence.left(sameTypeSequenceLength - 1))
         {
-            switch (d->sameTypeSequence[i])
+            switch (ch.toAscii())
             {
             case 'm':
             case 't':
@@ -262,36 +229,39 @@ bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset,
             case 'l':
             case 'g':
             case 'x':
-                for (j = 0; j < nWord; ++j)
-                    if (!wordFind[j] && strstr(p, searchWords[j].c_str()))
+                for (int j = 0; j < wordCount; ++j)
+                {
+                    if (!wordFind.at(j) && originalData.indexOf(searchWords.at(j), sectionPosition) == -1)
                     {
-                        WordFind[j] = true;
-                        ++nfound;
+                        wordFind[j] = true;
+                        ++foundCount;
                     }
+                }
 
-
-                if (nfound == nWord)
+                // If everything has been found
+                if (foundCount == wordCount)
                     return true;
 
-                ssec = strlen(p) + 1;
-                p += ssec;
+                sectionSize = originalData.indexOf(QChar('\0'), sectionPosition) + 1;
+                sectionPosition += sectionSize;
                 break;
 
             default:
-                if (d->sameTypeSequence[i].isUpper())
+                if (ch.isUpper())
                 {
-                    ssec = *reinterpret_cast<quint32 *>(p);
-                    ssec += sizeof(quint32);
+                    sectionSize = *reinterpret_cast<quint32 *>(originalData.mid(sectionPosition).data());
+                    sectionSize += sizeof(quint32);
                 }
                 else
                 {
-                    ssec = strlen(p) + 1;
+                    sectionSize = originalData.indexOf(QChar('\0'), sectionPosition) + 1;
                 }
-                p += ssec;
+
+                sectionPosition += sectionSize;
             }
         }
 
-        switch (d->sameTypeSequence[sSameTypeSequence - 1])
+        switch (d->sameTypeSequence.at(sameTypeSequenceLength - 1).toAscii())
         {
         case 'm':
         case 't':
@@ -299,16 +269,17 @@ bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset,
         case 'l':
         case 'g':
         case 'x':
-            ssec = indexItemSize - (p - originalData);
-            for (j = 0; j < nWord; ++j)
-                if (!wordFind[j] && g_strstr_len(p, sec_size, SearchWords[j].c_str()))
+            sectionSize = indexItemSize - sectionSize;
+            for (int j = 0; j < wordCount; ++j)
+            {
+                if (!wordFind[j] && originalData.contains(searchWords.at(j).mid(sectionSize).toUtf8()))
                 {
-                    WordFind[j] = true;
-                    ++nfound;
+                    wordFind[j] = true;
+                    ++foundCount;
                 }
+            }
 
-
-            if (nfound == nWord)
+            if (foundCount == wordCount)
                 return true;
 
             break;
@@ -316,9 +287,9 @@ bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset,
     }
     else
     {
-        while (quint32(p - originalData) < indexItemSize)
+        for (; sectionPosition < indexItemSize; sectionPosition += sectionSize)
         {
-            switch (*p)
+            switch (originalData.at(sectionPosition))
             {
             case 'm':
             case 't':
@@ -326,33 +297,36 @@ bool DictionaryBase::findData(QStringList &searchWords, quint32 indexItemOffset,
             case 'l':
             case 'g':
             case 'x':
-                for (j = 0; j < nWord; ++j)
-                    if (!wordFind[j] && strstr(p, SearchWords[j].c_str()))
+                for (int j = 0; j < wordCount; ++j)
+                {
+                    if (!wordFind.at(j) && originalData.indexOf(searchWords.at(j), sectionSize) == -1)
                     {
                         wordFind[j] = true;
-                        ++nfound;
+                        ++foundCount;
                     }
+                }
 
-                if (nfound == nWord)
+                // If everything has been found
+                if (foundCount == wordCount)
                     return true;
 
-                ssec = strlen(p) + 1;
-                p += ssec;
+                sectionSize = originalData.indexOf(QChar('\0'), sectionPosition) + 1;
+
                 break;
             default:
-                if (g_ascii_isupper(*p))
+                if (QChar(originalData.at(sectionSize)).isUpper())
                 {
-                    ssec = *reinterpret_cast<quint32 *>(p);
-                    ssec += sizeof(quint32);
+                    originalData.fromRawData(reinterpret_cast<char*>(&sectionSize), 4); 
+                    sectionSize += sizeof(quint32);
                 }
                 else
                 {
-                    ssec = strlen(p) + 1;
+                    sectionSize = originalData.indexOf(QChar('\0'), sectionPosition) + 1;
                 }
-                p += ssec;
             }
         }
     }
+
     return false;
 }
 
@@ -362,7 +336,7 @@ DictionaryBase::compressedDictionaryFile() const
     return d->compressedDictionaryFile;
 }
 
-DictionaryZip*
+QString&
 DictionaryBase::sameTypeSequence() const
 {
     return d->sameTypeSequence;

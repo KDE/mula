@@ -26,6 +26,8 @@ class QFile;
 
 namespace MulaPluginStarDict
 {
+    const int WORDDATA_CACHE_NUM = 10;
+
     class DictionaryZip;
 
     class DictionaryBase
@@ -34,14 +36,14 @@ namespace MulaPluginStarDict
             DictionaryBase();
             virtual ~DictionaryBase();
 
-            const QByteArray& wordData(quint32 indexItemOffset, quint32 indexItemSize);
+            const QByteArray wordData(quint32 indexItemOffset, qint32 indexItemSize);
             bool containFindData();
-            bool fineData(const QStringList &searchWords, quint32 indexItemOffset, quint32 indexItemSize, QString originalData);
+            bool findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize);
 
             DictionaryZip* compressedDictionaryFile() const;
             QFile* dictionaryFile() const;
 
-            QString sameTypeSequence() const;
+            QString& sameTypeSequence() const;
             void setSameTypeSequence(const QString& sameTypeSequence);
 
         private:

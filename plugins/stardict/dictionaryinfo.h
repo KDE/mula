@@ -42,7 +42,7 @@ namespace MulaPluginStarDict
             void setWordCount(quint32 wordCount);
             quint32 wordCount() const;
 
-            void setBookName(const QString& bookname);
+            void setBookName(const QString& bookName);
             QString bookName() const;
 
             void setAuthor(const QString& author);
@@ -54,8 +54,8 @@ namespace MulaPluginStarDict
             void setWebsite(const QString website);
             QString website() const;
 
-            void setDate(const QDateTime& dateTime);
-            QDateTime dateTime() const;
+            void setDate(const QString& dateTime);
+            QString dateTime() const;
 
             void setDescription(const QString& description);
             QString description() const;

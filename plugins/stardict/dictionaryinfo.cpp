@@ -19,13 +19,15 @@
 
 #include "dictionaryinfo.h"
 
+#include <QtCore/QFile>
+
 using namespace MulaPluginStarDict;
 
 class DictionaryInfo::Private
 {
     public:
         Private()
-            : wordcount(0)
+            : wordCount(0)
             , indexFileSize(0)
             , indexOffsetBits(0)
         {   
@@ -36,17 +38,17 @@ class DictionaryInfo::Private
         }
  
         QString ifoFileName;
-        quint32 wordcount;
-        QString bookname;
+        quint32 wordCount;
+        QString bookName;
         QString author;
         QString email;
         QString website;
-        QDateTime date;
+        QString date;
         QString description;
         quint32 indexFileSize;
         quint32 indexOffsetBits;
         QString sameTypeSequence;
-}
+};
 
 DictionaryInfo::DictionaryInfo()
     : d(new Private)
@@ -64,20 +66,21 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
     d->ifoFileName = ifoFileName;
     QFile ifoFile(ifoFileName);
     QByteArray buffer = ifoFile.readAll();
+
     if (buffer.isEmpty())
         return false;
 
 #define TREEDICT_MAGIC_DATA "StarDict's treedict ifo file\nversion=2.4.2\n"
 #define DICT_MAGIC_DATA "StarDict's dict ifo file\nversion=2.4.2\n"
 
-    const QString magicData = isTreeDictionary ? TREEDICT_MAGIC_DATA : DICT_MAGIC_DATA;
-    if (!buffer.startsWith(magic_data))
+    const QByteArray magicData = isTreeDictionary ? TREEDICT_MAGIC_DATA : DICT_MAGIC_DATA;
+    if (!buffer.startsWith(magicData))
         return false;
 
     QByteArray byteArray;
     int index;
 
-    byteArray = buffer.mid(strlen(magic_data) - 1);
+    byteArray = buffer.mid(strlen(magicData) - 1);
 
     index = byteArray.indexOf("\nwordcount=");
     if (index == -1)
@@ -86,9 +89,9 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
     index += sizeof("\nwordcount=") - 1; 
 
     bool ok;
-    d->wordCount = byteArray.mid(index, p1.indexOf('\n', index) - index).toLong(&ok, 10);
+    d->wordCount = byteArray.mid(index, byteArray.indexOf('\n', index) - index).toLong(&ok, 10);
 
-    if (d->isTreeDictionary)
+    if (isTreeDictionary)
     {
         index = byteArray.indexOf("\ntdxfilesize=");
         if (index == -1)
@@ -96,7 +99,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
 
         index += sizeof("\ntdxfilesize=");
 
-        d->indexFileSize = byteArray.mid(index, p1.indexOf('\n', index) - index).toLong(&ok, 10);
+        d->indexFileSize = byteArray.mid(index, byteArray.indexOf('\n', index) - index).toLong(&ok, 10);
     }
     else
     {
@@ -106,7 +109,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
 
         index += sizeof("\nidxfilesize=");
 
-        d->indexFileSize = byteArray.mid(index, p1.indexOf('\n', index) - index).toLong(&ok, 10);
+        d->indexFileSize = byteArray.mid(index, byteArray.indexOf('\n', index) - index).toLong(&ok, 10);
     }
 
     // bookname
@@ -115,7 +118,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\nbookname=");
-    d->bookname.assign(index, p1.indexOf('\n', index));
+    d->bookName = byteArray.indexOf('\n', index);
 
     // author
     index = byteArray.indexOf("\nauthor=");
@@ -123,7 +126,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\nauthor=");
-    d->author.assign(index, p1.indexOf('\n', index));
+    d->author = byteArray.indexOf('\n', index);
 
     // email
     index = byteArray.indexOf("\nemail=");
@@ -131,7 +134,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\nemail=");
-    d->email.assign(index, p1.indexOf('\n', index));
+    d->email = byteArray.indexOf('\n', index);
 
     // website
     index = byteArray.indexOf("\nwebsite=");
@@ -139,7 +142,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\nwebsite=");
-    d->website.assign(index, p1.indexOf('\n', index));
+    d->website = byteArray.indexOf('\n', index);
 
     // date
     index = byteArray.indexOf("\ndate=");
@@ -147,7 +150,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\ndate=");
-    d->date.assign(index, p1.indexOf('\n', index));
+    d->date = byteArray.indexOf('\n', index);
 
     // description
     index = byteArray.indexOf("\ndescription=");
@@ -155,7 +158,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\ndescription=");
-    d->description.assign(index, p1.indexOf('\n', index));
+    d->description = byteArray.indexOf('\n', index);
 
     // description
     index = byteArray.indexOf("\nsametypesequence=");
@@ -163,7 +166,7 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
         return false;
 
     index += sizeof("\nsametypesequence=");
-    d->sameTypeSequence.assign(index, p1.indexOf('\n', index));
+    d->sameTypeSequence = byteArray.indexOf('\n', index);
 
     return true;
 }
@@ -183,25 +186,25 @@ DictionaryInfo::ifoFileName() const
 void
 DictionaryInfo::setWordCount(quint32 wordCount)
 {
-    d->wordcount = wordCount;
+    d->wordCount = wordCount;
 }
 
 quint32
 DictionaryInfo::wordCount() const
 {
-    return d->wordcount;
+    return d->wordCount;
 }
 
 void
-DictionaryInfo::setBookName(const QString& bookname)
+DictionaryInfo::setBookName(const QString& bookName)
 {
-    d->bookname = bookname;
+    d->bookName = bookName;
 }
 
 QString
 DictionaryInfo::bookName() const
 {
-    return d->bookname;
+    return d->bookName;
 }
 
 void
@@ -241,13 +244,13 @@ DictionaryInfo::website() const
 }
 
 void
-DictionaryInfo::setDate(const QDateTime& dateTime)
+DictionaryInfo::setDate(const QString& dateTime)
 {
     d->date = dateTime;
 }
 
-QDateTime
-DictionaryFile::dateTime() const
+QString
+DictionaryInfo::dateTime() const
 {
     return d->date;
 }
@@ -285,7 +288,7 @@ DictionaryInfo::setIndexOffsetBits(quint32 indexOffsetBits)
 quint32
 DictionaryInfo::indexOffsetBits() const
 {
-    d->indexOffsetBits;
+    return d->indexOffsetBits;
 }
 
 void
