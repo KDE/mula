@@ -19,6 +19,8 @@
 
 #include "indexfile.h"
 
+#include <QtCore/QString>
+
 using namespace MulaPluginStarDict;
 
 class IndexFile::Private
@@ -26,7 +28,7 @@ class IndexFile::Private
     public:
         Private()
             : wordEntryOffset(0)
-            , wordEntrySieze(0)
+            , wordEntrySize(0)
         {   
         }
 
@@ -36,7 +38,7 @@ class IndexFile::Private
  
         quint32 wordEntryOffset;
         quint32 wordEntrySize;
-}
+};
 
 IndexFile::IndexFile()
     : d(new Private)
@@ -47,10 +49,14 @@ IndexFile::~IndexFile()
 {
 }
 
+quint32
 IndexFile::wordEntryOffset() const
 {
+    return d->wordEntryOffset;
 }
 
-IndexFile::wordEntrysize() const
+quint32
+IndexFile::wordEntrySize() const
 {
+    return d->wordEntrySize;
 }

@@ -21,12 +21,12 @@
 
 #include "distance.h"
 
-#include <QtAlgorithms>
+#include <QtCore/QtAlgorithms>
 #include <QtCore/QString>
 
 #include <zlib.h>
 
-using namespace MulaCore;
+using namespace MulaPluginStarDict;
 
 // Notice: read src/tools/DICTFILE_FORMAT for the dictionary
 // file's format information!
@@ -379,7 +379,7 @@ bool Libs::removePattern(QString pattern, QString originalWord, bool found)
         if (!found && wordLength > pattern.length())
         {
             originalWordPart = originalWord.mid([wordLength - 2], 2);
-            bool isUpperCase = !strncmp(`&sWord[wordLength - 2], "LY", 2);
+            bool isUpperCase = !strncmp(&sWord[wordLength - 2], "LY", 2);
             if (!originiWordPart.compare("LY", Qt::CaseSensitive) || !originiWordPart.compare("ly", Qt::CaseSensitive))
             {
                 sNewWord = sWord;

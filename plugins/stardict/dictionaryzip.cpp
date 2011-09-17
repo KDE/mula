@@ -25,7 +25,8 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QString>
-#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDateTime>
 
 #include <zlib.h>
 
@@ -138,11 +139,10 @@ class DictionaryZip::Private
             , subLength(0)
             , method(0)
             , flags(0)
-            , mtime(0)
             , extraFlags(0)
             , os(0)
             , version(0)
-            , chuckLength(0)
+            , chunkLength(0)
             , chunkCount(0)
             , chunks(0)
             , offsets(0)
@@ -167,11 +167,11 @@ class DictionaryZip::Private
         int headerLength;
         int extraLength;
         int subLength;
-        int method;
-        int flags;
-        time_t mtime;
-        int extraFlags;
-        int os;
+        char method;
+        char flags;
+        QDateTime mtime;
+        char extraFlags;
+        char os;
         int version;
         int chunkLength;
         int chunkCount;
@@ -199,16 +199,12 @@ DictionaryZip::~DictionaryZip()
 int
 DictionaryZip::readHeader(const QString &fileName, int computeCRC)
 {
-    int id1;
-    int id2;
-    int si1;
-    int si2;
+    char id1;
+    char id2;
+    char si1;
+    char si2;
     char buffer[BUFFERSIZE];
-    int subLength;
     int i;
-    char *pt;
-    int c;
-    struct stat sb;
     unsigned long crc = crc32( 0L, Z_NULL, 0 );
     int count;
     unsigned long offset;
@@ -226,14 +222,14 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
     if (file.read( &id2, 1 ) < 0)
         qWarning() << "Invalid ZIP file. Unexpected end of file.";
 
-    if (id1 != GZ_MAGIC1 || id2 != GZ_MAGIC2)
+    if (uchar(id1) != GZ_MAGIC1 || uchar(id2) != GZ_MAGIC2)
     {
-        d->type = DICT_TEXT;
+        d->type = DICTIONARY_TEXT;
         d->compressedLength = d->originalLength = file.size();
-        d->originalFilename = fileName;
+        d->originalFileName = fileName;
 
-        QFileInfo fileInfo(fileName)
-        mtime = fileInfo.lastModified();
+        QFileInfo fileInfo(fileName);
+        d->mtime = fileInfo.lastModified();
         if (computeCRC)
         {
             file.seek(0);
@@ -248,7 +244,7 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
         return 0;
     }
 
-    d->type = DICT_GZIP;
+    d->type = DICTIONARY_GZIP;
 
     if (file.read( &d->method, 1 ) < 0) {
         qWarning() << "Invalid ZIP file. Unexpected end of file.";
@@ -261,14 +257,16 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
     }
 
     time_t mtime;
-    for(int i = 0, int mtime = 0, d->mtime = 0; i < 4; ++i) {
-        if (file.read( &mtime, 1 ) < 0) {
+    char chtime;
+    for(int i = 0; i < 4; ++i) {
+        if (file.read( &chtime, 1 ) < 0) {
             qWarning() << "Invalid ZIP file. Unexpected end of file.";
             return -1;
         } else {
-            d->mtime |= mtime << i*8;
+            mtime |= chtime << i*8;
         }
     }
+    d->mtime.setTime_t(mtime);
 
     if (file.read( &d->extraFlags, 1 ) < 0) {
         qWarning() << "Invalid ZIP file. Unexpected end of file.";
@@ -282,7 +280,9 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
 
     if (d->flags & GZ_FEXTRA)
     {
-        for(int i = 0, int extraLength, d->extraLength = 0; i < 2; ++i) {
+        d->extraLength = 0;
+        char extraLength;
+        for(int i = 0; i < 2; ++i) {
             if (file.read( &extraLength, 1 ) < 0) {
                 qWarning() << "Invalid ZIP file. Unexpected end of file.";
                 return -1;
@@ -303,10 +303,11 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
             return -1;
         }
 
-        if (si1 == GZ_RND_S1 || si2 == GZ_RND_S2)
+        if (uchar(si1) == GZ_RND_S1 || uchar(si2) == GZ_RND_S2)
         {
-
-            for(int i = 0, int subLength, d->subLength = 0; i < 2; ++i) {
+            d->subLength = 0;
+            char subLength;
+            for(int i = 0; i < 2; ++i) {
                 if (file.read( &subLength, 1 ) < 0) {
                     qWarning() << "Invalid ZIP file. Unexpected end of file.";
                     return -1;
@@ -315,7 +316,9 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
                 }
             }
 
-            for(int i = 0, int version, d->version = 0; i < 2; ++i) {
+            d->version = 0;
+            char version;
+            for(int i = 0; i < 2; ++i) {
                 if (file.read( &version, 1 ) < 0) {
                     qWarning() << "Invalid ZIP file. Unexpected end of file.";
                     return -1;
@@ -326,10 +329,12 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
 
             if (d->version != 1) 
             {
-                qDebug() << Q_FUNC << QString("dzip header version %1 not supported").arg(d->version);
+                qDebug() << Q_FUNC_INFO << QString("dzip header version %1 not supported").arg(d->version);
             }
 
-            for(int i = 0, d->chunkLength = 0; i < 2; ++i) {
+            d->chunkLength = 0;
+            char chunkLength;
+            for(int i = 0; i < 2; ++i) {
                 if (file.read( &chunkLength, 1 ) < 0) {
                     qWarning() << "Invalid ZIP file. Unexpected end of file.";
                     return -1;
@@ -338,7 +343,9 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
                 }
             }
 
-            for(int i = 0, int chunkCount, d->chunkCount = 0; i < 2; ++i) {
+            d->chunkCount = 0;
+            char chunkCount;
+            for(int i = 0; i < 2; ++i) {
                 if (file.read( &chunkCount, 1 ) < 0) {
                     qWarning() << "Invalid ZIP file. Unexpected end of file.";
                     return -1;
@@ -355,8 +362,10 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
 
             d->chunks = (int *)malloc(sizeof( d->chunks[0] ) * d->chunkCount );
 
-            for (int j = 0, int chunk = 0, d->chunks[j] = 0; j < d->chunkCount; ++j)
+            char chunk;
+            for (int j = 0; j < d->chunkCount; ++j)
             {
+                d->chunks[j] = 0;
                 for(int i = 0; i < 2; ++i) {
                     if (file.read( &chunk, 1 ) < 0) {
                         qWarning() << "Invalid ZIP file. Unexpected end of file.";
@@ -366,7 +375,7 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
                     }
                 }
             }
-            d->type = DICT_DZIP;
+            d->type = DICTIONARY_DZIP;
         }
         else
         {
@@ -377,7 +386,7 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
     if (d->flags & GZ_FNAME)
     { /* FIXME! Add checking against header len */
         int i = 0;
-        while ((file.read(&buffer[i++], 1) && !file.atEnd());
+        while (file.read(&buffer[i++], 1) && !file.atEnd());
         buffer[i] = '\0';
 
         d->originalFileName = buffer;
@@ -391,39 +400,43 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
     if (d->flags & GZ_COMMENT)
     { /* FIXME! Add checking for header len */
         int i = 0;
-        while ((file.read(&buffer[i++], 1) && !file.atEnd());
+        while (file.read(&buffer[i++], 1) && !file.atEnd());
         buffer[i] = '\0';
         d->comment = buffer;
         d->headerLength += d->comment.length() + 1;
     }
     else
     {
-        comment = "";
+       d-> comment = "";
     }
 
     if (d->flags & GZ_FHCRC)
     {
-        file.read(2)
+        file.read(2);
         d->headerLength += 2;
     }
 
     if (file.pos() != d->headerLength + 1)
     {
-        qDebug() << Q_FUNC << QString("File position (%1) != header length + 1 (%2)").arg(file.pos()).arg(d->headerLength + 1 ); 
+        qDebug() << Q_FUNC_INFO << QString("File position (%1) != header length + 1 (%2)").arg(file.pos()).arg(d->headerLength + 1 ); 
     }
 
     file.seek(file.size() - 8);
 
-    for(int i = 0, int crc = 0, d->crc = 0; i < 4; ++i) {
-        if (file.read(&crc, 1 ) < 0) {
+    d->crc = 0;
+    char chcrc;
+    for(int i = 0; i < 4; ++i) {
+        if (file.read(&chcrc, 1 ) < 0) {
             qWarning() << "Invalid ZIP file. Unexpected end of file.";
             return -1;
         } else {
-            d->crc |= crc << i*8;
+            d->crc |= chcrc << i*8;
         }
     }
 
-    for(int i = 0, int length = 0, d->length = 0; i < 4; ++i) {
+    d->originalLength = 0;
+    char length;
+    for(int i = 0; i < 4; ++i) {
         if (file.read( &length, 1 ) < 0) {
             qWarning() << "Invalid ZIP file. Unexpected end of file.";
             return -1;
@@ -450,24 +463,17 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
 bool
 DictionaryZip::open(const QString& fileName, int computeCRC)
 {
-    struct stat sb;
-    int j;
-
     d->initialized = 0;
 
-#ifdef Q_OS_UNIX
-    if (stat(fname.c_str(), &sb) || !S_ISREG(sb.st_mode))
-#elif defined(Q_OS_WIN32)
-    if (_stat(fname.c_str(), &sb) || !(sb.stMode & _S_IFREG))
-#endif
+    if (!QFileInfo(fileName).isFile())
     {
-        qDebug() << Q_FUNC << QString("%1 is not a regular file -- ignoring").arg(fname);
+        qDebug() << Q_FUNC_INFO << QString("%1 is not a regular file -- ignoring").arg(fileName);
         return false;
     }
 
     if (readHeader(fileName, computeCRC))
     {
-        qDebug() << Q_FUNC << QString("\"%1\" not in text or dzip format").arg(fileName);
+        qDebug() << Q_FUNC_INFO << QString("\"%1\" not in text or dzip format").arg(fileName);
         return false;
     }
 
@@ -487,22 +493,22 @@ DictionaryZip::open(const QString& fileName, int computeCRC)
         return -1; 
     }   
  
-    data = QFile.map(0, d->size);
+    uchar *data = d->mapFile.map(0, d->size);
     if (data == NULL)
     {   
-        QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(d->indexFileName);
+        qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(fileName);
         return false;
     }   
 
     d->start = data;
     d->end = d->start + d->size;
 
-    for (j = 0; j < DICT_CACHE_SIZE; ++j)
+    for (int j = 0; j < DICT_CACHE_SIZE; ++j)
     {
-        DictionaryCache dictionaryCache();
+        DictionaryCache dictionaryCache;
         dictionaryCache.setChunk(-1);
         dictionaryCache.setStamp(-1);
-        dictionaryCache.setInByteArray(NULL);
+        dictionaryCache.setByteArray(NULL);
         dictionaryCache.setCount(0);
 
         d->cache.append(dictionaryCache);
@@ -524,15 +530,15 @@ DictionaryZip::close()
     {
         if (inflateEnd( &d->zStream ))
         {
-            qDebug() << Q_FUNC << QString("Cannot shut down inflation engine: %1").arg(d->zStream.msg);
+            qDebug() << Q_FUNC_INFO << QString("Cannot shut down inflation engine: %1").arg(d->zStream.msg);
         }
     }
 
-    for (int i = 0; i < DICT_CACHE_SIZE; ++i)
+    /* for (int i = 0; i < DICTIONARY_CACHE_SIZE; ++i)
     {
         if (d->cache[i].inBuffer)
             ::free(d->cache[i].inBuffer);
-    }
+    } */
 }
 
 QByteArray
@@ -540,8 +546,8 @@ DictionaryZip::read(unsigned long start, unsigned long size)
 {
     unsigned long end;
     int count;
-    qByteArray inByteArray;
-    qByteArray outByteArray;
+    QByteArray inByteArray;
+    QByteArray outByteArray;
     int firstChunk;
     int lastChunk;
     int firstOffset;
@@ -557,12 +563,12 @@ DictionaryZip::read(unsigned long start, unsigned long size)
     switch (d->type)
     {
     case DICTIONARY_GZIP:
-        qWarning() << Q_FUNC << "Cannot seek on pure gzip format files.";
+        qWarning() << Q_FUNC_INFO << "Cannot seek on pure gzip format files.";
         qWarning() << "Use plain text (for performance) or dzip format (for space savings).";
         break;
 
     case DICTIONARY_TEXT:
-        resultString = QByteArray::fromRawData(d->start, size);
+        resultString = QByteArray::fromRawData(reinterpret_cast<char*>(d->start), size);
         break;
 
     case DICTIONARY_DZIP:
@@ -579,7 +585,7 @@ DictionaryZip::read(unsigned long start, unsigned long size)
 
             if (inflateInit2( &d->zStream, -15 ) != Z_OK)
             {
-                qWarning() << Q_FUNC << QString("Cannot initialize inflation engine: %1").arg(d->zStream.msg);
+                qWarning() << Q_FUNC_INFO << QString("Cannot initialize inflation engine: %1").arg(d->zStream.msg);
             }
         }
 
@@ -615,7 +621,7 @@ DictionaryZip::read(unsigned long start, unsigned long size)
                 }
             }
 
-            d->cache[target].stamp() = ++stamp;
+            d->cache[target].setStamp(++stamp);
             if (found)
             {
                 count = d->cache.at(target).count();
@@ -625,14 +631,14 @@ DictionaryZip::read(unsigned long start, unsigned long size)
             {
                 d->cache[target].setChunk(i);
 
-                inByteArray = d->cache.at(target).inByteArray();
+                inByteArray = d->cache.at(target).byteArray();
 
                 if (d->chunks[i] >= OUT_BUFFER_SIZE )
                 {
-                    qDebug << Q_FUNC <<QString("this->chunks[%1] = %2 >= %3 (OUT_BUFFER_SIZE)".arg(i).arg(d->chunks[i]).arg(OUT_BUFFER_SIZE);
+                    qDebug() << Q_FUNC_INFO << QString("chunks[%1] = %2 >= %3 (OUT_BUFFER_SIZE)").arg(i).arg(d->chunks[i]).arg(OUT_BUFFER_SIZE);
                 }
 
-                outByteArray = QByteArray(d->start + d->offsets[i], d->chunks[i]);
+                outByteArray = QByteArray::fromRawData(reinterpret_cast<char*>(d->start + d->offsets[i]), d->chunks[i]);
 
                 d->zStream.next_in = (Bytef *)outByteArray.data();
                 d->zStream.avail_in = d->chunks[i];
@@ -641,12 +647,12 @@ DictionaryZip::read(unsigned long start, unsigned long size)
 
                 if (inflate( &d->zStream, Z_PARTIAL_FLUSH ) != Z_OK)
                 {
-                    qWarning() << Q_FUNC << QString("inflate: %1").arg(zStream.msg);
+                    qWarning() << Q_FUNC_INFO << QString("inflate: %1").arg(d->zStream.msg);
                 }
 
                 if (d->zStream.avail_in)
                 {
-                    qWarning() << Q_FUNC << QString("inflate did not flush (%1 pending, %2 avail)").arg(d->zStream.avail_in).arg(d->zStream.avail_out);
+                    qWarning() << Q_FUNC_INFO << QString("inflate did not flush (%1 pending, %2 avail)").arg(d->zStream.avail_in).arg(d->zStream.avail_out);
                 }
 
                 count = IN_BUFFER_SIZE - d->zStream.avail_out;
@@ -658,32 +664,32 @@ DictionaryZip::read(unsigned long start, unsigned long size)
             {
                 if (i == lastChunk)
                 {
-                    QByteArray.append(inByteArray.mid(firstOffset, lastOffset - firstOffset));
+                    inByteArray.append(inByteArray.mid(firstOffset, lastOffset - firstOffset));
                 }
                 else
                 {
                     if (count != d->chunkLength )
                     {
-                        qDebug() << Q_FUNC << QString("Length = %1 instead of %2").arg(count).arg(d->chunkLength);
+                        qDebug() << Q_FUNC_INFO << QString("Length = %1 instead of %2").arg(count).arg(d->chunkLength);
                     }
 
-                    QByteArray.append(inBuffer.mid(firstOffset, d->chunkLength - firstOffset);
+                    inByteArray.append(inByteArray.mid(firstOffset, d->chunkLength - firstOffset));
                 }
             }
             else if (i == lastChunk)
             {
-                QByteArray.append(nBuffer.left(lastOffset);
+                inByteArray.append(inByteArray.left(lastOffset));
             }
             else
             {
                 Q_ASSERT(count == d->chunkLength);
-                QByteArray.append(inBuffer.left(d->chunkLength);
+                inByteArray.append(inByteArray.left(d->chunkLength));
             }
         }
         break;
 
     case DICTIONARY_UNKNOWN:
-        qWarning() << Q_FUNC << "Cannot read unknown file type";
+        qWarning() << Q_FUNC_INFO << "Cannot read unknown file type";
         break;
     }
 

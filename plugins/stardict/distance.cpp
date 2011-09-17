@@ -36,6 +36,10 @@ The Levenshtein distance algorithm has been used in:
 
 #include "distance.h"
 
+#include <stdlib.h>
+
+#include <QtCore/QString>
+
 #define OPTIMIZE_ED 
 /*
 Cover transposition, in addition to deletion,
@@ -64,30 +68,39 @@ EditDistance::~EditDistance()
 }
 
 #ifdef OPTIMIZE_ED
-int EditDistance::CalEditDistance(const QString s, const QString t, const int limit)
+int EditDistance::calEditDistance(QString s, QString t, const int limit)
 /*Compute levenshtein distance between s and t, this is using QUICK algorithm*/
 {
-    int n = 0, m = 0, iLenDif, k, i, j, cost;
+    int n = 0;
+    int m = 0;
+    int iLenDif;
+    int k;
+    int i;
+    int j;
+    int cost;
+
     // Remove leftmost matching portion of strings
-    while ( s[i] && (s[i] == t[i]) ) ++i;
+    while ( !s.at(i).isNull() && (s.at(i) == t.at(i)) ) 
+        ++i;
+
     s = s.mid(i);
     t = t.mid(i);
 
-    while (s[n])
+    while (!s.at(n).isNull())
     {
-        n++;
+        ++n;
     }
 
-    while (t[m])
+    while (!t.at(m).isNull())
     {
-        m++;
+        ++m;
     }
 
     // Remove rightmost matching portion of strings by decrement n and m.
-    while ( n && m && (s[n - 1] == t[m - 1]) )
+    while ( n && m && (s.at(n - 1) == t.at(m - 1)) )
     {
-        n--;
-        m--;
+        --n;
+        --m;
     }
 
     if ( m == 0 || n == 0 || d == (int*)0 )
@@ -107,8 +120,8 @@ int EditDistance::CalEditDistance(const QString s, const QString t, const int li
     if ( iLenDif >= limit )
         return iLenDif;
     // step 1
-    n++;
-    m++;
+    ++n;
+    ++m;
     //    d=(int*)malloc(sizeof(int)*m*n);
     if ( m*n > currentelements )
     {

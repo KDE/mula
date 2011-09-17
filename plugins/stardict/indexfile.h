@@ -20,12 +20,16 @@
 #ifndef MULA_PLUGIN_STARDICT_INDEXFILE_H
 #define MULA_PLUGIN_STARDICT_INDEXFILE_H
 
+#include <QtCore/QtGlobal>
+
+class QString;
+
 namespace MulaPluginStarDict
 {
     class IndexFile
     {
         public:
-            IndexFile(QObject *object);
+            IndexFile();
             virtual ~IndexFile();
 
             virtual bool load(const QString& url, ulong wc, qulonglong sfile) = 0;

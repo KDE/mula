@@ -20,7 +20,7 @@
 #ifndef MULA_PLUGIN_STARDICT_DISTANCE_H
 #define MULA_PLUGIN_STARDICT_DISTANCE_H
 
-#include <QtGlobal>
+#include <QtCore/QtGlobal>
 
 class EditDistance
 {
@@ -28,7 +28,7 @@ class EditDistance
         EditDistance();
         virtual ~EditDistance();
 
-        int CalEditDistance( const QString s, const QString t, const int limit );
+        int calEditDistance( QString s, QString t, const int limit );
 
     private:
         /*Gets the minimum of three values */
