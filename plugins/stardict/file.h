@@ -20,8 +20,9 @@
 #ifndef MULA_PLUGIN_STARDICT_FILE
 #define MULA_PLUGIN_STARDICT_FILE
 
-#include <QtAlgorithms>
+#include <QtCore/QtAlgorithms>
 #include <QtCore/QStringList>
+#include <QtCore/QDir>
 
 template <typename Function>
 void __for_each_file(const QString& dirName, const QString& suffix,
@@ -33,14 +34,14 @@ void __for_each_file(const QString& dirName, const QString& suffix,
     // Going through the subfolders
     foreach (QString entryName, dir.entryList(QDir::Dirs & QDir::NoDotAndDotDot))
     {
-        QString absolutePath = dir.absolutePath(entryName);
+        QString absolutePath = dir.absoluteFilePath(entryName);
         __for_each_file(absolutePath, suffix, orderList, disableList, f);
     }
    
     foreach (QString entryName, dir.entryList(QDir::Files & QDir::Drives & QDir::NoDotAndDotDot))
     {
-        QString absolutePath = dir.absolutePath(entryName);
-        if (absolutePath..endsWith(suffix)
+        QString absolutePath = dir.absoluteFilePath(entryName);
+        if (absolutePath.endsWith(suffix)
                 && qFind(orderList.begin(), orderList.end(), absolutePath) == orderList.end())
         {
             bool enable = qFind(disableList.begin(), disableList.end(), absolutePath) == disableList.end();
@@ -54,15 +55,14 @@ void for_each_file(const QStringList& dirList, const QString& suffix,
                    const QStringList& orderList, const QStringList& disableList,
                    Function f)
 {
-    QStringList::const_iterator it;
-    for (it = orderList.begin(); it != orderList.end(); ++it)
+    foreach (const QString& string, orderList)
     {
-        bool disable = qFind(disableList.begin(), disableList.end(), *it) != disableList.end();
-        f(*it, disable);
+        bool disable = qFind(disableList.begin(), disableList.end(), string) != disableList.end();
+        f(string, disable);
     }
 
-    for (it = dirsList.begin(); it != dirsList.end(); ++it)
-        __for_each_file(*it, suffix, orderList, disableList, f);
+    foreach (const QString* dirName, dirList)
+        __for_each_file(dirName, suffix, orderList, disableList, f);
 }
 
 #endif // MULA_PLUGIN_STARDICT_FILE

@@ -46,13 +46,13 @@ class Libs
                     const QStringList& orderList,
                     const QStringList& disableList);
 
-        ulong articleCount(int idict);
+        ulong articleCount(int index) const;
 
-        const QString& dictionaryName(int idict);
+        const QString& dictionaryName(int index) const;
 
-        int dictionaryCount();
+        int dictionaryCount() const;
 
-        const char *poWord(ulong iIndex, int iLib);
+        const QByteArray poWord(ulong iIndex, int iLib) const;
 
         QString poWordData(ulong iIndex, int iLib);
 
