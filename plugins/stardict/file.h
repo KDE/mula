@@ -61,7 +61,7 @@ void for_each_file(const QStringList& dirList, const QString& suffix,
         f(string, disable);
     }
 
-    foreach (const QString* dirName, dirList)
+    foreach (const QString& dirName, dirList)
         __for_each_file(dirName, suffix, orderList, disableList, f);
 }
 

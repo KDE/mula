@@ -28,11 +28,11 @@ namespace MulaPluginStarDict
             WordListIndex();
             virtual ~WordListIndex();
 
-            bool load(const QString& url, ulong wc, qulonglong sffile);
-            const QString& key(ulong index);
-            void data(ulong index);
-            const QString& keyAndData(ulong index);
-            bool lookup(const QString& string, ulong &index);
+            bool load(const QString& url, long wc, qulonglong sffile);
+            QByteArray key(long index);
+            void data(long index);
+            QByteArray keyAndData(long index);
+            bool lookup(const QString& string, long &index);
 
             virtual quint32 wordEntryOffset() const;
             virtual quint32 wordEntrySize() const;

@@ -38,7 +38,7 @@ namespace MulaPluginStarDict
 
             const QByteArray wordData(quint32 indexItemOffset, qint32 indexItemSize);
             bool containFindData();
-            bool findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize);
+            bool findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize, QByteArray& originalData);
 
             DictionaryZip* compressedDictionaryFile() const;
             QFile* dictionaryFile() const;

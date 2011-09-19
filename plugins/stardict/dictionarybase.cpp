@@ -142,7 +142,7 @@ DictionaryBase::wordData(quint32 indexItemOffset, qint32 indexItemSize)
             }
             else
             {
-                sectionSize = originalData.indexOf(QChar('\0'), sectionPosition) + 1;
+                sectionSize = qstrlen(originalData.mid(sectionPosition)) + 1;
             }
 
             resultData.append(originalData.mid(sectionPosition, sectionSize));
@@ -197,15 +197,13 @@ DictionaryBase::containFindData()
     return false;
 }
 
-bool DictionaryBase::findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize)
+bool DictionaryBase::findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize, QByteArray& originalData)
 {
     int wordCount = searchWords.size();
     QVector<bool> wordFind(wordCount, false);
 
     if (d->dictionaryFile->isOpen())
         d->dictionaryFile->seek(indexItemOffset);
-
-    QByteArray originalData;
 
     if (d->dictionaryFile->isOpen())
         originalData = d->dictionaryFile->read(indexItemSize);

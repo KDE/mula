@@ -17,7 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "indexfile.h"
+#include "offsetindex.h"
+
+#include <QtCore/QVector>
+#include <QtCore/QFile>
+#include <QtCore/QtGlobal>
+#include <QtCore/QDir>
+#include <QtCore/QDateTime>
+#include <QtCore/QDebug>
+#include <QtGui/QDesktopServices>
+
+#include <arpa/inet.h>
 
 using namespace MulaPluginStarDict;
 
@@ -25,7 +35,9 @@ class OffsetIndex::Private
 {
     public:
         Private()
-            : indexDataBuf(0)
+            : entriesPerPage(32)
+            , wordCount(0)
+            , cacheMagicString("StarDict's Cache, Version: 0.1")
         {   
         }
 
@@ -33,30 +45,35 @@ class OffsetIndex::Private
         {
         }
 
-        static const int ENTR_PER_PAGE = 32;
-        static const char *CACHE_MAGIC;
+        int entriesPerPage;
+        QString cacheMagic;
 
         QVector<quint32> wordOffset;
         QFile indexFile;
         ulong wordCount;
 
-        char wordEntryBuf[256 + sizeof(quint32)*2]; // The length of "word_str" should be less than 256. See src/tools/DICTFILE_FORMAT.
+        char wordEntryBuffer[256 + sizeof(quint32)*2]; // The length of "word_str" should be less than 256. See src/tools/DICTFILE_FORMAT.
         struct indexEntry
         {
             ulong index;
-            QString keyStr;
-            void assign(ulong i, const QString& str)
+            QByteArray keyData;
+
+            void assign(ulong i, QByteArray &data)
             {
                 index = i;
-                keystr.assign(str);
+                keyData = data;
             }
         };
-        indexEntry first, last, middle, realLast;
+
+        indexEntry first;
+        indexEntry last;
+        indexEntry middle;
+        indexEntry realLast;
 
         struct pageEntry
         {
-            char *keyStr;
-            quint32 off;
+            QString keyData;
+            quint32 offset;
             quint32 size;
         };
 
@@ -64,78 +81,74 @@ class OffsetIndex::Private
         struct page_t
         {
             page_t()
-                :idx( -1)
+                :index(-1)
             {
             }
 
-            void fill(QByteArray data, int nent, ulong index_);
+            void fill(QByteArray data, int nent, ulong index_)
+            {
+                index = index_;
+                ulong position; 
+                for (int i = 0; i < nent; ++i) 
+                {    
+                    entries[i].keyData = data.mid(position); 
+                    position = qstrlen(data.mid(position)) + 1;
+                    entries[i].offset = ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data()));
+                    position += sizeof(quint32);
+                    entries[i].size = ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data()));
+                    position += sizeof(quint32);
+                }
+            }
 
             ulong index;
-            pageEntry entries[ENTR_PER_PAGE];
+            pageEntry entries[entriesPerPage];
         } page;
-}
 
-const QString offsetIndex::CACHE_MAGIC = "StarDict's Cache, Version: 0.1";
-
-void
-offsetIndex::page_t::fill(char *data, int nent, ulong index)
-{
-    idx = index;
-    char *p = data;
-    ulong len; 
-    for (int i = 0; i < nent; ++i) 
-    {    
-        entries[i].keystr = p; 
-        len = strlen(p);
-        p += len + 1; 
-        entries[i].off = g_ntohl(*reinterpret_cast<quint32 *>(p));
-        p += sizeof(quint32);
-        entries[i].size = g_ntohl(*reinterpret_cast<quint32 *>(p));
-        p += sizeof(quint32);
-    }    
-}
+        QByteArray cacheMagicString;
+};
 
 OffsetIndex::~OffsetIndex()
 {
 }
 
-const QByteArray
-OffsetIndex::readFirstOnPageKey(ulong pageIndex)
+QByteArray
+OffsetIndex::readFirstOnPageKey(long pageIndex)
 {
-    d->indexFile.seek(d->wordoffset[pageIndx]);
-    quint spage = d->wordOffset[pageIndex + 1] - d->wordOffset[pageIndex];
-    d->wordentryBuf = d->indexFile.read(1*qMin(sizeof(wordEntryBuf), spage)); //TODO: check returned values, deal with word entry that strlen>255.
-    return wordEntryBuf;
+    d->indexFile.seek(d->wordOffset.at(pageIndex));
+    int pageSize = d->wordOffset.at(pageIndex + 1) - d->wordOffset.at(pageIndex);
+    d->wordEntryBuffer = d->indexFile.read(qMin(d->wordEntryBuffer.size(), pageSize)); //TODO: check returned values, deal with word entry that strlen>255.
+    return d->wordEntryBuffer;
 }
 
-const QString
-OffsetIndex::firstOnPageKey(ulonglong pageIndex)
+QByteArray
+OffsetIndex::firstOnPageKey(long pageIndex)
 {
-    if (pageIndex < middle.idx)
+    if (pageIndex < d->middle.index)
     {
-        if (pageIndex == first.idx)
-            return first.keystr;
+        if (pageIndex == d->first.index)
+            return d->first.keyData;
 
         return readFirstOnPageKey(pageIndex);
     }
-    else if (pageIndex > middle.idx)
+    else if (pageIndex > d->middle.index)
     {
-        if (pageIndex == last.idx)
-            return last.keystr;
+        if (pageIndex == d->last.index)
+            return d->last.keyData;
+
         return readFirstOnPageKey(pageIndex);
     }
     else
     {
-        return middle.keystr;
+        return d->middle.keyData;
     }
 }
 
 bool
 OffsetIndex::loadCache(const QString& url)
 {
-    QStringList vars = cacheVariant(url);
+    QStringList urlStrings = cacheVariant(url);
 
-    for (QStringList::const_iterator it = vars.begin(); it != vars.end(); ++it)
+    foreach (const QString& urlString, urlStrings)
     {
         QFileInfo fileInfoIndex(url);
         QFileInfo fileInfoCache(url);
@@ -143,24 +156,24 @@ OffsetIndex::loadCache(const QString& url)
         if (fileInfoCache.lastModified() < fileInfoIndex.lastModified())
             continue;
 
-        d->mapFile.setFileName(fileName);
+        d->mapFile.setFileName(urlString);
         if( !d->mapFile.open( QIODevice::ReadOnly ) )
         {
-            qDebug() << "Failed to open file:" << fileName;
+            qDebug() << "Failed to open file:" << urlString;
             return -1;
         }
 
-        data = d->mapFile.map(0, file_size);
+        data = d->mapFile.map(0, fileSize);
         if (data == NULL)
         {
-            QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(fileName);
+            qDebug << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(urlString);
             return false;
         }
 
-        if (CACHE_MAGIC.comapre(QString::fromUtf8(data)))
+        if (d->cacheMagicString != data)
             continue;
 
-        memcpy(&wordoffset[0], data + strlen(CACHE_MAGIC), wordoffset.size()*sizeof(wordoffset[0]));
+        memcpy(&wordoffset[0], data + d->cacheMagicString.size(), wordoffset.size()*sizeof(wordoffset[0]));
         return true;
     }
 
@@ -170,8 +183,8 @@ OffsetIndex::loadCache(const QString& url)
 QStringList
 OffsetIndex::cacheVariant(const QString& url)
 {
-    QStringList ret;
-    ret.append(url + ".oft");
+    QStringList result;
+    result.append(url + ".oft");
 
     QFileInfo urlFileInfo(url);
     QString cacheLocation = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
@@ -179,62 +192,61 @@ OffsetIndex::cacheVariant(const QString& url)
     QDir cacheLocationDir;
 
     if (!cacheLocationFileInfo.exists() && cacheLocationDir.mkdir(cacheLocation) == false)
-        return ret;
+        return result;
 
     QString cacheDir = cacheLocation + QDir::separator() + "sdcv";
 
     if (!cacheLocationFileInfo.exists())
     {
         if (!cacheLocationDir.mkdir(cacheLocation))
-            return ret;
+            return result;
     }
     else if (!cacheLocationFileInfo.isDir())
     {
-        return ret;
+        return result;
     }
 
-    ret.append(cacheDir + QDir::separator() + fileInfo.fileName() + ".oft");
-    return res;
+    result.append(cacheDir + QDir::separator() + urlFileInfo.fileName() + ".oft");
+    return result;
 }
 
 bool
 OffsetIndex::saveCache(const QString& url)
 {
-    QStringList vars = cacheVariant(url);
-    for (QStringList::const_iterator it = vars.begin(); it != vars.end(); ++it)
+    QStringList urlStrings = cacheVariant(url);
+    foreach (const QString& urlString, urlStrings)
     {
-        QFile file(it);
+        QFile file(urlString);
         if( !file.open( QIODevice::WriteOnly ) )
         {
-            qDebug() << "Failed to open file for writing:" << fileName;
+            qDebug() << "Failed to open file for writing:" << urlString;
             return -1;
         }
 
-        d->mapFile.setFileName(it);
+        d->mapFile.setFileName(urlString);
         if( !d->mapFile.open( QIODevice::ReadOnly ) )
         {
-            qDebug() << "Failed to open file:" << it;
+            qDebug() << "Failed to open file:" << urlString;
             return -1;
         }
 
-        data = d->mapFile.map(0, m_size);
+        char *data = d->mapFile.map(0, d->size);
         if (data == NULL)
         {
-            QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(it);
+            qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(urlString);
             return false;
         }
 
-
-        if (!out)
+        if (file(d->cacheMagicString) != d->cacheMagicString.size())
             continue;
 
-        if (fwrite(CACHE_MAGIC, 1, strlen(CACHE_MAGIC), out) != strlen(CACHE_MAGIC))
+        if (file(d->wordOffset, sizeof(d->wordOffset[0])*d->wordOffset.size()) != d->wordOffset.size())
             continue;
-        if (fwrite(&wordoffset[0], sizeof(wordoffset[0]), wordoffset.size(), out) != wordoffset.size())
-            continue;
-        fclose(out);
 
-        QDebug() << "Save to cache" << url;
+        file.close();
+
+        qDebug() << "Save to cache" << url;
+
         return true;
     }
 
@@ -242,11 +254,12 @@ OffsetIndex::saveCache(const QString& url)
 }
 
 bool
-OffsetIndex::load(const QString& url, ulonglong wc, ulonglong fsize)
+OffsetIndex::load(const QString& url, long wc, long fileSize)
 {
-    wordcount = wc;
-    ulonglong npages = (wc - 1) / ENTR_PER_PAGE + 2;
+    d->wordCount = wc;
+    ulonglong npages = (wc - 1) / enterPerPage + 2;
     wordoffset.resize(npages);
+
     if (!load_cache(url))
     { //map file will close after finish of block
         m_mapFile.setFileName(url);
@@ -259,7 +272,7 @@ OffsetIndex::load(const QString& url, ulonglong wc, ulonglong fsize)
         data = QFile.map(0, m_mapFile.size());
         if (data == NULL)
         {
-            QDebug() << Q_FUNC() << QString("Mapping the file %1 failed!").arg(idxfilename);
+            qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(idxfilename);
             return false;
         }
 
@@ -271,7 +284,7 @@ OffsetIndex::load(const QString& url, ulonglong wc, ulonglong fsize)
         for (guint32 i = 0; i < wc; i++)
         {
             index_size = strlen(p1) + 1 + 2 * sizeof(guint32);
-            if (i % ENTR_PER_PAGE == 0)
+            if (i % d->entriesPerPage == 0)
             {
                 wordoffset[j] = p1 - idxdatabuffer;
                 ++j;
@@ -279,8 +292,9 @@ OffsetIndex::load(const QString& url, ulonglong wc, ulonglong fsize)
             p1 += index_size;
         }
         wordoffset[j] = p1 - idxdatabuffer;
-        if (!save_cache(url))
-            fprintf(stderr, "cache update failed\n");
+
+        if (!saveCache(url))
+            qDebug() << "Cache update failed";
     }
 
     if (!(idxfile = fopen(url.c_str(), "rb")))
@@ -300,10 +314,10 @@ OffsetIndex::load(const QString& url, ulonglong wc, ulonglong fsize)
 ulong
 OffsetIndex::loadPage(ulong page_idx)
 {
-    ulong nentr = ENTR_PER_PAGE;
+    ulong nentr = d->entriesPerPage;
     if (page_idx == ulong(wordoffset.size() - 2))
-        if ((nentr = wordcount % ENTR_PER_PAGE) == 0)
-            nentr = ENTR_PER_PAGE;
+        if ((nentr = wordcount % d->entriesPerPage) == 0)
+            nentr = d->entriesPerPage;
 
 
     if (page_idx != page.idx)
@@ -317,11 +331,11 @@ OffsetIndex::loadPage(ulong page_idx)
     return nentr;
 }
 
-const QString
+QByteArray
 OffsetIndex::key(ulong index)
 {
-    loadPage(idx / ENTR_PER_PAGE);
-    ulong indexInPage = idx % ENTR_PER_PAGE;
+    loadPage(idx / d->entriesPerPage);
+    ulong indexInPage = idx % d->entriesPerPage;
     wordentryOffset = page.entries[idx_in_page].off;
     wordentrySize = page.entries[idx_in_page].size;
 
@@ -334,7 +348,7 @@ OffsetIndex::data(ulong index)
    key(index);
 }
 
-const QByteArray
+QByteArray
 OffsetIndex::keyAndData(ulong index)
 {
     return key(index);
@@ -403,7 +417,7 @@ OffsetIndex::lookup(const char *str, ulong &idx)
             }
         }
 
-        index *= ENTR_PER_PAGE;
+        index *= d->entriesPerPage;
         if (!found)
             index += iFrom;    //next
         else
@@ -411,7 +425,7 @@ OffsetIndex::lookup(const char *str, ulong &idx)
     }
     else
     {
-        index *= ENTR_PER_PAGE;
+        index *= d->entriesPerPage;
     }
 
     return found;

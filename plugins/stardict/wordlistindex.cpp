@@ -19,13 +19,16 @@
 
 #include "wordlistindex.h"
 
+#include <QtCore/QDebug>
+
+#include <arpa/inet.h>
+
 using namespace MulaPluginStarDict;
 
 class WordListIndex::Private
 {
     public:
         Private()
-            : indexDataBuf(0)
         {   
         }
 
@@ -33,25 +36,25 @@ class WordListIndex::Private
         {
         }
 
-        QByteArray indexDataBuf;
+        QByteArray indexDataBuffer;
         QStringList wordList;
-}
+};
 
 WordListIndex::~WordListIndex()
 {
 }
 
 bool
-WordListIndex::load(const QString& filePath, qulonglong wc, qulonglong sfile)
+WordListIndex::load(const QString& filePath, long wc, qulonglong fileSize)
 {
     Qfile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
     {
-        qDebug() << Q_FUNC << "Failed to open file:" << filePath;
+        qDebug() << Q_FUNC_INFO << "Failed to open file:" << filePath;
         return -1;
     }
 
-    d->indexDataBuf = file.read(sfile);
+    d->indexDataBuffer = file.read(fileSize);
 
     file.close();
 
@@ -69,58 +72,58 @@ WordListIndex::load(const QString& filePath, qulonglong wc, qulonglong sfile)
     return true;
 }
 
-const QString&
-WordListIndex::key(ulong index) const
+QByteArray
+WordListIndex::key(long index) const
 {
     return d->wordList.at(index);
 }
 
 void
-WordListIndex::data(ulong index)
+WordListIndex::data(long index)
 {
-    char *p1 = d->wordList[idx] + strlen(wordlist[idx]) + sizeof(char);
-    wordentry_offset = g_ntohl(*reinterpret_cast<quint32 *>(p1));
-    p1 += sizeof(guint32);
-    wordentry_size = g_ntohl(*reinterpret_cast<quint32 *>(p1));
+    int position = index + qstrlen(wordlist.mid(index)) + sizeof(char);
+    wordentry_offset = ntohl(*reinterpret_cast<quint32 *>(d->wordList[position]));
+    position += sizeof(guint32);
+    d->wordEntrySize = ntohl(*reinterpret_cast<quint32 *>(d->wordList[position]));
 }
 
-const QByteArray&
-WordListIndex::keyAndData(ulong index)
+QByteArray
+WordListIndex::keyAndData(long index)
 {
     data(index);
     return key(index);
 }
 
 bool
-WordListIndex::lookup(const QString &string, ulong &index)
+WordListIndex::lookup(const QString &string, long &index)
 {
     bool found = false;
-    ulong iTo = d->wordList.size() - 2;
+    long indexTo = d->wordList.size() - 2;
 
     if (stardictStringCompare(string, key(0)) < 0)
     {
         index = 0;
     }
-    else if (stardictStringCompare(string, key(iTo)) > 0)
+    else if (stardictStringCompare(string, key(indexTo)) > 0)
     {
-        index = INVALID_INDEX;
+        index = invalidIndex;
     }
     else
     {
-        ulong iThisIndex = 0;
-        ulong iFrom = 0;
+        long indexThisIndex = 0;
+        long indexFrom = 0;
         int cmpint;
-        while (iFrom <= iTo)
+        while (indexFrom <= indexTo)
         {
-            iThisIndex = (iFrom + iTo) / 2;
-            cmpint = stardictStringCompare(string, key(iThisIndex));
+            indexThisIndex = (indexFrom + indexTo) / 2;
+            cmpint = stardictStringCompare(string, key(indexThisIndex));
             if (cmpint > 0)
             {
-                iFrom = iThisIndex + 1;
+                indexFrom = indexThisIndex + 1;
             }
             else if (cmpint < 0)
             {
-                iTo = iThisIndex - 1;
+                indexTo = indexThisIndex - 1;
             }
             else
             {
@@ -128,10 +131,11 @@ WordListIndex::lookup(const QString &string, ulong &index)
                 break;
             }
         }
+
         if (!found)
-            index = iFrom;    //next
+            index = indexFrom;    //next
         else
-            index = iThisIndex;
+            index = indexThisIndex;
     }
 
     return found;

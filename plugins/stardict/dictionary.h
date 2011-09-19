@@ -34,21 +34,21 @@ namespace MulaPluginStarDict
 
             bool load(const QString& ifoFileName);
 
-            int articlesCount() const;
+            int articleCount() const;
 
             const QString& dictionaryName() const;
 
             const QString& ifoFileName() const;
 
-            const QString& key(ulong index) const;
+            const QString key(long index) const;
 
-            const QString data(ulong index);
+            QString data(long index);
 
-            void keyAndData(ulong index, QString& key, quint32 *offset, quint32 *size);
+            void keyAndData(long index, QByteArray key, qint32& offset, qint32 &size);
 
-            bool lookup(const QString string, ulong &index);
+            bool lookup(const QString string, long &index);
 
-            bool lookupWithRule(const QString& pattern, ulong *aIndex, int iBuffLen);
+            bool lookupWithRule(const QString& pattern, long *aIndex, int iBuffLen);
 
             DictionaryZip* compressedDictionaryFile() const;
             QFile* dictionaryFile() const;

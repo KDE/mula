@@ -20,6 +20,10 @@
 #ifndef MULA_PLUGIN_STARDICT_OFFSETINDEX_H
 #define MULA_PLUGIN_STARDICT_OFFSETINDEX_H
 
+#include "indexfile.h"
+
+#include <QtCore/QStringList>
+
 namespace MulaPluginStarDict
 {
     class OffsetIndex : public IndexFile
@@ -28,23 +32,26 @@ namespace MulaPluginStarDict
             OffsetIndex();
             virtual ~OffsetIndex();
 
-            bool load(const QString& url, ulong wordCount, qulonglong sfile);
-            const QString& key(ulong index);
+            bool load(const QString& url, long wordCount, qulonglong sfile);
+            QByteArray key(long index);
 
-            void data(ulong index);
-            const QString& keyAndData(ulong index);
-            bool lookup(const QString &string, ulong &index);
+            void data(long index);
+            QByteArray keyAndData(long index);
+            bool lookup(const QString &string, long &index);
 
             virtual quint32 wordEntryOffset() const;
             virtual quint32 wordEntrySize() const;
 
         private:
-            ulong loadPage(ulong pageIndex);
-            const QString& readFirstOnPageKey(ulong pageIndex);
-            const QString& firstOnPageKey(ulong pageIndex);
+            long loadPage(long pageIndex);
+            QByteArray readFirstOnPageKey(long pageIndex);
+            QByteArray firstOnPageKey(long pageIndex);
             bool loadCache(const QString& url);
             bool saveCache(const QString& url);
             static QStringList cacheVariant(const QString& url);
+
+            class Private;
+            Private *const d;
     };
 }
 

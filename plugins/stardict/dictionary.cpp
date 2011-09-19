@@ -13,7 +13,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License aLong with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
@@ -45,7 +45,7 @@ class Dictionary::Private
         }
  
         QString ifoFileName;
-        ulong wordCount;
+        long wordCount;
         QString bookName;
 
         QScopedPointer<IndexFile> indexFile;
@@ -62,7 +62,7 @@ Dictionary::~Dictionary()
 }
 
 int
-Dictionary::articlesCount() const
+Dictionary::articleCount() const
 {   
     return d->wordCount;
 }   
@@ -79,29 +79,29 @@ Dictionary::ifoFileName() const
     return d->ifoFileName;
 }   
 
-const QString&
-Dictionary::key(ulong index) const
+const QString
+Dictionary::key(long index) const
 {   
     return d->indexFile->key(index);
 }   
 
-const QString
-Dictionary::data(ulong index)
+QString
+Dictionary::data(long index)
 {
     d->indexFile->data(index);
     return DictionaryBase::wordData(d->indexFile->wordEntryOffset(), d->indexFile->wordEntrySize());
 }
 
 void
-Dictionary::keyAndData(ulong index, QString& key, quint32 *offset, quint32 *size)
+Dictionary::keyAndData(long index, QByteArray key, qint32 &offset, qint32 &size)
 {
     key = d->indexFile->keyAndData(index);
-    *offset = d->indexFile->wordEntryOffset();
-    *size = d->indexFile->wordEntrySize();
+    offset = d->indexFile->wordEntryOffset();
+    size = d->indexFile->wordEntrySize();
 }
 
 bool
-Dictionary::lookup(const QString string, ulong &index)
+Dictionary::lookup(const QString string, long &index)
 {
     return d->indexFile->lookup(string, index);
 }
@@ -136,7 +136,7 @@ Dictionary::load(const QString& ifoFilePath)
         completeFilePath.remove(completeFilePath.length() - sizeof(".dz") + 1, sizeof(".dz") - 1);
 
         QFile *uncompressedDictionaryFile = dictionaryFile();
-        if (!uncompressedDictionaryFile)
+        if (uncompressedDictionaryFile)
         {
             delete uncompressedDictionaryFile;
             uncompressedDictionaryFile = 0;
@@ -191,14 +191,14 @@ Dictionary::loadIfoFile(const QString& ifoFileName)
 }
 
 bool
-Dictionary::lookupWithRule(const QString& pattern, ulong *aIndex, int iBuffLen)
+Dictionary::lookupWithRule(const QString& pattern, long *aIndex, int iBuffLen)
 {
     int indexCount = 0;
 
     QRegExp rx(pattern);
     rx.setPatternSyntax(QRegExp::Wildcard);
 
-    for (int i = 0; i < articlesCount() && indexCount < iBuffLen - 1; ++i)
+    for (int i = 0; i < articleCount() && indexCount < iBuffLen - 1; ++i)
         if (rx.exactMatch(key(i)))
             aIndex[indexCount++] = i;
 

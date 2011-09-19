@@ -32,11 +32,11 @@ namespace MulaPluginStarDict
             IndexFile();
             virtual ~IndexFile();
 
-            virtual bool load(const QString& url, ulong wc, qulonglong sfile) = 0;
-            virtual const QString& key(ulong index) = 0;
-            virtual void data(ulong index) = 0;
-            virtual const QString& keyAndData(ulong index) = 0;
-            virtual bool lookup(const QString& string, ulong &index) = 0;
+            virtual bool load(const QString& url, long wc, qulonglong sfile) = 0;
+            virtual QByteArray key(long index) = 0;
+            virtual void data(long index) = 0;
+            virtual QByteArray keyAndData(long index) = 0;
+            virtual bool lookup(const QString& string, long &index) = 0;
 
             virtual quint32 wordEntryOffset() const;
             virtual quint32 wordEntrySize() const;

@@ -54,9 +54,10 @@ static bool isPureEnglish(const QByteArray& word)
     return true;
 }
 
-static inline int stardictStringCompare(const QString string1, const QString string2)
+static inline int stardictStringCompare(QString string1, QString string2)
 {
     int retval = string1.compare(string2, Qt::CaseInsensitive);
+
     if (retval == 0)
         return string1.compare(string2);
     else
@@ -75,15 +76,15 @@ class Libs::Private
         {   
         }   
  
-        QList<Dictionary *> dictionaries; // word Libs.
+        QVector<Dictionary *> dictionaries; // word Libs.
         int maximumFuzzyDistance;
-        progress_func_t progress_func;
+        progress_func_t progressFunction;
 };
 
-Libs::Libs(progress_func_t f)
+Libs::Libs(progress_func_t progressFunction)
     : d(new Private)
 {
-    Q_UNUSED(f);
+    d->progressFunction = progressFunction;
 }
 
 Libs::~Libs()
@@ -106,10 +107,10 @@ void Libs::loadDictionary(const QString& url)
     }
 }
 
-ulong
+long
 Libs::articleCount(int index) const
 {
-    return d->dictionaries.at(index)->articlesCount();
+    return d->dictionaries.at(index)->articleCount();
 }
 
 const QString&
@@ -125,22 +126,22 @@ Libs::dictionaryCount() const
 }
 
 const QByteArray
-Libs::poWord(ulong keyIndex, int libIndex) const
+Libs::poWord(long keyIndex, int libIndex) const
 {
     return d->dictionaries.at(libIndex)->key(keyIndex).toUtf8();
 }
 
 QString
-Libs::poWordData(ulong dataIndex, int libIndex)
+Libs::poWordData(long dataIndex, int libIndex)
 {
-    if (iIndex == INVALID_INDEX)
+    if (libIndex == INVALID_INDEX)
         return NULL;
 
     return d->dictionaries.at(libIndex)->data(dataIndex);
 }
 
 bool
-Libs::lookupWord(const char* searchWord, ulong& iWordIndex, int libIndex)
+Libs::lookupWord(const char* searchWord, long& iWordIndex, int libIndex)
 {
     return d->dictionaries.at(libIndex)->lookup(searchWord, iWordIndex);
 }
@@ -197,9 +198,6 @@ class DictionaryReLoader
         }
 
     private:
-        QVector<Dictionary *> &future;
-        Libs& lib;
-
         Dictionary *find(const QString& url)
         {
             QVector<Dictionary *>::iterator it;
@@ -215,6 +213,10 @@ class DictionaryReLoader
             }
             return NULL;
         }
+
+        QVector<Dictionary *> previous;
+        QVector<Dictionary *> future;
+        Libs& lib;
 };
 
 void
@@ -227,53 +229,17 @@ Libs::reload(const QStringList& dictionaryDirs,
     for_each_file(dictionaryDirs, ".ifo", orderList, disableList,
                   DictionaryReLoader(previous, d->dictionaries, *this));
 
-    qDeleteAll(previous)
+    qDeleteAll(previous);
 }
 
-const char *
-Libs::poCurrentWord(ulong *iCurrent)
+QByteArray
+Libs::poCurrentWord(long *iCurrent)
 {
     const char *poCurrentWord = NULL;
     const char *word;
 
     for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
     {
-        if (iCurrent.at(iLib) == INVALID_INDEX)
-            continue;
-
-        if (iCurrent[iLib] >= articlesCount(iLib) || iCurrent[iLib] < 0)
-            continue;
-
-        if (poCurrentWord == NULL )
-        {
-            poCurrentWord = poWord(iCurrent[iLib], iLib);
-        }
-        else
-        {
-            word = poWord(iCurrent[iLib], iLib);
-
-            if (stardictStringCompare(poCurrentWord, word) > 0 )
-                poCurrentWord = word;
-        }
-    }
-    return poCurrentWord;
-}
-
-const char *
-Libs::poNextWord(const char *sWord, ulong *iCurrent)
-{
-    // the input can be:
-    // (word,iCurrent),read word,write iNext to iCurrent,and return next word. used by TopWin::NextCallback();
-    // (NULL,iCurrent),read iCurrent,write iNext to iCurrent,and return next word. used by AppCore::ListWords();
-    const char *poCurrentWord = NULL;
-    QVector<Dictionary *>::size_type iCurrentLib = 0;
-    const char *word;
-
-    for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
-    {
-        if (sWord)
-            d->dictionaries.at(iLib)->lookup(sWord, iCurrent[iLib]);
-
         if (iCurrent[iLib] == INVALID_INDEX)
             continue;
 
@@ -283,25 +249,61 @@ Libs::poNextWord(const char *sWord, ulong *iCurrent)
         if (poCurrentWord == NULL )
         {
             poCurrentWord = poWord(iCurrent[iLib], iLib);
-            iCurrentLib = iLib;
         }
         else
         {
             word = poWord(iCurrent[iLib], iLib);
 
             if (stardictStringCompare(poCurrentWord, word) > 0 )
-            {
                 poCurrentWord = word;
+        }
+    }
+    return poCurrentWord;
+}
+
+QByteArray
+Libs::poNextWord(QByteArray searchWord, long *iCurrent)
+{
+    // the input can be:
+    // (word,iCurrent),read word,write iNext to iCurrent,and return next word. used by TopWin::NextCallback();
+    // (NULL,iCurrent),read iCurrent,write iNext to iCurrent,and return next word. used by AppCore::ListWords();
+    QByteArray currentWord = NULL;
+    QVector<Dictionary *>::size_type iCurrentLib = 0;
+    const char *word;
+
+    for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
+    {
+        if (!searchWord.isEmpty())
+            d->dictionaries.at(iLib)->lookup(searchWord, iCurrent[iLib]);
+
+        if (iCurrent[iLib] == INVALID_INDEX)
+            continue;
+
+        if (iCurrent[iLib] >= articleCount(iLib) || iCurrent[iLib] < 0)
+            continue;
+
+        if (currentWord.isNull())
+        {
+            currentWord = poWord(iCurrent[iLib], iLib);
+            iCurrentLib = iLib;
+        }
+        else
+        {
+            word = poWord(iCurrent[iLib], iLib);
+
+            if (stardictStringCompare(currentWord, word) > 0 )
+            {
+                currentWord = word;
                 iCurrentLib = iLib;
             }
         }
     }
 
-    if (poCurrentWord)
+    if (!currentWord.isEmpty())
     {
         iCurrent[iCurrentLib]
         ++;
-        for (std::vector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
+        for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
         {
             if (iLib == iCurrentLib)
                 continue;
@@ -309,37 +311,37 @@ Libs::poNextWord(const char *sWord, ulong *iCurrent)
             if (iCurrent[iLib] == INVALID_INDEX)
                 continue;
 
-            if ( iCurrent[iLib] >= narticles(iLib) || iCurrent[iLib] < 0)
+            if ( iCurrent[iLib] >= articleCount(iLib) || iCurrent[iLib] < 0)
                 continue;
 
-            if (strcmp(poCurrentWord, poWord(iCurrent[iLib], iLib)) == 0 )
+            if (strcmp(currentWord, poWord(iCurrent[iLib], iLib)) == 0 )
                 iCurrent[iLib]++;
         }
 
-        poCurrentWord = poCurrentWord(iCurrent);
+        currentWord = poCurrentWord(iCurrent);
     }
-    return poCurrentWord;
+    return currentWord;
 }
 
-const char *
-Libs::poPreviousWord(ulong *iCurrent)
+QByteArray
+Libs::poPreviousWord(long *iCurrent)
 {
     // used by TopWin::PreviousCallback(); the iCurrent is cached by AppCore::TopWinWordChange();
-    const char *poCurrentWord = NULL;
+    QByteArray poCurrentWord = NULL;
     QVector<Dictionary *>::size_type iCurrentLib = 0;
     const char *word;
 
-    for (QVector<Dict *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
+    for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
     {
         if (iCurrent[iLib] == INVALID_INDEX)
-            iCurrent[iLib] = narticles(iLib);
+            iCurrent[iLib] = articleCount(iLib);
         else
         {
-            if ( iCurrent[iLib] > narticles(iLib) || iCurrent[iLib] <= 0)
+            if ( iCurrent[iLib] > articleCount(iLib) || iCurrent[iLib] <= 0)
                 continue;
         }
 
-        if ( poCurrentWord == NULL )
+        if ( poCurrentWord.isNull() )
         {
             poCurrentWord = poWord(iCurrent[iLib] - 1, iLib);
             iCurrentLib = iLib;
@@ -355,24 +357,24 @@ Libs::poPreviousWord(ulong *iCurrent)
         }
     }
 
-    if (poCurrentWord)
+    if (!poCurrentWord.isEmpty())
     {
         iCurrent[iCurrentLib]--;
-        for (QVector<Dict *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
+        for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
         {
             if (iLib == iCurrentLib)
                 continue;
 
-            if (iCurrent[iLib] > narticles(iLib) || iCurrent[iLib] <= 0)
+            if (iCurrent[iLib] > articleCount(iLib) || iCurrent[iLib] <= 0)
                 continue;
 
-            if (poCurrentWord.compare(poWord(iCurrent[iLib] - 1, iLib)) == 0)
+            if (poCurrentWord == poWord(iCurrent[iLib] - 1, iLib))
             {
                 iCurrent[iLib]--;
             }
             else
             {
-                if (iCurrent[iLib] == narticles(iLib))
+                if (iCurrent[iLib] == articleCount(iLib))
                     iCurrent[iLib] = INVALID_INDEX;
             }
         }
@@ -380,72 +382,17 @@ Libs::poPreviousWord(ulong *iCurrent)
     return poCurrentWord;
 }
 
-bool Libs::removePattern(QString pattern, QString originalWord, bool found)
+bool Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
 {
-        //cut "ly"
-        int wordLength = originalWord.length();
-        if (!found && wordLength > pattern.length())
-        {
-            originalWordPart = originalWord.mid([wordLength - 2], 2);
-            bool isUpperCase = !strncmp(&sWord[wordLength - 2], "LY", 2);
-            if (!originiWordPart.compare("LY", Qt::CaseSensitive) || !originiWordPart.compare("ly", Qt::CaseSensitive))
-            {
-                sNewWord = sWord;
-                sNewWord[iWordLen - 2] = '\0';  // cut "ly"
-                if (iWordLen > 5 && sNewWord[iWordLen - 3] == sNewWord[iWordLen - 4]
-                        && !isVowel(sNewWord[iWordLen - 4]) && isVowel(sNewWord[iWordLen - 5]))
-                { //doubled
-
-                    sNewWord[iWordLen - 3] = '\0';
-                    if ( d->dictionaries.at(iLib)->lookup(sNewWord, iIndex) )
-                        bFound = true;
-                    else
-                    {
-                        if (isUpperCase || sWord.at(0).isUpper())
-                        {
-                            caseString = sNewWord.toLower();
-                            if (caseString.compare(sNewWord))
-                            {
-                                if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
-                                    found = true;
-                            }
-                        }
-                        if (!found)
-                            sNewWord[iWordLen - 3] = sNewWord[iWordLen - 4];  //restore
-                    }
-                }
-
-                if (!found)
-                {
-                    if (d->dictionaries.at(iLib)->lookup(sNewWord, iIndex))
-                    {
-                        found = true;
-                    }
-                    else if (isUpperCase || sWord.at(0).isUpper())
-                    {
-                        caseString = sNewWord.toLower();
-                        if (caseString.compare(sNewWord))
-                        {
-                            if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
-                                found = true;
-                        }
-                    }
-                }
-            }
-        }
-}
-
-bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
-{
-    ulong iIndex;
+    long iIndex;
     bool found = false;
     QString caseString;
 
     if (!found)
     {
         // to lower case.
-        caseString = sWord.toLower();
-        if (caseString.compare(sWord))
+        caseString = searchWord.toLower();
+        if (caseString.compare(searchWord))
         {
             if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                 found = true;
@@ -454,8 +401,8 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
         // to upper case.
         if (!found)
         {
-            caseString = sWord.toUpper();
-            if (caseString.compare(sWord))
+            caseString = searchWord.toUpper();
+            if (caseString.compare(searchWord))
             {
                 if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                     found = true;
@@ -465,9 +412,9 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
         // Upper the first character and lower others.
         if (!found)
         {
-            caseString = sWord.toLower();
+            caseString = searchWord.toLower();
             caseString[0] = caseString[0].toUpper();
-            if (caseString.compare(sWord))
+            if (caseString.compare(searchWord))
             {
                 if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                     found = true;
@@ -475,28 +422,28 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
         }
     }
 
-    if (isPureEnglish(similarWord))
+    if (isPureEnglish(searchWord))
     {
-        // If not Found, try other status of sWord.
-        int similarWordLength = similarWord.size();
+        // If not Found, try other status of searchWord.
+        int searchWordLength = searchWord.size();
         bool isUpperCase;
 
-        QString similarNewWord = similarWord.left(similarWordLength - 1); //cut one char "s" or "d"
-        if (!found && similarWordLength > 1)
+        QByteArray searchNewWord = searchWord.left(searchWordLength - 1); //cut one char "s" or "d"
+        if (!found && searchWordLength > 1)
         {
-            isUpperCase = similarWord.endsWith('S') || similarWord.endsWith("ED");
-            if (isUpperCase || similarWordLength.endsWith('s') || similarWord.endsWith("ed"))
+            isUpperCase = searchWord.endsWith('S') || searchWord.endsWith("ED");
+            if (isUpperCase || searchWord.endsWith('s') || searchWord.endsWith("ed"))
             {
-                similarNewWord = similarWord.left(similarWordLength - 1);
+                searchNewWord = searchWord.left(searchWordLength - 1);
                 // cut "s" or "d"
-                if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                 {
                     found = true;
                 }
-                else if (isUpperCase || similarWord.at(0).isUpper())
+                else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                 {
-                    caseString = similarNewWord.toLower();
-                    if (caseString.compare(similarNewWord))
+                    caseString = searchNewWord.toLower();
+                    if (caseString.compare(searchNewWord))
                     {
                         if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                             found = true;
@@ -506,27 +453,27 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
         }
 
         //cut "ly"
-        if (!found && similarWordLength > 2)
+        if (!found && searchWordLength > 2)
         {
-            isUpperCase = similarWord.endsWith("LY");
-            if (isUpperCase || similarWord.endsWith("ly"))
+            isUpperCase = searchWord.endsWith("LY");
+            if (isUpperCase || searchWord.endsWith("ly"))
             {
-                similarNewWord = similarWord.left(similarWordLength - 2); // cut "ly"
-                if (similarWordLength > 5 && similarNewWord.at(similarWordLength - 3) == similarNewWord.at(similarWordLength - 4)
-                        && !isVowel(similarNewWord.at(similarWordLength - 4)) && isVowel(similarNewWord.at(similarWordLength - 5)))
+                searchNewWord = searchWord.left(searchWordLength - 2); // cut "ly"
+                if (searchWordLength > 5 && searchNewWord.at(searchWordLength - 3) == searchNewWord.at(searchWordLength - 4)
+                        && !isVowel(searchNewWord.at(searchWordLength - 4)) && isVowel(searchNewWord.at(searchWordLength - 5)))
                 { //doubled
 
-                    similarNewWord.remove(similarWordLength - 3);
-                    if ( d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex) )
+                    searchNewWord.remove(searchNewWord.length() - 1, 1);
+                    if ( d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex) )
                     {
                         found = true;
                     }
                     else
                     {
-                        if (isUpperCase || similarWord.at(0).isUpper())
+                        if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                         {
-                            caseString = similarNewWord.toLower();
-                            if (caseString.compare(similarNewWord))
+                            caseString = searchNewWord.toLower();
+                            if (caseString.compare(searchNewWord))
                             {
                                 if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                                     found = true;
@@ -534,20 +481,20 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
                         }
 
                         if (!found)
-                            similarNewWord.append(similarNewWord(similarNewWord.length() -1));  //restore
+                            searchNewWord.append(searchNewWord.at(searchNewWord.length() - 1));  //restore
                     }
                 }
 
                 if (!found)
                 {
-                    if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                    if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                     {
                         found = true;
                     }
-                    else if (isUpperCase || similarWord.at(0).isUpper())
+                    else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                     {
-                        caseString = similarNewWord.toLower();
-                        if (caseString.compare(similarNewWord))
+                        caseString = searchNewWord.toLower();
+                        if (caseString.compare(searchNewWord))
                         {
                             if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                                 found = true;
@@ -558,24 +505,24 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
         }
 
         //cut "ing"
-        if (!found && similarWordLength > 3)
+        if (!found && searchWordLength > 3)
         {
-            isUpperCase = similarWord.endsWith("ING");
-            if (isUpperCase || similarWord.endsWith("ing"))
+            isUpperCase = searchWord.endsWith("ING");
+            if (isUpperCase || searchWord.endsWith("ing"))
             {
-                similarNewWord = similarWord.left(similarWordLength - 3);
-                if ( similarWordLength > 6 && (similarNewWord.at(similarWordLength - 4) == similarNewWord.at(similarWordLength - 5))
-                        && !isVowel(similarNewWord.at(similarWordLength - 5)) && isVowel(similarNewWord.at(similarWordLength - 6)))
+                searchNewWord = searchWord.left(searchWordLength - 3);
+                if ( searchWordLength > 6 && (searchNewWord.at(searchWordLength - 4) == searchNewWord.at(searchWordLength - 5))
+                        && !isVowel(searchNewWord.at(searchWordLength - 5)) && isVowel(searchNewWord.at(searchWordLength - 6)))
                 {  //doubled
-                    similarNewWord.remove(similarNewWord.length() - 1);
-                    if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                    searchNewWord.remove(searchNewWord.length() - 1, 1);
+                    if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                         found = true;
                     else
                     {
-                        if (isUpperCase || similarWord.at(0).isUpper())
+                        if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                         {
-                            caseString = similarNewWord.toLower();
-                            if (caseString.compare(similarNewWord))
+                            caseString = searchNewWord.toLower();
+                            if (caseString.compare(searchNewWord))
                             {
                                 if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                                     found = true;
@@ -583,20 +530,20 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
                         }
 
                         if (!found)
-                            similarNewWord.append(similarNewWord(similarNewWord.length() - 1));  //restore
+                            searchNewWord.append(searchNewWord.at(searchNewWord.length() - 1));  //restore
                     }
                 }
 
                 if (!found)
                 {
-                    if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                    if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                     {
                         found = true;
                     }
-                    else if (isUpperCase || similarWord.at(0).isUpper())
+                    else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                     {
-                        caseString = similarNewWord.toLower();
-                        if (caseString.compare(similarNewWord))
+                        caseString = searchNewWord.toLower();
+                        if (caseString.compare(searchNewWord))
                         {
                             if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                                 found = true;
@@ -607,18 +554,18 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
                 if (!found)
                 {
                     if (isUpperCase)
-                        sNewWord += "E"; // add a char "E"
+                        searchNewWord.append('E'); // add a char "E"
                     else
-                        sNewWord += "e"; // add a char "e"
+                        searchNewWord.append('e'); // add a char "e"
 
-                    if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                    if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                     {
                         found = true;
                     }
-                    else if (isUpperCase || sWord.at(0).isUpper())
+                    else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                     {
-                        caseString = sNewWord.toLower();
-                        if (caseString.compare(sNewWord))
+                        caseString = searchNewWord.toLower();
+                        if (caseString.compare(searchNewWord))
                         {
                             if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                                 found = true;
@@ -629,34 +576,34 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
         }
 
         //cut two char "es"
-        if (!found && similarWordLength > 3)
+        if (!found && searchWordLength > 3)
         {
-            isUpperCase = (similarWord.endsWith("ES")
-                        && similarWord.at(similarWordLength - 3) == 'S'
-                        || similarWord.at(similarWordLength - 3) == 'X'
-                        || similarWord.at(similarWordLength - 3) == 'O'
-                        || (similarWordLenth > 4 && similarWord.at(similarWordLength - 3) == 'H'
-                        && (similarWord.at(similarWordLength - 4) == 'C'
-                        || similarWord.at(similarWordLength - 4) == 'S')));
+            isUpperCase = (searchWord.endsWith("ES")
+                        && (searchWord.at(searchWordLength - 3) == 'S'
+                        || searchWord.at(searchWordLength - 3) == 'X'
+                        || searchWord.at(searchWordLength - 3) == 'O'
+                        || (searchWordLength > 4 && searchWord.at(searchWordLength - 3) == 'H'
+                        && (searchWord.at(searchWordLength - 4) == 'C'
+                        || searchWord.at(searchWordLength - 4) == 'S'))));
 
             if (isUpperCase ||
-                    (similarWord.endsWith("es")
-                     && (similarWord.at(similarWordLength - 3) == 's'
-                     || similarWord.at(similarWordLength - 3) == 'x'
-                     || similarWord.at(similarWordLength - 3) == 'o'
-                     || (similarWordLength > 4 && similarWord.at(similarWordLength - 3) == 'h'
-                     && (similarWord.at(similarWordLength - 4) == 'c'
-                     || similarWord.at(similarWordLength - 4) == 's')))))
+                    (searchWord.endsWith("es")
+                     && (searchWord.at(searchWordLength - 3) == 's'
+                     || searchWord.at(searchWordLength - 3) == 'x'
+                     || searchWord.at(searchWordLength - 3) == 'o'
+                     || (searchWordLength > 4 && searchWord.at(searchWordLength - 3) == 'h'
+                     && (searchWord.at(searchWordLength - 4) == 'c'
+                     || searchWord.at(searchWordLength - 4) == 's')))))
             {
-                similarNewWord = similarWord.left(similarWordLength - 2);
-                if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                searchNewWord = searchWord.left(searchWordLength - 2);
+                if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                 {
                     found = true;
                 }
-                else if (isUpperCase || sWord.at(0).isUpper())
+                else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                 {
-                    caseString = similarNewWord.toLower();
-                    if (caseString.compare(similarNewWord))
+                    caseString = searchNewWord.toLower();
+                    if (caseString.compare(searchNewWord))
                     {
                         if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                             found = true;
@@ -666,46 +613,46 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
         }
 
         //cut "ed"
-        if (!found && similarWordLength > 3)
+        if (!found && searchWordLength > 3)
         {
-            isUpperCase = similar.endsWith("ED");
-            if (isUpperCase || similarWord.endsWith("ed"))
+            isUpperCase = searchWord.endsWith("ED");
+            if (isUpperCase || searchWord.endsWith("ed"))
             {
-                similarNewWord = similarWord.left(similarWordLength - 2);
-                if (similarWordLength > 5 && (similarNewWord.at(similarWordLength - 3) == similarNewWord.at(similarWordLength - 4))
-                        && !isVowel(similarNewWord.at(similarWordLength - 4)) && isVowel(similarNewWord.at(similarWordLength - 5)))
+                searchNewWord = searchWord.left(searchWordLength - 2);
+                if (searchWordLength > 5 && (searchNewWord.at(searchWordLength - 3) == searchNewWord.at(searchWordLength - 4))
+                        && !isVowel(searchNewWord.at(searchWordLength - 4)) && isVowel(searchNewWord.at(searchWordLength - 5)))
                 { //doubled
-                    similarNewWord.remove(similarNewWord.length() - 1);
-                    if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                    searchNewWord.remove(searchNewWord.length() - 1, 1);
+                    if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                     {
                         found = true;
                     }
                     else
                     {
-                        if (isUpperCase || sWord.at(0).isUpper())
+                        if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                         {
-                            caseString = similarNewWord.toLower();
-                            if (caseString.compare(similarNewWord))
+                            caseString = searchNewWord.toLower();
+                            if (caseString.compare(searchNewWord))
                             {
                                 if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                                     found = true;
                             }
                         }
                         if (!found)
-                            similarNewWord.append(similarNewWord.at(similarNewWord.length() - 1);  //restore
+                            searchNewWord.append(searchNewWord.at(searchNewWord.length() - 1));  //restore
                     }
                 }
 
                 if (!found)
                 {
-                    if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                    if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                     {
                         found = true;
                     }
-                    else if (isUpperCase || similarWord.at(0).isUpper())
+                    else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                     {
-                        caseString = similarNewWord.toLower();
-                        if (caseString.compare(similarNewWord))
+                        caseString = searchNewWord.toLower();
+                        if (caseString.compare(searchNewWord))
                         {
                             if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                                 found = true;
@@ -716,107 +663,107 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
         }
 
         // cut "ied" , add "y".
-        if (!found && similarWordLength > 3)
+        if (!found && searchWordLength > 3)
         {
-            isUpperCase = similarWord.endsWith("IED");
-            if (isUpperCase || similarWord.endsWith("ied"))
+            isUpperCase = searchWord.endsWith("IED");
+            if (isUpperCase || searchWord.endsWith("ied"))
             {
-                sNewWord = sWord.left(similarWordLength() - 3);
+                searchNewWord = searchWord.left(searchWordLength - 3);
                 if (isUpperCase)
                 {
-                    similarNewWord.append('Y'); // add a char "Y"
+                    searchNewWord.append('Y'); // add a char "Y"
                 }
                 else
                 {
-                    similarNewWord.append('y'); // add a char "y"
+                    searchNewWord.append('y'); // add a char "y"
                 }
 
-                if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                 {
                     found = true;
                 }
-                else if (isUpperCase ||sWord.at(0).isUpper())
+                else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                 {
-                    caseString = similarNewWord.toLower();
-                    if (caseString.compare(similarNewWord))
+                    caseString = searchNewWord.toLower();
+                    if (caseString.compare(searchNewWord))
                     {
                         if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
-                            bound = true;
+                            found = true;
                     }
                 }
             }
         }
 
         // cut "ies" , add "y".
-        if (!bound && similarWordLength > 3)
+        if (!found && searchWordLength > 3)
         {
-            isUpperCase = similarWord.endsWith("IES");
-            if (isUpperCase || similarWord.endsWith("ies"))
+            isUpperCase = searchWord.endsWith("IES");
+            if (isUpperCase || searchWord.endsWith("ies"))
             {
-                similarNewWord = similarWord.left(similarWordLength - 3);
+                searchNewWord = searchWord.left(searchWordLength - 3);
                 if (isUpperCase)
                 {
-                    similarNewWord.append('Y'); // add a char "Y"
+                    searchNewWord.append('Y'); // add a char "Y"
                 }
                 else
                 { 
-                    similarNewWord.append('y'); // add a char "y"
+                    searchNewWord.append('y'); // add a char "y"
                 }
 
-                if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                 {
                     found = true;
                 }
-                else if (isUpperCase || similarWord.at(0).isUpper())
+                else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                 {
-                    caseString = similarNewWord.toLower();
-                    if (caseString.compare(similarNewWord))
+                    caseString = searchNewWord.toLower();
+                    if (caseString.compare(searchNewWord))
                     {
                         if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
-                            bound = true;
+                            found = true;
                     }
                 }
             }
         }
 
         // cut "er".
-        if (!found && similarWordLength > 2)
+        if (!found && searchWordLength > 2)
         {
-            isUpperCase = similarWord.endsWith("ER");
-            if (isUpperCase || similarWord.endsWith("er"))
+            isUpperCase = searchWord.endsWith("ER");
+            if (isUpperCase || searchWord.endsWith("er"))
             {
-                similarNewWord = similarWord.left(similarWordLength - 2);
-                if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                searchNewWord = searchWord.left(searchWordLength - 2);
+                if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                 {
                     found = true;
                 }
-                else if (isUpperCase || similarWord.at(0).isUpper())
+                else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                 {
-                    caseString = similarNewWord.toLower();
-                    if (caseString.compare(similarNewWord))
+                    caseString = searchNewWord.toLower();
+                    if (caseString.compare(searchNewWord))
                     {
-                        if (d->dictionaries(iLib)->lookup(caseString, iIndex))
-                            bound = true;
+                        if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
+                            found = true;
                     }
                 }
             }
         }
 
         // cut "est".
-        if (!bound && similarWordLength > 3)
+        if (!found && searchWordLength > 3)
         {
-            isUpperCase = sWord.endsWith("EST");
-            if (isUpperCase || similarWord.endsWith("est"))
+            isUpperCase = searchWord.endsWith("EST");
+            if (isUpperCase || searchWord.endsWith("est"))
             {
-                similarNewWord = similarWord.left(similarWordLength - 3);
-                if (d->dictionaries.at(iLib)->lookup(similarNewWord, iIndex))
+                searchNewWord = searchWord.left(searchWordLength - 3);
+                if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
                 {
                     found = true;
                 }
-                else if (isUpperCase || similarWord.at(0).isUpper())
+                else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
                 {
-                    caseString = similarNewWord.toLower();
-                    if (caseString.compare(similarNewWord))
+                    caseString = searchNewWord.toLower();
+                    if (caseString.compare(searchNewWord))
                     {
                         if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
                             found = true;
@@ -839,223 +786,204 @@ bool Libs::lookupSimilarWord(const QString sWord, ulong & iWordIndex, int iLib)
     return found;
 }
 
-bool Libs::simpleLookupWord(const QString sWord, ulong &iWordIndex, int iLib)
+bool Libs::simpleLookupWord(QByteArray searchWord, long &iWordIndex, int iLib)
 {
-    bool found = d->dictionaries.at(iLib)->lookup(sWord, iWordIndex);
+    bool found = d->dictionaries.at(iLib)->lookup(searchWord, iWordIndex);
     if (!found)
-        found = lookupSimilarWord(sWord, iWordIndex, iLib);
+        found = lookupSimilarWord(searchWord, iWordIndex, iLib);
 
     return found;
 }
 
 struct Fuzzystruct
 {
-    char * pMatchWord;
-    int iMatchWordDistance;
+    QByteArray pMatchWord;
+    int matchWordDistance;
 };
 
 inline bool operator<(const Fuzzystruct & lh, const Fuzzystruct & rh)
 {
-    if (lh.iMatchWordDistance != rh.iMatchWordDistance)
-        return lh.iMatchWordDistance < rh.iMatchWordDistance;
+    if (lh.matchWordDistance != rh.matchWordDistance)
+        return lh.matchWordDistance < rh.matchWordDistance;
 
-    if (lh.pMatchWord && rh.pMatchWord)
-        return stardict_strcmp(lh.pMatchWord, rh.pMatchWord) < 0;
+    if (!lh.pMatchWord.isNull() && !rh.pMatchWord.isNull())
+        return stardictStringCompare(lh.pMatchWord, rh.pMatchWord) < 0;
 
     return false;
 }
 
-bool Libs::lookupWithFuzzy(const QString sWord, QString reslist[], int sresList, int iLib)
+bool Libs::lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int resultListSize, int iLib)
 {
-    if (sWord[0] == '\0')
+    if (searchWord[0] == '\0')
         return false;
 
-    Fuzzystruct *oFuzzystruct = new Fuzzystruct[reslist_size];
+    Fuzzystruct *oFuzzystruct = new Fuzzystruct[resultListSize];
 
-    for (int i = 0; i < sresList; ++i)
+    for (int i = 0; i < resultListSize; ++i)
     {
         oFuzzystruct[i].pMatchWord = NULL;
-        oFuzzystruct[i].iMatchWordDistance = iMaxFuzzyDistance;
+        oFuzzystruct[i].matchWordDistance = d->maximumFuzzyDistance;
     }
 
-    int iMaxDistance = iMaxFuzzyDistance;
+    int maximumDistance = d->maximumFuzzyDistance;
     int iDistance;
     bool found = false;
     EditDistance oEditDistance;
 
-    ulong iCheckWordLen;
-    const QString sCheck;
-    QString ucs4Str1;
-    QString ucs4Str2;
-    long sucs4Str2;
+    long searchCheckWordLength;
+    long searchWordLength;
+    QString searchCheckWord;
 
-    ucs4_str2 = g_utf8_to_ucs4_fast(sWord, -1, &ucs4_str2_len);
-    unicode_strdown(ucs4_str2);
+    searchWord.toLower();
 
-    if (progress_func)
-        progress_func();
+    if (d->progressFunction)
+        d->progressFunction();
 
-    //if (stardict_strcmp(sWord, poGetWord(0,iLib))>=0 && stardict_strcmp(sWord, poGetWord(narticles(iLib)-1,iLib))<=0) {
+
+    //if (stardict_strcmp(searchWord, poGetWord(0,iLib))>=0 && stardict_strcmp(searchWord, poGetWord(articleCount(iLib)-1,iLib))<=0) {
     //there are Chinese dicts and English dicts...
-    if (TRUE)
+    if (true)
     {
-        const int iwords = narticles(iLib);
-        for (int index = 0; index < iwords; index++)
+        int wordNumber = articleCount(iLib);
+        for (int index = 0; index < wordNumber; ++index)
         {
-            sCheck = poWord(index, iLib);
+            searchCheckWord = poWord(index, iLib);
             // tolower and skip too long or too short words
-            iCheckWordLen = sCheck.length();
-            if (iCheckWordLen - ucs4_str2_len >= iMaxDistance ||
-                    ucs4_str2_len - iCheckWordLen >= iMaxDistance)
+            searchCheckWordLength = searchCheckWord.length();
+            searchWordLength = searchWord.length();
+            if (searchCheckWordLength - searchWordLength >= maximumDistance
+                    || searchWordLength - searchCheckWordLength >= maximumDistance)
                 continue;
 
-            ucs4_str1 = g_utf8_to_ucs4_fast(sCheck, -1, NULL);
-            if (iCheckWordLen > sucs4Str2)
-                ucs4_str1[ucs4_str2_len] = 0;
-            unicode_strdown(ucs4_str1);
+            searchCheckWord.toLower();
 
-            iDistance = oEditDistance.CalEditDistance(ucs4_str1, ucs4_str2, iMaxDistance);
-            if (iDistance < iMaxDistance && iDistance < ucs4_str2_len)
+            iDistance = oEditDistance.calEditDistance(searchCheckWord, searchWord, maximumDistance);
+            if (iDistance < maximumDistance && iDistance < searchWordLength)
             {
-                // when ucs4_str2_len=1,2 we need less fuzzy.
+                // when searchWordLength=1,2 we need less fuzzy.
                 found = true;
                 bool isAlreadyInList = false;
-                int iMaxDistanceAt = 0;
-                for (int j = 0; j < sresList; ++j)
+                int maximumDistanceAt = 0;
+                for (int j = 0; j < resultListSize; ++j)
                 {
-                    if (oFuzzystruct[j].pMatchWord
-                        && strcmp(oFuzzystruct[j].pMatchWord, sCheck) == 0 )
+                    if (!oFuzzystruct[j].pMatchWord.isNull() && searchCheckWord.compare(oFuzzystruct[j].pMatchWord) == 0)
                     { //already in list
                         isAlreadyInList = true;
                         break;
                     }
+
                     //find the position,it will certainly be found (include the first time) as iMaxDistance is set by last time.
-                    if (oFuzzystruct[j].iMatchWordDistance == iMaxDistance )
+                    if (oFuzzystruct[j].matchWordDistance == maximumDistance )
                     {
-                        iMaxDistanceAt = j;
+                        maximumDistanceAt = j;
                     }
                 }
+
                 if (!isAlreadyInList)
                 {
-                    if (oFuzzystruct[iMaxDistanceAt].pMatchWord)
-                        g_free(oFuzzystruct[iMaxDistanceAt].pMatchWord);
-
-                    oFuzzystruct[iMaxDistanceAt].pMatchWord = g_strdup(sCheck);
-                    oFuzzystruct[iMaxDistanceAt].iMatchWordDistance = iDistance;
+                    oFuzzystruct[maximumDistanceAt].pMatchWord = searchCheckWord.toUtf8();
+                    oFuzzystruct[maximumDistanceAt].matchWordDistance = iDistance;
                     // calc new iMaxDistance
-                    iMaxDistance = iDistance;
-                    int tmpVal = iMaxDistance; //stupid workaround for gcc bug 44545
-                    for (int j = 0; j < reslist_size; j++)
+                    maximumDistance = iDistance;
+                    int tmpVal = maximumDistance; //stupid workaround for gcc bug 44545
+                    for (int j = 0; j < resultListSize; ++j)
                     {
-                        if (oFuzzystruct[j].iMatchWordDistance > iMaxDistance)
-                            tmpVal = oFuzzystruct[j].iMatchWordDistance;
+                        if (oFuzzystruct[j].matchWordDistance > maximumDistance)
+                            tmpVal = oFuzzystruct[j].matchWordDistance;
                     } // calc new iMaxDistance
-                    iMaxDistance = tmpVal; // end of stupid workaround
+
+                    maximumDistance = tmpVal; // end of stupid workaround
                 }   // add to list
             }   // find one
         }   // each word
     }   // ok for search
 //    }   // each lib
-    g_free(ucs4_str2);
 
     if (found) // sort with distance
-        qSort(oFuzzystruct, oFuzzystruct + sresList);
+        qSort(oFuzzystruct, oFuzzystruct + resultListSize);
 
-    for (int i = 0; i < sresList; ++i)
-        resList[i] = oFuzzystruct[i].pMatchWord;
+    for (int i = 0; i < resultListSize; ++i)
+        resultList[i] = oFuzzystruct[i].pMatchWord;
 
     delete [] oFuzzystruct;
 
     return found;
 }
 
-inline bool lessForCompare(const char *lh, const char *rh)
+inline bool lessForCompare(QString lh, QString rh)
 {
-    return stardict_strcmp(lh, rh) < 0;
+    return stardictStringCompare(lh, rh) < 0;
 }
 
-int Libs::lookupWithRule(const gchar *word, gchar **ppMatchWord)
+int Libs::lookupWithRule(QByteArray patternWord, QStringList patternMatchWords)
 {
-    ulong aiIndex[MAX_MATCH_ITEM_PER_LIB + 1];
-    int iMatchCount = 0;
-    GPatternSpec *pspec = g_pattern_spec_new(word);
+    long aiIndex[MAX_MATCH_ITEM_PER_LIB + 1];
+    int matchCount = 0;
 
-    for (QVector<Dict *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
+    for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
     {
         //if(oLibs.LookdupWordsWithRule(pspec,aiIndex,MAX_MATCH_ITEM_PER_LIB+1-iMatchCount,iLib))
         // -iMatchCount,so save time,but may got less result and the word may repeat.
 
-        if (d->dictionaries.at(iLib)->lookupWithRule(pspec, aiIndex, MAX_MATCH_ITEM_PER_LIB + 1))
+        if (d->dictionaries.at(iLib)->lookupWithRule(patternWord, aiIndex, MAX_MATCH_ITEM_PER_LIB + 1))
         {
-            if (progress_func)
-                progress_func();
+            if (d->progressFunction)
+                d->progressFunction();
 
             for (int i = 0; aiIndex[i] != -1; ++i)
             {
-                const char *sMatchWord = poWord(aiIndex[i], iLib);
-                bool isAlreadyInList = false;
-                for (int j = 0; j < iMatchCount; ++j)
-                {
-                    if (ppMatchWord[j].compare(sMatchWord) == 0)
-                    { //already in list
-                        isAlreadyInList = true;
-                        break;
-                    }
-                }
-                if (!isAlreadyInList)
-                    ppMatchWord[iMatchCount++] = g_strdup(sMatchWord);
+                QByteArray searchMatchWord = poWord(aiIndex[i], iLib);
+
+                if (!patternMatchWords.contains(searchMatchWord))
+                    patternMatchWords.append(searchMatchWord);
             }
         }
     }
-    g_pattern_spec_free(pspec);
 
-    if (iMatchCount) // sort it.
-        qSort(ppMatchWord, ppMatchWord + iMatchCount, less_for_compare);
+    if (matchCount) // sort it.
+        qSort(patternMatchWords.begin(), patternMatchWords.end(), lessForCompare);
 
-    return iMatchCount;
+    return matchCount;
 }
 
-bool Libs::lookupData(const QString sWord, QString resList)
+bool Libs::lookupData(QByteArray search_word, QStringList resultList)
 {
     QStringList searchWords;
     QString searchWord;
-    const char *p = sWord;
-    while (*p)
+    foreach (char ch, search_word)
     {
-        if (*p == '\\')
+        if (ch == '\\')
         {
-            p++;
-            switch (*p)
+            switch (ch)
             {
             case ' ':
-                SearchWord += ' ';
+                searchWord.append(' ');
                 break;
             case '\\':
-                SearchWord += '\\';
+                searchWord.append('\\');
                 break;
             case 't':
-                SearchWord += '\t';
+                searchWord.append('\t');
                 break;
             case 'n':
-                SearchWord += '\n';
+                searchWord.append('\n');
                 break;
             default:
-                SearchWord += *p;
+                searchWord.append(ch);
             }
         }
-        else if (*p == ' ')
+        else if (ch == ' ')
         {
-            if (!SearchWord.empty())
+            if (!searchWord.isEmpty())
             {
-                SearchWords.push_back(SearchWord);
-                SearchWord.clear();
+                searchWords.append(searchWord);
+                searchWord.clear();
             }
         }
         else
         {
-            SearchWord += *p;
+            searchWord.append(ch);
         }
-        p++;
     }
 
     if (!searchWord.isEmpty())
@@ -1067,66 +995,65 @@ bool Libs::lookupData(const QString sWord, QString resList)
     if (searchWords.isEmpty())
         return false;
 
-    uint32 smax = 0;
-    gchar *originalData = NULL;
-    for (QVector<Dict *>::size_type i = 0; i < d->dictionaries.size(); ++i)
+    int maximumSize = 0;
+    QByteArray originalData = NULL;
+    for (QVector<Dictionary *>::size_type i = 0; i < d->dictionaries.size(); ++i)
     {
-        if (!d->dictionaries.at(i)->containSearchData())
+        if (!d->dictionaries.at(i)->containFindData())
             continue;
 
-        if (progress_func)
-            progress_func();
+        if (d->progressFunction)
+            d->progressFunction();
 
-        const ulong iwords = narticles(i);
-        const gchar *key;
-        guint32 offset, size;
-        for (ulong j = 0;
-                j < iwords;
-                ++j)
+        long wordSize = articleCount(i);
+        QByteArray key;
+        qint32 offset;
+        qint32 size;
+        for (long j = 0; j < wordSize; ++j)
         {
-            d->dictionaries(i)->keyAndData(j, &key, &offset, &size);
-            if (size > smax)
+            d->dictionaries.at(i)->keyAndData(j, key, offset, size);
+            if (size > maximumSize)
             {
-                origin_data = (gchar *)g_realloc(origin_data, size);
-                smax = size;
+                maximumSize = size;
             }
-            if (d->dictionaries.at(i)->SearchData(SearchWords, offset, size, origin_data))
-                reslist[i].push_back(g_strdup(key));
+
+            if (d->dictionaries.at(i)->findData(searchWords, offset, size, originalData))
+                resultList[i].append(key);
         }
     }
-    g_free(origin_data);
 
-    QVector<Dict *>::size_type i;
+    QVector<Dictionary *>::size_type i;
     for (i = 0; i < d->dictionaries.size(); ++i)
-        if (!resList[i].empty())
+        if (!resultList[i].isEmpty())
             break;
 
     return i != d->dictionaries.size();
 }
 
-query_t analyzeQuery(const QString string, QString& result)
+Libs::QueryType
+Libs::analyzeQuery(QString string, QString& result)
 {
-    if (string.isEmpty() || result.isEmpty())
+    if (string.isNull() || result.isNull())
     {
         result = "";
-        return qtSIMPLE;
+        return SIMPLE;
     }
 
     if (string.startsWith('/'))
     {
-        result = str.mid(1);
-        return qtFUZZY;
+        result = string.mid(1);
+        return FUZZY;
     }
     else if (string.startsWith('|'))
     {
         result = string.mid(1);
-        return qtDATA;
+        return DATA;
     }
 
     string.remove('\\');
 
     if (string.contains('*') || string.contains('?'))
-        return qtREGEXP;
+        return REGEXP;
 
-    return qtSIMPLE;
+    return SIMPLE;
 }

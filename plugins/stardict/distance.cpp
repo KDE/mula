@@ -75,7 +75,7 @@ int EditDistance::calEditDistance(QString s, QString t, const int limit)
     int m = 0;
     int iLenDif;
     int k;
-    int i;
+    int i = 0;
     int j;
     int cost;
 

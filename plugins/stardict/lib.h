@@ -33,6 +33,13 @@ const int INVALID_INDEX = -100;
 class Libs
 {
     public:
+        enum QueryType {
+            SIMPLE,
+            REGEXP,
+            FUZZY,
+            DATA,
+        };
+
         typedef void (*progress_func_t)(void);
 
         Libs(progress_func_t f = NULL);
@@ -46,41 +53,34 @@ class Libs
                     const QStringList& orderList,
                     const QStringList& disableList);
 
-        ulong articleCount(int index) const;
+        long articleCount(int index) const;
 
         const QString& dictionaryName(int index) const;
 
         int dictionaryCount() const;
 
-        const QByteArray poWord(ulong iIndex, int iLib) const;
+        const QByteArray poWord(long iIndex, int iLib) const;
 
-        QString poWordData(ulong iIndex, int iLib);
+        QString poWordData(long iIndex, int iLib);
 
-        const char *poCurrentWord(ulong *iCurrent);
-        const char *poNextWord(const char *word, ulong *iCurrent);
-        const char *poPreviousWord(ulong *iCurrent);
+        QByteArray poCurrentWord(long *iCurrent);
+        QByteArray poNextWord(QByteArray searchWord, long *iCurrent);
+        QByteArray poPreviousWord(long *iCurrent);
 
-        bool lookupWord(const char* sWorda, ulong& iWordIndex, int iLib);
+        bool lookupWord(const char* sWorda, long& iWordIndex, int iLib);
 
-        bool lookupSimilarWord(const char* sWord, ulong & iWordIndex, int iLib);
-        bool simpleLookupWord(const char* sWord, ulong & iWordIndex, int iLib);
+        bool lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib);
+        bool simpleLookupWord(QByteArray searchWord, long& iWordIndex, int iLib);
 
-        bool lookupWithFuzzy(const char *sWord, QStringList reslist, int reslistSize, int iLib);
-        int lookupWithRule(const char *sWord, QStringList reslist);
-        bool lookupData(const char *sWord, QStringList reslist);
+        bool lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int resultListSize, int iLib);
+        int lookupWithRule(QByteArray searchWord, QStringList resultList);
+        bool lookupData(QByteArray searchWord, QStringList resultList);
+
+        QueryType analyzeQuery(QString string, QString& result);
 
     private:
         class Private;
         Private *const d;
 };
-
-enum QueryType {
-    Simple,
-    Regexp,
-    Fuzzy,
-    Data
-};
-
-extern QueryType analyzeQuery(const char *s, QString& res);
 
 #endif // MULA_PLUGIN_STARDICT_LIB_H
