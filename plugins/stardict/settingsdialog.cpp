@@ -23,7 +23,7 @@
 
 #include <QtGui/QFileDialog>
 
-using namespace MulaCore;
+using namespace MulaPluginStarDict;
 
 SettingsDialog::SettingsDialog(StarDict *plugin, QWidget *parent)
     : QDialog(parent)

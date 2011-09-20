@@ -22,26 +22,29 @@
 
 #include <QtGui/QDialog>
 
-class StarDict;
-
-class SettingsDialog: public QDialog
+namespace MulaPluginStarDict
 {
-    Q_OBJECT
+    class StarDict;
 
-    public:
-        explicit SettingsDialog(StarDict *plugin, QWidget *parent = 0);
+    class SettingsDialog: public QDialog
+    {
+        Q_OBJECT
 
-    PRIVATE_SLOTS:
-        void on_addDictDirButton_clicked();
-        void on_removeDictDirButton_clicked();
-        void on_moveUpDictDirButton_clicked();
-        void on_moveDownDictDirButton_clicked();
+        public:
+            explicit SettingsDialog(StarDict *plugin, QWidget *parent = 0);
 
-        void apply();
+            private slots:
+                void on_addDictDirButton_clicked();
+            void on_removeDictDirButton_clicked();
+            void on_moveUpDictDirButton_clicked();
+            void on_moveDownDictDirButton_clicked();
 
-    private:
-        StarDict *m_plugin;
-};
+            void apply();
+
+        private:
+            StarDict *m_plugin;
+    };
+}
 
 #endif // MULA_PLUGIN_STARDICT_SETTINGSDIALOG_H
 

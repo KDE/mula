@@ -31,7 +31,7 @@
 
 namespace MulaPluginStarDict
 {
-    class StarDict: public QObject, public MulaCore::DictionaryPlugin
+    class StarDict : public QObject, public MulaCore::DictionaryPlugin
     {
         Q_OBJECT
         Q_INTERFACES(MULA::IDictionaryPlugin)
@@ -50,7 +50,7 @@ namespace MulaPluginStarDict
 
             QStringList loadedDictionaries() const;
             void setLoadedDictionaries(const QStringList &loadedDictionaries);
-            DictionaryInfo dictionaryInfo(const QString &dictionaryUrl);
+            MulaCore::DictionaryInfo dictionaryInfo(const QString &dictionaryUrl);
 
             bool isTranslatable(const QString &dict, const QString &word);
             MulaCore::Translation translate(const QString &dict, const QString &word);
@@ -70,7 +70,6 @@ namespace MulaPluginStarDict
             class Private;
             Private *const d;
     };
-
 }
 
 #endif // MULA_PLUGIN_STARDICT_STARDICT_H

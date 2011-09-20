@@ -39,20 +39,20 @@ const int MaxFuzzy = 24;
 class IfoListSetter
 {
     public:
-        IfoListSetter(QStringList *bnList)
+        IfoListSetter(QStringList bnList)
             : bookNameList(bnList)
         {
         }
 
-        void operator () (const QString &filename, bool)
+        void operator () (const QString &fileName, bool)
         {
             DictionaryInfo info;
-            if (info.loadFromIfoFile(filename, false))
-                bookNameList->append(QString::fromUtf8(info.bookname()));
+            if (info.loadFromIfoFile(fileName, false))
+                bookNameList.append(info.bookName());
         }
 
     private:
-        QStringList bookNamelist;
+        QStringList bookNameList;
 };
 
 class IfoFileFinder
@@ -67,7 +67,7 @@ class IfoFileFinder
         void operator () (const QString &fileName, bool)
         {
             DictionaryInfo info;
-            if (info.loadFromIfoFile(fileaName, false) && info.bookname() == ifoBookName)
+            if (info.loadFromIfoFile(fileName, false) && info.bookName() == ifoBookName)
                 ifoFileName = fileName;
         }
 
@@ -95,8 +95,7 @@ class StarDict::Private
         QHash<QString, int> loadedDictionaries;
         bool reformatLists;
         bool expandAbbreviations;
-}
-
+};
 
 StarDict::StarDict(QObject *parent)
     : QObject(parent)
@@ -192,7 +191,8 @@ StarDict::setLoadedDictionaries(const QStringList &loadedDictionaries)
         d->loadedDictionaries[QString::fromUtf8(d->sdLibs->dict_name(i))] = i;
 }
 
-StarDict::DictionaryInfo StarDict::dictionaryInfo(const QString &dictionary)
+MulaCore::DictionaryInfo
+StarDict::dictionaryInfo(const QString &dictionary)
 {
     DictionaryInfo nativeInfo;
     nativeInfo.wordcount = 0;
@@ -206,7 +206,8 @@ StarDict::DictionaryInfo StarDict::dictionaryInfo(const QString &dictionary)
     return result;
 }
 
-bool StarDict::isTranslatable(const QString &dictionary, const QString &word)
+bool
+StarDict::isTranslatable(const QString &dictionary, const QString &word)
 {
     if (!d->loadedDictonaries.contains(dictionary))
         return false;
@@ -236,7 +237,8 @@ StarDict::translate(const QString &dictionary, const QString &word)
                 d->reformatLists, d->expandAbbreviations));
 }
 
-QStringList StarDict::findSimilarWords(const QString &dictionary, const QString &word)
+QStringList
+StarDict::findSimilarWords(const QString &dictionary, const QString &word)
 {
     if (!d->loadedDictionaries.contains(dictionary))
         return QStringList();
@@ -255,13 +257,15 @@ QStringList StarDict::findSimilarWords(const QString &dictionary, const QString 
     return result;
 }
 
-int StarDict::execSettingsDialog(QWidget *parent)
+int
+StarDict::execSettingsDialog(QWidget *parent)
 {
     SettingsDialog dialog(this, parent);
     return dialog.exec();
 }
 
-QString StarDict::parseData(const char *data, int dictIndex, bool htmlSpaces, bool reformatLists, bool expandAbbreviations)
+QString
+StarDict::parseData(const char *data, int dictIndex, bool htmlSpaces, bool reformatLists, bool expandAbbreviations)
 {
     QString result;
     quint32 dataSize = *reinterpret_cast<const quint32*>(data);
