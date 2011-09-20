@@ -59,7 +59,7 @@ namespace MulaPluginStarDict
 
             virtual QStringList findSimilarWords(const QString &dict, const QString &word);
 
-            int execSettingsDialog(QWidget *parent);
+            // int execSettingsDialog(QWidget *parent);
 
             friend class SettingsDialog;
 

@@ -57,7 +57,9 @@ set(MulaCore_HEADERS
     debughelper.h
     dictionarydataitem.h
     dictionaryinfo.h
+    dictionarymanager.h
     dictionaryplugin.h
+    directoryprovider.h
     mula_core_export.h
     pluginmanager.h
     singleton.h

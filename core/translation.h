@@ -20,6 +20,8 @@
 #ifndef MULA_CORE_TRANSLATION_H
 #define MULA_CORE_TRANSLATION_H
 
+#include "mula_core_export.h"
+
 #include <QtCore/QString>
 
 namespace MulaCore
@@ -27,7 +29,7 @@ namespace MulaCore
     /**
      * This class represent a translation.
      */
-    class Translation
+    class MULA_CORE_EXPORT Translation
     {
         public:
 

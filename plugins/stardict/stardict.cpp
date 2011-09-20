@@ -94,15 +94,15 @@ class StarDict::Private
             : sdLibs(new Libs)
             , reformatLists(false)
             , expandAbbreviations(false)
-        {   
+        {
         }
 
         ~Private()
         {
         }
- 
+
         Libs *sdLibs;
-        QStringList dictionaryDirs;
+        QStringList dictionaryDirectoryList;
         QHash<QString, int> loadedDictionaries;
         bool reformatLists;
         bool expandAbbreviations;
@@ -114,17 +114,17 @@ StarDict::StarDict(QObject *parent)
 {
     QSettings settings("mula","mula");
 
-    d->dictionaryDirs = settings.value("StarDict/dictionaryDirs", d->dictionaryDirs).toStringList();
+    d->dictionaryDirectoryList = settings.value("StarDict/dictionaryDirectoryList", d->dictionaryDirectoryList).toStringList();
     d->reformatLists = settings.value("StarDict/reformatLists", true).toBool();
     d->expandAbbreviations = settings.value("StarDict/expandAbbreviations", true).toBool();
-    if (d->dictionaryDirs.isEmpty())
+    if (d->dictionaryDirectoryList.isEmpty())
     {
 #ifdef Q_OS_UNIX
-        d->dictionaryDirs.append("/usr/share/stardict/dic");
+        d->dictionaryDirectoryList.append("/usr/share/stardict/dic");
 #else
-        d->dictionaryDirs.append(QCoreApplication::applicationDirPath() + "/dic");
-#endif			
-        d->dictionaryDirs.append(QDir::homePath() + "/.stardict/dic");
+        d->dictionaryDirectoryList.append(QCoreApplication::applicationDirPath() + "/dic");
+#endif
+        d->dictionaryDirectoryList.append(QDir::homePath() + "/.stardict/dic");
     }
 }
 
@@ -132,7 +132,7 @@ StarDict::~StarDict()
 {
     QSettings settings("mula","mula");
 
-    settings.setValue("StarDict/dictDirs", d->dictionaryDirs);
+    settings.setValue("StarDict/dictionaryDirectoryList", d->dictionaryDirectoryList);
     settings.setValue("StarDict/reformatLists", d->reformatLists);
     settings.setValue("StarDict/expandAbbreviations", d->expandAbbreviations);
 
@@ -141,7 +141,7 @@ StarDict::~StarDict()
 
 QString
 StarDict::name() const
-{ 
+{
     return "stardict";
 }
 
@@ -174,7 +174,7 @@ StarDict::availableDictionaries() const
 {
     QStringList result;
     IfoListSetter setter(result);
-    for_each_file(d->dictionaryDirs, ".ifo", QStringList(), QStringList(), setter);
+    for_each_file(d->dictionaryDirectoryList, ".ifo", QStringList(), QStringList(), setter);
 
     return result;
 }
@@ -196,7 +196,7 @@ StarDict::setLoadedDictionaries(const QStringList &loadedDictionaries)
             disabled.append(dictionary);
     }
 
-    d->sdLibs->reload(d->dictionaryDirs, loadedDictionaries, disabled);
+    d->sdLibs->reload(d->dictionaryDirectoryList, loadedDictionaries, disabled);
 
     d->loadedDictionaries.clear();
     for (int i = 0; i < d->sdLibs->dictionaryCount(); ++i)
@@ -208,7 +208,7 @@ StarDict::dictionaryInfo(const QString &dictionary)
 {
     StarDictDictionaryInfo nativeInfo;
     nativeInfo.setWordCount(0);
-    if (!nativeInfo.loadFromIfoFile(findDictionary(dictionary, d->dictionaryDirs), false))
+    if (!nativeInfo.loadFromIfoFile(findDictionary(dictionary, d->dictionaryDirectoryList), false))
         return MulaCore::DictionaryInfo();
 
     MulaCore::DictionaryInfo result(name(), dictionary);
@@ -264,12 +264,12 @@ StarDict::findSimilarWords(const QString &dictionary, const QString &word)
     return fuzzyList;
 }
 
-int
-StarDict::execSettingsDialog(QWidget *parent)
-{
-    MulaPluginStarDict::SettingsDialog dialog(this, parent);
-    return dialog.exec();
-}
+// int
+// StarDict::execSettingsDialog(QWidget *parent)
+// {
+    // MulaPluginStarDict::SettingsDialog dialog(this, parent);
+    // return dialog.exec();
+// }
 
 QString
 StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces, bool reformatLists, bool expandAbbreviations)
@@ -481,7 +481,7 @@ StarDict::findDictionary(const QString &name, const QStringList &dictionaryDirs)
 {
     QString fileName;
     IfoFileFinder finder(name, fileName);
-    for_each_file(d->dictionaryDirs, ".ifo", QStringList(), QStringList(), finder);
+    for_each_file(dictionaryDirs, ".ifo", QStringList(), QStringList(), finder);
     return fileName;
 }
 

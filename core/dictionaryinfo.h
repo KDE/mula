@@ -20,6 +20,8 @@
 #ifndef MULA_CORE_DICTIONARYINFO_H
 #define MULA_CORE_DICTIONARYINFO_H
 
+#include "mula_core_export.h"
+
 #include <QtCore/QString>
 
 namespace MulaCore
@@ -27,7 +29,7 @@ namespace MulaCore
     /**
      * This class represents information about dictionary.
      */
-    class DictionaryInfo
+    class MULA_CORE_EXPORT DictionaryInfo
     {
         public:
             /**
@@ -43,9 +45,9 @@ namespace MulaCore
              * @param desription A dictionary description
              * @param wordsCount A count of words that available in dictionary
              */
-            DictionaryInfo(const QString &plugin, const QString &name, const QString &author = QString(), 
+            DictionaryInfo(const QString &plugin, const QString &name, const QString &author = QString(),
                             const QString &description = QString(), long wordsCount = -1L);
-            ~DictionaryInfo();
+            virtual ~DictionaryInfo();
 
             const QString &plugin() const;
 

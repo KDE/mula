@@ -10,6 +10,7 @@ set(stardict_SRCS
     indexfile.cpp
     lib.cpp
     offsetindex.cpp
+    #settingsdialog.cpp
     stardict.cpp
     stardictdictionaryinfo.cpp
     wordlistindex.cpp
@@ -25,6 +26,7 @@ set(stardict_HEADERS
     indexfile.h
     lib.h
     offsetindex.h
+    #settingsdialog.h
     stardict.h
     stardictdictionaryinfo.h
     wordlistindex.h

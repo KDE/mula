@@ -35,10 +35,10 @@ namespace MulaPluginStarDict
             ~SettingsDialog();
 
         private slots:
-            void on_addDictDirButton_clicked();
-            void on_removeDictDirButton_clicked();
-            void on_moveUpDictDirButton_clicked();
-            void on_moveDownDictDirButton_clicked();
+            void addDictionaryDirButton();
+            void removeDictionaryDirButton();
+            void moveUpDictionaryDirButton();
+            void moveDownDictionaryDirButton();
 
             void apply();
 

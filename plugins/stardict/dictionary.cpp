@@ -21,7 +21,6 @@
 
 #include "dictionaryzip.h"
 #include "stardictdictionaryinfo.h"
-#include "indexfile.h"
 #include "wordlistindex.h"
 #include "offsetindex.h"
 
@@ -37,13 +36,13 @@ class Dictionary::Private
         Private()
             : wordCount(0)
             , indexFileSize(0)
-        {   
+        {
         }
 
         ~Private()
         {
         }
- 
+
         QString ifoFileName;
         long wordCount;
         QString bookName;
@@ -63,27 +62,27 @@ Dictionary::~Dictionary()
 
 int
 Dictionary::articleCount() const
-{   
+{
     return d->wordCount;
-}   
+}
 
 const QString&
 Dictionary::dictionaryName() const
-{   
+{
     return d->bookName;
-}   
+}
 
 const QString&
 Dictionary::ifoFileName() const
-{   
+{
     return d->ifoFileName;
-}   
+}
 
 const QString
 Dictionary::key(long index) const
-{   
+{
     return d->indexFile->key(index);
-}   
+}
 
 QString
 Dictionary::data(long index)
@@ -123,7 +122,7 @@ Dictionary::load(const QString& ifoFilePath)
             delete dictionaryZip;
             dictionaryZip = 0;
         }
-        
+
         dictionaryZip = new DictionaryZip();
         if (!dictionaryZip->open(completeFilePath, 0))
         {
@@ -141,7 +140,7 @@ Dictionary::load(const QString& ifoFilePath)
             delete uncompressedDictionaryFile;
             uncompressedDictionaryFile = 0;
         }
-        
+
         uncompressedDictionaryFile = new QFile(completeFilePath);
         if( uncompressedDictionaryFile->open( QIODevice::ReadOnly ) )
         {

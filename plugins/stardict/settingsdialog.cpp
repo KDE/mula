@@ -33,7 +33,7 @@ SettingsDialog::SettingsDialog(StarDict *plugin, QWidget *parent)
 
     reformatListsBox->setChecked(m_plugin->m_reformatLists);
     expandAbbreviationsBox->setChecked(m_plugin->m_expandAbbreviations);
-    dictDirsList->addItems(m_plugin->m_dictDirs);
+    dictionaryDirList->addItems(m_plugin->m_dictDirs);
 
     connect(this, SIGNAL(accepted()), SLOT(apply()));
 }
@@ -42,43 +42,43 @@ SettingsDialog::~SettingsDialog()
 {
 }
 
-void SettingsDialog::on_addDictDirButton_clicked()
+void SettingsDialog::addDictionaryDirButton()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, tr("Select dictionaries directory"));
-    if (!dirName.isEmpty())
+    QString directoryName = QFileDialog::getExistingDirectory(this, tr("Select dictionaries directory"));
+    if (!directoryName.isEmpty())
     {
-        dictDirsList->addItem(dirName);
+        dictionaryDirList->addItem(directoryName);
     }
 }
 
-void SettingsDialog::on_removeDictDirButton_clicked()
+void SettingsDialog::removeDictionaryDirButton()
 {
-    delete dictDirsList->takeItem(dictDirsList->currentRow());
+    delete dictionaryDirList->takeItem(dictionaryDirList->currentRow());
 }
 
-void SettingsDialog::on_moveUpDictDirButton_clicked()
+void SettingsDialog::moveUpDictionaryDirButton()
 {
-    if (dictDirsList->currentRow() > 0)
+    if (dictionaryDirList->currentRow() > 0)
     {
-        dictDirsList->insertItem(dictDirsList->currentRow(),
-                                 dictDirsList->takeItem(dictDirsList->currentRow()));
-        dictDirsList->setCurrentRow(dictDirsList->currentRow() - 1);
+        dictionaryDirList->insertItem(dictionaryDirList->currentRow(),
+                                 dictionaryDirList->takeItem(dictionaryDirList->currentRow()));
+        dictionaryDirList->setCurrentRow(dictionaryDirList->currentRow() - 1);
     }
 }
 
-void SettingsDialog::on_moveDownDictDirButton_clicked()
+void SettingsDialog::moveDownDictDirButton()
 {
-    if (dictDirsList->currentRow() < dictDirsList->count() - 1)
-    dictDirsList->insertItem(dictDirsList->currentRow(),
-                             dictDirsList->takeItem(dictDirsList->currentRow() + 1));
+    if (dictionaryDirList->currentRow() < dictionaryDirList->count() - 1)
+    dictionaryDirList->insertItem(dictionaryDirList->currentRow(),
+                             dictionaryDirList->takeItem(dictionaryDirList->currentRow() + 1));
 }
 
 void SettingsDialog::apply()
 {
     m_plugin->m_reformatLists = reformatListsBox->isChecked();
     m_plugin->m_expandAbbreviations = expandAbbreviationsBox->isChecked();
-    m_plugin->m_dictDirs.clear();
-    for (int i = 0; i < dictDirsList->count(); ++i)
-        m_plugin->m_dictDirs << dictDirsList->item(i)->text();
+    m_plugin->m_dictionaryDirectories.clear();
+    for (int i = 0; i < dictionaryDirList->count(); ++i)
+        m_plugin->m_dictionaryDirectories << dictionaryDirList->item(i)->text();
 }
 

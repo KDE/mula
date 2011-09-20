@@ -31,7 +31,7 @@ namespace MulaCore
     /**
      * This is a base, interface class for all the dictionary plugins classes.
      */
-    class DictionaryPlugin
+    class MULA_CORE_EXPORT DictionaryPlugin
     {
         public:
             /**
