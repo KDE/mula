@@ -54,7 +54,7 @@ namespace MulaPluginStarDict
             void setWebsite(const QString website);
             QString website() const;
 
-            void setDate(const QString& dateTime);
+            void setDateTime(const QString& dateTime);
             QString dateTime() const;
 
             void setDescription(const QString& description);

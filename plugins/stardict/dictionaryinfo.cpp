@@ -244,7 +244,7 @@ DictionaryInfo::website() const
 }
 
 void
-DictionaryInfo::setDate(const QString& dateTime)
+DictionaryInfo::setDateTime(const QString& dateTime)
 {
     d->date = dateTime;
 }
