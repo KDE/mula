@@ -18,6 +18,7 @@
  */
 
 #include "offsetindex.h"
+#include "file.h"
 
 #include <QtCore/QVector>
 #include <QtCore/QFile>
@@ -35,8 +36,7 @@ class OffsetIndex::Private
 {
     public:
         Private()
-            : entriesPerPage(32)
-            , wordCount(0)
+            : wordCount(0)
             , cacheMagicString("StarDict's Cache, Version: 0.1")
         {   
         }
@@ -45,20 +45,20 @@ class OffsetIndex::Private
         {
         }
 
-        int entriesPerPage;
+        static const int entriesPerPage = 32;
         QString cacheMagic;
 
         QVector<quint32> wordOffset;
         QFile indexFile;
         ulong wordCount;
 
-        char wordEntryBuffer[256 + sizeof(quint32)*2]; // The length of "word_str" should be less than 256. See src/tools/DICTFILE_FORMAT.
+        QByteArray wordEntryBuffer; // 256 + sizeof(quint32)*2) - The length of "word_str" should be less than 256. See src/tools/DICTFILE_FORMAT.
         struct indexEntry
         {
-            ulong index;
+            long index;
             QByteArray keyData;
 
-            void assign(ulong i, QByteArray &data)
+            void assign(ulong i, QByteArray data)
             {
                 index = i;
                 keyData = data;
@@ -72,7 +72,7 @@ class OffsetIndex::Private
 
         struct pageEntry
         {
-            QString keyData;
+            QByteArray keyData;
             quint32 offset;
             quint32 size;
         };
@@ -85,7 +85,7 @@ class OffsetIndex::Private
             {
             }
 
-            void fill(QByteArray data, int nent, ulong index_)
+            void fill(QByteArray data, int nent, long index_)
             {
                 index = index_;
                 ulong position; 
@@ -100,11 +100,12 @@ class OffsetIndex::Private
                 }
             }
 
-            ulong index;
+            long index;
             pageEntry entries[entriesPerPage];
         } page;
 
         QByteArray cacheMagicString;
+        QFile mapFile;
 };
 
 OffsetIndex::~OffsetIndex()
@@ -163,17 +164,17 @@ OffsetIndex::loadCache(const QString& url)
             return -1;
         }
 
-        data = d->mapFile.map(0, fileSize);
+        uchar *data = d->mapFile.map(0, d->mapFile.size());
         if (data == NULL)
         {
-            qDebug << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(urlString);
+            qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(urlString);
             return false;
         }
 
         if (d->cacheMagicString != data)
             continue;
 
-        memcpy(&wordoffset[0], data + d->cacheMagicString.size(), wordoffset.size()*sizeof(wordoffset[0]));
+        memcpy(&d->wordOffset[0], data + d->cacheMagicString.size(), d->wordOffset.size()*sizeof(d->wordOffset[0]));
         return true;
     }
 
@@ -230,17 +231,18 @@ OffsetIndex::saveCache(const QString& url)
             return -1;
         }
 
-        char *data = d->mapFile.map(0, d->size);
+        uchar *data = d->mapFile.map(0, d->mapFile.size());
         if (data == NULL)
         {
             qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(urlString);
             return false;
         }
 
-        if (file(d->cacheMagicString) != d->cacheMagicString.size())
+        if (file.write(d->cacheMagicString) != d->cacheMagicString.size())
             continue;
 
-        if (file(d->wordOffset, sizeof(d->wordOffset[0])*d->wordOffset.size()) != d->wordOffset.size())
+        if (file.write(reinterpret_cast<const char*>(d->wordOffset.data()), sizeof(d->wordOffset.at(0))*d->wordOffset.size())
+                != d->wordOffset.at(0)*d->wordOffset.size())
             continue;
 
         file.close();
@@ -254,136 +256,140 @@ OffsetIndex::saveCache(const QString& url)
 }
 
 bool
-OffsetIndex::load(const QString& url, long wc, long fileSize)
+OffsetIndex::load(const QString& url, long wc, qulonglong fileSize)
 {
-    d->wordCount = wc;
-    ulonglong npages = (wc - 1) / enterPerPage + 2;
-    wordoffset.resize(npages);
+    Q_UNUSED(fileSize);
 
-    if (!load_cache(url))
+    d->wordCount = wc;
+    qulonglong npages = (wc - 1) / d->entriesPerPage + 2;
+    d->wordOffset.resize(npages);
+
+    if (!loadCache(url))
     { //map file will close after finish of block
-        m_mapFile.setFileName(url);
-        if( !m_mapFile.open( QIODevice::ReadOnly ) )
+        d->mapFile.setFileName(url);
+        if (!d->mapFile.open(QIODevice::ReadOnly))
         {
-            qDebug() << "Failed to open file:" << fileName;
+            qDebug() << "Failed to open file:" << url;
             return -1;
         }
 
-        data = QFile.map(0, m_mapFile.size());
+        uchar *data = d->mapFile.map(0, d->mapFile.size());
         if (data == NULL)
         {
-            qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(idxfilename);
+            qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(url);
             return false;
         }
 
-        const gchar *idxdatabuffer = data;
+        QByteArray byteArray = QByteArray::fromRawData(reinterpret_cast<const char*>(data), d->mapFile.size());
 
-        const gchar *p1 = idxdatabuffer;
-        gulong index_size;
-        guint32 j = 0;
-        for (guint32 i = 0; i < wc; i++)
+        int position = 0;
+        int j = 0;
+        for (int i = 0; i < wc; i++)
         {
-            index_size = strlen(p1) + 1 + 2 * sizeof(guint32);
             if (i % d->entriesPerPage == 0)
             {
-                wordoffset[j] = p1 - idxdatabuffer;
+                d->wordOffset[j] = position;
                 ++j;
             }
-            p1 += index_size;
+
+            position += strlen(byteArray.mid(position)) + 1 + 2 * sizeof(quint32);
         }
-        wordoffset[j] = p1 - idxdatabuffer;
+
+        d->wordOffset[j] = position;
 
         if (!saveCache(url))
             qDebug() << "Cache update failed";
     }
 
-    if (!(idxfile = fopen(url.c_str(), "rb")))
+    d->indexFile.setFileName(url);
+    if (!d->indexFile.open(QIODevice::ReadOnly))
     {
-        wordoffset.resize(0);
+        qDebug() << "Failed to open file:" << url;
+        d->wordOffset.resize(0);
         return false;
     }
 
-    first.assign(0, read_first_on_page_key(0));
-    last.assign(wordoffset.size() - 2, read_first_on_page_key(wordoffset.size() - 2));
-    middle.assign((wordoffset.size() - 2) / 2, read_first_on_page_key((wordoffset.size() - 2) / 2));
-    real_last.assign(wc - 1, get_key(wc - 1));
+    d->first.assign(0, readFirstOnPageKey(0));
+    d->last.assign(d->wordOffset.size() - 2, readFirstOnPageKey(d->wordOffset.size() - 2));
+    d->middle.assign((d->wordOffset.size() - 2) / 2, readFirstOnPageKey((d->wordOffset.size() - 2) / 2));
+    d->realLast.assign(wc - 1, key(wc - 1));
 
     return true;
 }
 
 ulong
-OffsetIndex::loadPage(ulong page_idx)
+OffsetIndex::loadPage(long pageIndex)
 {
-    ulong nentr = d->entriesPerPage;
-    if (page_idx == ulong(wordoffset.size() - 2))
-        if ((nentr = wordcount % d->entriesPerPage) == 0)
-            nentr = d->entriesPerPage;
+    ulong entryCount = d->entriesPerPage;
+    if (pageIndex == ulong(d->wordOffset.size() - 2))
+        if ((entryCount = d->wordCount % d->entriesPerPage) == 0)
+            entryCount = d->entriesPerPage;
 
 
-    if (page_idx != page.idx)
+    if (pageIndex != d->page.index)
     {
-        page_data.resize(wordoffset[pageIndex + 1] - wordoffset[page_idx]);
-        fseek(indexFile, wordoffset[pageIndex], SEEK_SET);
-        fread(&pageData[0], 1, pageData.size(), indexFile);
-        page.fill(&pageData[0], nentr, pageIndex);
+        d->indexFile.seek(d->wordOffset.at(pageIndex));
+
+        d->pageData = d->indexFile.read(d->wordOffset[pageIndex + 1] - d->wordOffset[pageIndex]);
+        d->page.fill(d->pageData, entryCount, pageIndex);
     }
 
-    return nentr;
+    return entryCount;
 }
 
 QByteArray
-OffsetIndex::key(ulong index)
+OffsetIndex::key(long index)
 {
-    loadPage(idx / d->entriesPerPage);
-    ulong indexInPage = idx % d->entriesPerPage;
-    wordentryOffset = page.entries[idx_in_page].off;
-    wordentrySize = page.entries[idx_in_page].size;
+    loadPage(index / d->entriesPerPage);
+    ulong indexInPage = index % d->entriesPerPage;
+    setWordEntryOffset(d->page.entries[indexInPage].offset);
+    setWordEntrySize(d->page.entries[indexInPage].size);
 
-    return page.entries[indexInPage].keystr;
+    return d->page.entries[indexInPage].keyData;
 }
 
 void
-OffsetIndex::data(ulong index)
+OffsetIndex::data(long index)
 {
-   key(index);
+    key(index);
 }
 
 QByteArray
-OffsetIndex::keyAndData(ulong index)
+OffsetIndex::keyAndData(long index)
 {
     return key(index);
 }
 
 bool
-OffsetIndex::lookup(const char *str, ulong &idx)
+OffsetIndex::lookup(const QByteArray& word, long &index)
 {
     bool found = false;
-    ulong iFrom;
-    ulong iTo = d->wordOffset.size() - 2;
+    long indexFrom;
+    long indexTo = d->wordOffset.size() - 2;
     int cmpint;
-    ulong iThisIndex;
-    if (stardictStringCompare(str, first.keystr.c_str()) < 0)
+    long indexThisIndex;
+    if (stardictStringCompare(word, d->first.keyData) < 0)
     {
-        idx = 0;
+        index = 0;
         return false;
     }
-    else if (stardictStringCompare(string, real_last.keystr.c_str()) > 0)
+    else if (stardictStringCompare(word, d->realLast.keyData) > 0)
     {
-        index = INVALID_INDEX;
+        index = invalidIndex;
         return false;
     }
     else
     {
-        iFrom = 0;
-        iThisIndex = 0;
-        while (iFrom <= iTo)
+        indexFrom = 0;
+        indexThisIndex = 0;
+        while (indexFrom <= indexTo)
         {
-            iThisIndex = (iFrom + iTo) / 2;
-            cmpint = stardict_strcmp(str, get_first_on_page_key(iThisIndex));
+            indexThisIndex = (indexFrom + indexTo) / 2;
+            cmpint = stardictStringCompare(word, firstOnPageKey(indexThisIndex));
             if (cmpint > 0)
-                iFrom = iThisIndex + 1;
+                indexFrom = indexThisIndex + 1;
             else if (cmpint < 0)
-                iTo = iThisIndex - 1;
+                indexTo = indexThisIndex - 1;
             else
             {
                 found = true;
@@ -391,25 +397,25 @@ OffsetIndex::lookup(const char *str, ulong &idx)
             }
         }
         if (!found)
-            index = iTo;    //prev
+            index = indexTo;    //prev
         else
-            index = iThisIndex;
+            index = indexThisIndex;
     }
 
     if (!found)
     {
         ulong netr = loadPage(index);
-        iFrom = 1; // Needn't search the first word anymore.
-        iTo = netr - 1;
-        iThisIndex = 0;
-        while (iFrom <= iTo)
+        indexFrom = 1; // Needn't search the first word anymore.
+        indexTo = netr - 1;
+        indexThisIndex = 0;
+        while (indexFrom <= indexTo)
         {
-            iThisIndex = (iFrom + iTo) / 2;
-            cmpint = stardictStringCompare(string, page.entries[iThisIndex].keystr);
+            indexThisIndex = (indexFrom + indexTo) / 2;
+            cmpint = stardictStringCompare(word, d->page.entries[indexThisIndex].keyData);
             if (cmpint > 0)
-                iFrom = iThisIndex + 1;
+                indexFrom = indexThisIndex + 1;
             else if (cmpint < 0)
-                iTo = iThisIndex - 1;
+                indexTo = indexThisIndex - 1;
             else
             {
                 found = true;
@@ -419,9 +425,9 @@ OffsetIndex::lookup(const char *str, ulong &idx)
 
         index *= d->entriesPerPage;
         if (!found)
-            index += iFrom;    //next
+            index += indexFrom;    //next
         else
-            index += iThisIndex;
+            index += indexThisIndex;
     }
     else
     {
@@ -437,8 +443,20 @@ OffsetIndex::wordEntryOffset() const
     return IndexFile::wordEntryOffset();
 }
 
-quint32 wordEntrySize() const
+void
+OffsetIndex::setWordEntryOffset(quint32 wordEntryOffset)
+{
+    IndexFile::setWordEntryOffset(wordEntryOffset);
+}
+
+quint32
+OffsetIndex::wordEntrySize() const
 {
     return IndexFile::wordEntrySize();
 }
 
+void
+OffsetIndex::setWordEntrySize(quint32 wordEntrySize)
+{
+    IndexFile::setWordEntrySize(wordEntrySize);
+}

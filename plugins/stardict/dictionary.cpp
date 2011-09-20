@@ -103,7 +103,7 @@ Dictionary::keyAndData(long index, QByteArray key, qint32 &offset, qint32 &size)
 bool
 Dictionary::lookup(const QString string, long &index)
 {
-    return d->indexFile->lookup(string, index);
+    return d->indexFile->lookup(string.toUtf8(), index);
 }
 
 bool

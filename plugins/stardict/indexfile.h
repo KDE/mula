@@ -36,7 +36,7 @@ namespace MulaPluginStarDict
             virtual QByteArray key(long index) = 0;
             virtual void data(long index) = 0;
             virtual QByteArray keyAndData(long index) = 0;
-            virtual bool lookup(const QString& string, long &index) = 0;
+            virtual bool lookup(const QByteArray& string, long &index) = 0;
 
             virtual quint32 wordEntryOffset() const;
             virtual void setWordEntryOffset(quint32 wordEntryOffset);

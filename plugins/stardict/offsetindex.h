@@ -32,18 +32,21 @@ namespace MulaPluginStarDict
             OffsetIndex();
             virtual ~OffsetIndex();
 
-            bool load(const QString& url, long wordCount, qulonglong sfile);
+            bool load(const QString& url, long wordCount, qulonglong fileSize);
             QByteArray key(long index);
 
             void data(long index);
             QByteArray keyAndData(long index);
-            bool lookup(const QString &string, long &index);
+            bool lookup(const QByteArray& string, long &index);
 
             virtual quint32 wordEntryOffset() const;
+            virtual void setWordEntryOffset(quint32 wordEntryOffset);
+
             virtual quint32 wordEntrySize() const;
+            virtual void setWordEntrySize(quint32 wordEntrySize);
 
         private:
-            long loadPage(long pageIndex);
+            ulong loadPage(long pageIndex);
             QByteArray readFirstOnPageKey(long pageIndex);
             QByteArray firstOnPageKey(long pageIndex);
             bool loadCache(const QString& url);

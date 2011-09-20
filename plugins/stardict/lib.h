@@ -28,8 +28,6 @@
 const int MAX_MATCH_ITEM_PER_LIB = 100;
 const int MAX_FUZZY_DISTANCE = 3; // at most MAX_FUZZY_DISTANCE-1 differences allowed when find similar words
 
-const int INVALID_INDEX = -100;
-
 class Libs
 {
     public:

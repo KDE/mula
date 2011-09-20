@@ -20,6 +20,8 @@
 #ifndef MULA_PLUGIN_STARDICT_WORDLISTINDEX_H
 #define MULA_PLUGIN_STARDICT_WORDLISTINDEX_H
 
+#include "indexfile.h"
+
 namespace MulaPluginStarDict
 {
     class WordListIndex : public IndexFile
@@ -32,7 +34,7 @@ namespace MulaPluginStarDict
             QByteArray key(long index);
             void data(long index);
             QByteArray keyAndData(long index);
-            bool lookup(const QString& string, long &index);
+            bool lookup(const QByteArray& string, long &index);
 
             virtual quint32 wordEntryOffset() const;
             virtual quint32 wordEntrySize() const;

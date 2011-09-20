@@ -24,6 +24,8 @@
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
 
+const int invalidIndex = -100;
+
 template <typename Function>
 void __for_each_file(const QString& dirName, const QString& suffix,
                      const QStringList& orderList, const QStringList& disableList,
@@ -63,6 +65,16 @@ void for_each_file(const QStringList& dirList, const QString& suffix,
 
     foreach (const QString& dirName, dirList)
         __for_each_file(dirName, suffix, orderList, disableList, f);
+}
+
+static inline int stardictStringCompare(QString string1, QString string2)
+{
+    int retval = string1.compare(string2, Qt::CaseInsensitive);
+
+    if (retval == 0)
+        return string1.compare(string2);
+    else
+        return retval;
 }
 
 #endif // MULA_PLUGIN_STARDICT_FILE

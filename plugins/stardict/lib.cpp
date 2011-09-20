@@ -54,16 +54,6 @@ static bool isPureEnglish(const QByteArray& word)
     return true;
 }
 
-static inline int stardictStringCompare(QString string1, QString string2)
-{
-    int retval = string1.compare(string2, Qt::CaseInsensitive);
-
-    if (retval == 0)
-        return string1.compare(string2);
-    else
-        return retval;
-}
-
 class Libs::Private
 {
     public:
@@ -134,7 +124,7 @@ Libs::poWord(long keyIndex, int libIndex) const
 QString
 Libs::poWordData(long dataIndex, int libIndex)
 {
-    if (libIndex == INVALID_INDEX)
+    if (libIndex == invalidIndex)
         return NULL;
 
     return d->dictionaries.at(libIndex)->data(dataIndex);
@@ -240,7 +230,7 @@ Libs::poCurrentWord(long *iCurrent)
 
     for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
     {
-        if (iCurrent[iLib] == INVALID_INDEX)
+        if (iCurrent[iLib] == invalidIndex)
             continue;
 
         if (iCurrent[iLib] >= articleCount(iLib) || iCurrent[iLib] < 0)
@@ -276,7 +266,7 @@ Libs::poNextWord(QByteArray searchWord, long *iCurrent)
         if (!searchWord.isEmpty())
             d->dictionaries.at(iLib)->lookup(searchWord, iCurrent[iLib]);
 
-        if (iCurrent[iLib] == INVALID_INDEX)
+        if (iCurrent[iLib] == invalidIndex)
             continue;
 
         if (iCurrent[iLib] >= articleCount(iLib) || iCurrent[iLib] < 0)
@@ -308,7 +298,7 @@ Libs::poNextWord(QByteArray searchWord, long *iCurrent)
             if (iLib == iCurrentLib)
                 continue;
 
-            if (iCurrent[iLib] == INVALID_INDEX)
+            if (iCurrent[iLib] == invalidIndex)
                 continue;
 
             if ( iCurrent[iLib] >= articleCount(iLib) || iCurrent[iLib] < 0)
@@ -333,7 +323,7 @@ Libs::poPreviousWord(long *iCurrent)
 
     for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
     {
-        if (iCurrent[iLib] == INVALID_INDEX)
+        if (iCurrent[iLib] == invalidIndex)
             iCurrent[iLib] = articleCount(iLib);
         else
         {
@@ -375,7 +365,7 @@ Libs::poPreviousWord(long *iCurrent)
             else
             {
                 if (iCurrent[iLib] == articleCount(iLib))
-                    iCurrent[iLib] = INVALID_INDEX;
+                    iCurrent[iLib] = invalidIndex;
             }
         }
     }
@@ -780,7 +770,7 @@ bool Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
     {
         //don't change iWordIndex here.
         //when LookupSimilarWord all failed too, we want to use the old LookupWord index to list words.
-        //iWordIndex = INVALID_INDEX;
+        //iWordIndex = invalidIndex;
     }
 #endif
     return found;
