@@ -21,6 +21,9 @@
 
 #include "lib.h"
 #include "settingsdialog.h"
+#include "file.h"
+
+#include <core/dictionaryplugin.h>
 
 #include <QtCore/QList>
 #include <QtCore/QMap>
@@ -39,7 +42,7 @@ const int MaxFuzzy = 24;
 class IfoListSetter
 {
     public:
-        IfoListSetter(QStringList bnList)
+        IfoListSetter(QStringList& bnList)
             : bookNameList(bnList)
         {
         }
@@ -99,20 +102,21 @@ class StarDict::Private
 
 StarDict::StarDict(QObject *parent)
     : QObject(parent)
+    , d(new Private)
 {
     QSettings settings("mula","mula");
 
-    d->dictionaryDirs = settings.value("StarDict/dictionaryDirs", m_dictionaryDirs).toStringList();
+    d->dictionaryDirs = settings.value("StarDict/dictionaryDirs", d->dictionaryDirs).toStringList();
     d->reformatLists = settings.value("StarDict/reformatLists", true).toBool();
     d->expandAbbreviations = settings.value("StarDict/expandAbbreviations", true).toBool();
     if (d->dictionaryDirs.isEmpty())
     {
 #ifdef Q_OS_UNIX
-        m_dictionaryDirs.append("/usr/share/stardict/dic");
+        d->dictionaryDirs.append("/usr/share/stardict/dic");
 #else
-        m_dictionaryDirs.append(QCoreApplication::applicationDirPath() + "/dic");
+        d->dictionaryDirs.append(QCoreApplication::applicationDirPath() + "/dic");
 #endif			
-        m_dictionaryDirs.append(QDir::homePath() + "/.stardict/dic");
+        d->dictionaryDirs.append(QDir::homePath() + "/.stardict/dic");
     }
 }
 
@@ -151,7 +155,7 @@ StarDict::authors() const
     return QStringList() << "Laszlo Papp <lpapp@kde.org>";
 }
 
-Features
+MulaCore::DictionaryPlugin::Features
 StarDict::features() const
 {
     return Features(SearchSimilar | SettingsDialog);
@@ -161,7 +165,7 @@ QStringList
 StarDict::availableDictionaries() const
 {
     QStringList result;
-    IfoListSetter setter(&result);
+    IfoListSetter setter(result);
     for_each_file(d->dictionaryDirs, ".ifo", QStringList(), QStringList(), setter);
 
     return result;
@@ -178,62 +182,62 @@ StarDict::setLoadedDictionaries(const QStringList &loadedDictionaries)
 {
     QStringList available = availableDictionaries();
     QStringList disabled;
-    for (QStringList::const_iterator i = available.begin(); i != available.end(); ++i)
+    foreach (const QString& dictionary, available)
     {
-        if (!loadedDictionaries.contains(*i))
-            disabled.append(i);
+        if (!loadedDictionaries.contains(dictionary))
+            disabled.append(dictionary);
     }
 
     d->sdLibs->reload(d->dictionaryDirs, loadedDictionaries, disabled);
 
     d->loadedDictionaries.clear();
-    for (int i = 0; i < d->sdLibs->ndicts(); ++i)
-        d->loadedDictionaries[QString::fromUtf8(d->sdLibs->dict_name(i))] = i;
+    for (int i = 0; i < d->sdLibs->dictionaryCount(); ++i)
+        d->loadedDictionaries[d->sdLibs->dictionaryName(i)] = i;
 }
 
 MulaCore::DictionaryInfo
 StarDict::dictionaryInfo(const QString &dictionary)
 {
     DictionaryInfo nativeInfo;
-    nativeInfo.wordcount = 0;
+    nativeInfo.setWordCount(0);
     if (!nativeInfo.loadFromIfoFile(findDictionary(dictionary, d->dictionaryDirs), false))
         return DictionaryInfo();
 
     DictionaryInfo result(name(), dictionary);
-    result.setAuthor(QString::fromUtf8(nativeInfo.autho()));
-    result.setDescription(QString::fromUtf8(nativeInfo.description()));
-    result.setWordsCount(nativeInfo.wordcount() ? static_cast<long>(nativeInfo.wordcount()) : -1);
+    result.setAuthor(nativeInfo.author());
+    result.setDescription(nativeInfo.description());
+    result.setWordCount(nativeInfo.wordCount() ? static_cast<long>(nativeInfo.wordCount()) : -1);
     return result;
 }
 
 bool
 StarDict::isTranslatable(const QString &dictionary, const QString &word)
 {
-    if (!d->loadedDictonaries.contains(dictionary))
+    if (!d->loadedDictionaries.contains(dictionary))
         return false;
 
     long ind;
-    return d->sdLibs->simpleLookupWord(word.toUtf8().data(), ind, d->loadedDicts[dictionary]);
+    return d->sdLibs->simpleLookupWord(word.toUtf8().data(), ind, d->loadedDictionaries[dictionary]);
 }
 
-StarDict::Translation
+MulaCore::Translation
 StarDict::translate(const QString &dictionary, const QString &word)
 {
-    if (!d->loadedDicts.contains(dictionary))
-        return Translation();
+    if (!d->loadedDictionaries.contains(dictionary))
+        return MulaCore::Translation();
 
     if (word.isEmpty())
-        return Translation();
+        return MulaCore::Translation();
 
-    int dictionaryIndex = m_loadedDicts[dictionary];
-    long ind;
+    int dictionaryIndex = d->loadedDictionaries[dictionary];
+    long index;
 
-    if (!d->sdLibs->simpleLookupWord(word.toUtf8().data(), ind, d->loadedDicts[dict]))
-        return Translation();
+    if (!d->sdLibs->simpleLookupWord(word.toUtf8().data(), index, d->loadedDictionaries[dictionary]))
+        return MulaCore::Translation();
 
-    return Translation(QString::fromUtf8(d->sdLibs->poWord(ind, dictionaryIndex)),
-            QString::fromUtf8(d->sdLibs->dict_name(dictionaryIndex)),
-            parseData(d->sdLibs->poWordData(ind, dictionaryIndex), dictionaryIndex, true,
+    return MulaCore::Translation(QString::fromUtf8(d->sdLibs->poWord(index, dictionaryIndex)),
+            d->sdLibs->dictionaryName(dictionaryIndex),
+            parseData(d->sdLibs->poWordData(index, dictionaryIndex).toUtf8(), dictionaryIndex, true,
                 d->reformatLists, d->expandAbbreviations));
 }
 
@@ -243,8 +247,9 @@ StarDict::findSimilarWords(const QString &dictionary, const QString &word)
     if (!d->loadedDictionaries.contains(dictionary))
         return QStringList();
 
-    char *fuzzy_res[MaxFuzzy];
-    if (!d->sdLibs->LookupWithFuzzy(word.toUtf8().data(), fuzzy_res, MaxFuzzy, m_loadedDicts[dict]))
+    QStringList fuzzyList;
+    fuzzyList.reserve(MaxFuzzy);
+    if (!d->sdLibs->lookupWithFuzzy(word.toUtf8(), fuzzyList, MaxFuzzy, d->loadedDictionaries[dictionary]))
         return QStringList();
 
     QStringList result;
@@ -265,51 +270,54 @@ StarDict::execSettingsDialog(QWidget *parent)
 }
 
 QString
-StarDict::parseData(const char *data, int dictIndex, bool htmlSpaces, bool reformatLists, bool expandAbbreviations)
+StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces, bool reformatLists, bool expandAbbreviations)
 {
     QString result;
-    quint32 dataSize = *reinterpret_cast<const quint32*>(data);
-    const char *dataEnd = data + dataSize;
-    const char *ptr = data + sizeof(quint32);
-    while (ptr < dataEnd)
+    int position;
+
+    foreach (char ch, data)
     {
-        switch (*ptr++)
+        switch (ch)
         {
             case 'm':
             case 'l':
             case 'g':
             {
-                QString str = QString::fromUtf8(ptr);
-                ptr += str.toUtf8().length() + 1;
-                result += str;
+                QString string = QString::fromUtf8(data);
+                position += data.length() + 1;
+                result.append(string);
                 break;
             }
+
             case 'x':
             {
-                QString str = QString::fromUtf8(ptr);
-                ptr += str.toUtf8().length() + 1;
-                xdxf2html(str);
-                result += str;
+                QString string = QString::fromUtf8(data);
+                position += data.length() + 1;
+                xdxf2html(string);
+                result.append(string);
                 break;
             }
+
             case 't':
             {
-                QString str = QString::fromUtf8(ptr);
-                ptr += str.toUtf8().length() + 1;
-                result += "<font class=\"example\">";
-                result += str;
-                result += "</font>";
+                QString string = QString::fromUtf8(data);
+                position += data.length() + 1;
+                result.append("<font class=\"example\">");
+                result.append(string);
+                result.append("</font>");
                 break;
             }
+
             case 'y':
             {
-                ptr += strlen(ptr) + 1;
+                position += qstrlen(data) + 1;
                 break;
             }
+
             case 'W':
             case 'P':
             {
-                ptr += *reinterpret_cast<const quint32*>(ptr) + sizeof(quint32);
+                position += *reinterpret_cast<const quint32*>(data.data()) + sizeof(quint32);
                 break;
             }
             default:
@@ -320,43 +328,47 @@ StarDict::parseData(const char *data, int dictIndex, bool htmlSpaces, bool refor
     if (d->expandAbbreviations)
     {
         QRegExp regExp("_\\S+[\\.:]");
-        int pos = 0;
-        while ((pos = regExp.indexIn(result, pos)) != -1)
+        int position = 0;
+        while ((position = regExp.indexIn(result, position)) != -1)
         {
-            long ind;
-            if (m_sdLibs->SimpleLookupWord(result.mid(pos, regExp.matchedLength()).toUtf8().data(), ind, dictIndex))
+            long index;
+            if (d->sdLibs->simpleLookupWord(result.mid(position, regExp.matchedLength()).toUtf8().data(), index, dictionaryIndex))
             {
                 QString expanded = "<font class=\"explanation\">";
-                expanded += parseData(m_sdLibs->poGetWordData(ind, dictIndex));
-                if (result[pos + regExp.matchedLength() - 1] == ':')
+                expanded += parseData(d->sdLibs->poWordData(index, dictionaryIndex));
+                if (result[position + regExp.matchedLength() - 1] == ':')
                     expanded += ':';
+
                 expanded += "</font>";
-                result.replace(pos, regExp.matchedLength(), expanded);
-                pos += expanded.length();
+                result.replace(position, regExp.matchedLength(), expanded);
+                position += expanded.length();
             }
             else
-                pos += regExp.matchedLength();
+                position += regExp.matchedLength();
         }
     }
+
     if (reformatLists)
     {
-        int pos = 0;
+        int position = 0;
         QStack<QChar> openedLists;
-        while (pos < result.length())
+        while (position < result.length())
         {
-            if (result[pos].isDigit())
+            if (result[position].isDigit())
             {
                 int n = 0;
-                while (result[pos + n].isDigit())
+                while (result[position + n].isDigit())
                     ++n;
-                pos += n;
-                if (result[pos] == '&' && result.mid(pos + 1, 3) == "gt;")
-                    result.replace(pos, 4, ">");
-                QChar marker = result[pos];
+
+                position += n;
+                if (result[position] == '&' && result.mid(position + 1, 3) == "gt;")
+                    result.replace(position, 4, ">");
+
+                QChar marker = result[position];
                 QString replacement;
                 if (marker == '>' || marker == '.' || marker == ')')
                 {
-                    if (n == 1 && result[pos - 1] == '1') // open new list
+                    if (n == 1 && result[position - 1] == '1') // open new list
                     {
                         if (openedLists.contains(marker))
                         {
@@ -380,27 +392,27 @@ StarDict::parseData(const char *data, int dictIndex, bool htmlSpaces, bool refor
                         replacement += "</li>";
                     }
                     replacement += "<li>";
-                    pos -= n;
-                    n += pos;
+                    position -= n;
+                    n += position;
 
-                    while (result[pos - 1].isSpace())
-                        --pos;
+                    while (result[position - 1].isSpace())
+                        --position;
 
                     while (result[n + 1].isSpace())
                         ++n;
 
-                    result.replace(pos, n - pos + 1, replacement);
-                    pos += replacement.length();
+                    result.replace(position, n - position + 1, replacement);
+                    position += replacement.length();
                 }
                 else
-                    ++pos;
+                    ++position;
             }
             else
-                ++pos;
+                ++position;
         }
         while (openedLists.size())
         {
-            result += "</li></ol>";
+            result.append("</li></ol>");
             openedLists.pop();
         }
     }
@@ -418,41 +430,42 @@ StarDict::parseData(const char *data, int dictIndex, bool htmlSpaces, bool refor
 
         result.remove(result.length() - n, n);
 
-        for (int pos = 0; pos < result.length();)
+        for (int position = 0; position < result.length();)
         {
-            switch (result[pos].toAscii())
+            switch (result[position].toAscii())
             {
                 case '[':
-                    result.insert(pos, "<font class=\"transcription\">");
-                    pos += 28 + 1; // sizeof "<font class=\"transcription\">" + 1
+                    result.insert(position, "<font class=\"transcription\">");
+                    position += 28 + 1; // sizeof "<font class=\"transcription\">" + 1
                     break;
                 case ']':
-                    result.insert(pos + 1, "</font>");
-                    pos += 7 + 1; // sizeof "</font>" + 1
+                    result.insert(position + 1, "</font>");
+                    position += 7 + 1; // sizeof "</font>" + 1
                     break;
                 case '\t':
                     result.insert(pos, "&nbsp;&nbsp;&nbsp;&nbsp;");
-                    pos += 24 + 1; // sizeof "&nbsp;&nbsp;&nbsp;&nbsp;" + 1
+                    position += 24 + 1; // sizeof "&nbsp;&nbsp;&nbsp;&nbsp;" + 1
                     break;
                 case '\n':
                 {
                     int count = 1;
                     n = 1;
-                    while (result[pos + n].isSpace())
+                    while (result[position + n].isSpace())
                     {
-                        if (result[pos + n] == '\n')
+                        if (result[position + n] == '\n')
                             ++count;
                         ++n;
                     }
+
                     if (count > 1)
-                        result.replace(pos, n, "</p><p>");
+                        result.replace(position, n, "</p><p>");
                     else
-                        result.replace(pos, n, "<br>");
+                        result.replace(position, n, "<br>");
 
                     break;
                 }
                 default:
-                    ++pos;
+                    ++position;
             }
         }
     }
@@ -462,21 +475,21 @@ StarDict::parseData(const char *data, int dictIndex, bool htmlSpaces, bool refor
 QString
 StarDict::findDictionary(const QString &name, const QStringList &dictionaryDirs)
 {
-    QString filename;
-    IfoFileFinder finder(name, &filename);
+    QString fileName;
+    IfoFileFinder finder(name, &fileName);
     for_each_file(d->dictionaryDirs, ".ifo", QStringList(), QStringList(), finder);
-    return filename;
+    return fileName;
 }
 
 void
-QString::xdxf2html(QString &str)
+StarDict::xdxf2html(QString &string)
 {
-    str.replace("<abr>", "<font class=\"abbreviature\">");
-    str.replace("<tr>", "<font class=\"transcription\">[");
-    str.replace("</tr>", "]</font>");
-    str.replace("<ex>", "<font class=\"example\">");
-    str.replace(QRegExp("<k>.*<\\/k>"), "");
-    str.replace(QRegExp("(<\\/abr>)|(<\\ex>)"), "</font");
+    string.replace("<abr>", "<font class=\"abbreviature\">");
+    string.replace("<tr>", "<font class=\"transcription\">[");
+    string.replace("</tr>", "]</font>");
+    string.replace("<ex>", "<font class=\"example\">");
+    string.replace(QRegExp("<k>.*<\\/k>"), "");
+    string.replace(QRegExp("(<\\/abr>)|(<\\ex>)"), "</font");
 }
 
 Q_EXPORT_PLUGIN2(stardict, StarDict)

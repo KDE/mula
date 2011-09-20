@@ -62,7 +62,7 @@ namespace MulaPluginStarDict
             friend class SettingsDialog;
 
         private:
-            QString parseData(const char *data, int dictIndex = -1,
+            QString parseData(const QByteArray &data, int dictIndex = -1,
                     bool htmlSpaces = false, bool reformatLists = false, bool expandAbbreviations = false);
             static QString findDictionary(const QString &name, const QStringList &dictDirs);
             static void xdxf2html(QString &str);
