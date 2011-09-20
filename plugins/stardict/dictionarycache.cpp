@@ -84,8 +84,10 @@ DictionaryCache::byteArray() const
     return d->byteArray;
 }
 
-void setStamp(int stamp)
+void
+DictionaryCache::setStamp(int stamp)
 {
+    d->stamp = stamp;
 }
 
 int
