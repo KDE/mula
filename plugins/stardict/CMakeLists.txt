@@ -15,8 +15,28 @@ set(stardict_SRCS
     wordlistindex.cpp
 )
 
+set(stardict_HEADERS
+    cacheitem.h
+    dictionary.h
+    dictionarybase.h
+    dictionarycache.h
+    dictionaryzip.h
+    distance.h
+    indexfile.h
+    lib.h
+    offsetindex.h
+    stardict.h
+    stardictdictionaryinfo.h
+    wordlistindex.h
+)
+
 qt4_automoc(${stardict_SRCS})
-add_library(mula_plugin_stardict SHARED ${stardict_SRCS})
+
+if(APPLE)
+    add_library(mula_plugin_stardict SHARED ${stardict_SRCS} ${stardict_HEADERS})
+else()
+    add_library(mula_plugin_stardict SHARED ${stardict_SRCS})
+endif()
 
 if(MULA_BUILD_ALL)
     add_dependencies(mula_plugin_stardict MULACore)
