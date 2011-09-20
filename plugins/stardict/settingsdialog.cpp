@@ -38,6 +38,10 @@ SettingsDialog::SettingsDialog(StarDict *plugin, QWidget *parent)
     connect(this, SIGNAL(accepted()), SLOT(apply()));
 }
 
+SettingsDialog::~SettingsDialog()
+{
+}
+
 void SettingsDialog::on_addDictDirButton_clicked()
 {
     QString dirName = QFileDialog::getExistingDirectory(this, tr("Select dictionaries directory"));

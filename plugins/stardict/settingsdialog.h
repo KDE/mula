@@ -32,9 +32,10 @@ namespace MulaPluginStarDict
 
         public:
             explicit SettingsDialog(StarDict *plugin, QWidget *parent = 0);
+            ~SettingsDialog();
 
-            private slots:
-                void on_addDictDirButton_clicked();
+        private slots:
+            void on_addDictDirButton_clicked();
             void on_removeDictDirButton_clicked();
             void on_moveUpDictDirButton_clicked();
             void on_moveDownDictDirButton_clicked();
