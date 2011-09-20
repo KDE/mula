@@ -39,7 +39,10 @@ namespace MulaPluginStarDict
             virtual bool lookup(const QString& string, long &index) = 0;
 
             virtual quint32 wordEntryOffset() const;
+            virtual void setWordEntryOffset(quint32 wordEntryOffset);
+
             virtual quint32 wordEntrySize() const;
+            virtual void setWordEntrySize(quint32 wordEntrySize);
 
         private:
             class Private;

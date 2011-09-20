@@ -55,8 +55,20 @@ IndexFile::wordEntryOffset() const
     return d->wordEntryOffset;
 }
 
+void
+IndexFile::setWordEntryOffset(quint32 wordEntryOffset)
+{
+    d->wordEntryOffset = wordEntryOffset;
+}
+
 quint32
 IndexFile::wordEntrySize() const
 {
     return d->wordEntrySize;
+}
+
+void
+IndexFile::setWordEntrySize(quint32 wordEntrySize)
+{
+    d->wordEntrySize = wordEntrySize;
 }
