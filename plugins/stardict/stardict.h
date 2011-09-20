@@ -21,7 +21,7 @@
 #define MULA_PLUGIN_STARDICT_STARDICT_H
 
 #include "lib.h"
-#include "dictionaryinfo.h"
+#include "stardictdictionaryinfo.h"
 
 #include <core/dictionaryplugin.h>
 
@@ -29,12 +29,14 @@
 #include <QtCore/QVector>
 #include <QtCore/QHash>
 
+class QWidget;
+
 namespace MulaPluginStarDict
 {
     class StarDict : public QObject, public MulaCore::DictionaryPlugin
     {
         Q_OBJECT
-        Q_INTERFACES(MULA::IDictionaryPlugin)
+        Q_INTERFACES(MULA::DictionaryPlugin)
 
         public:
             StarDict(QObject *parent = 0);
@@ -64,7 +66,8 @@ namespace MulaPluginStarDict
         private:
             QString parseData(const QByteArray &data, int dictIndex = -1,
                     bool htmlSpaces = false, bool reformatLists = false, bool expandAbbreviations = false);
-            static QString findDictionary(const QString &name, const QStringList &dictDirs);
+
+            QString findDictionary(const QString &name, const QStringList &dictDirs);
             static void xdxf2html(QString &str);
 
             class Private;

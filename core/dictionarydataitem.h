@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MULA_CORE_DICTIONARYDATA_H
-#define MULA_CORE_DICTIONARYDATA_H
+#ifndef MULA_CORE_DICTIONARYDATAITEM_H
+#define MULA_CORE_DICTIONARYDATAITEM_H
 
 #include "dictionaryplugin.h"
 
@@ -32,12 +32,12 @@ namespace MulaCore
     /** 
      * This class represents a dictionary.
      */
-    class DictionaryData
+    class DictionaryDataItem
     {
         public:
-            DictionaryData(const QString &plugin, const QString &name);
-            DictionaryData();
-            virtual ~DictionaryData();
+            DictionaryDataItem(const QString &plugin, const QString &name);
+            DictionaryDataItem();
+            virtual ~DictionaryDataItem();
 
             const QString &plugin() const;
 
@@ -47,7 +47,7 @@ namespace MulaCore
 
             void setName(const QString &name);
 
-            bool operator == (const DictionaryData &dictionaryData);
+            bool operator == (const DictionaryDataItem &dictionaryData);
 
         private:
             class Private;
@@ -55,5 +55,5 @@ namespace MulaCore
     };
 }
 
-#endif // MULA_CORE_PLUGINMANAGER_H
+#endif // MULA_CORE_DICTIONARYDATAITEM_H
 

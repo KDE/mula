@@ -25,7 +25,7 @@ class DictionaryInfo::Private
 {
     public:
         Private()
-            : wordsCount(0)
+            : wordCount(0)
         {   
         }
 
@@ -37,18 +37,18 @@ class DictionaryInfo::Private
         QString name;
         QString author;
         QString description;
-        long wordsCount;
+        long wordCount;
 };
 
 DictionaryInfo::DictionaryInfo(const QString &plugin, const QString &name, const QString &author, 
-               const QString &description, long wordsCount)
+               const QString &description, long wordCount)
     : d(new Private)
 {
     d->plugin = plugin;
     d->name = name;
     d->author = author;
     d->description = description;
-    d->wordsCount = wordsCount;
+    d->wordCount = wordCount;
 }
 
 DictionaryInfo::~DictionaryInfo()
@@ -80,9 +80,9 @@ DictionaryInfo::description() const
 }
 
 long
-DictionaryInfo::wordsCount() const
+DictionaryInfo::wordCount() const
 {
-    return d->wordsCount;
+    return d->wordCount;
 }
 
 void
@@ -110,9 +110,9 @@ DictionaryInfo::setDescription(const QString &description)
 }
 
 void
-DictionaryInfo::setWordsCount(long wordsCount)
+DictionaryInfo::setWordCount(long wordCount)
 {
-    d->wordsCount = wordsCount;
+    d->wordCount = wordCount;
 }
 
 #include "dictionaryinfo.moc"

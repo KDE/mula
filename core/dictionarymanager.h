@@ -21,7 +21,7 @@
 #define MULA_CORE_DICTIONARYMANAGER_H
 
 #include "dictionaryplugin.h"
-#include "dictionarydata.h"
+#include "dictionarydataitem.h"
 #include "singleton.h"
 
 #include <QtCore/QStringList>
@@ -64,14 +64,14 @@ namespace MulaCore
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
              */
-            QList<DictionaryData> availableDictionaries() const;
+            QList<DictionaryDataItem> availableDictionaries() const;
 
             /** 
              * Returns a list of loaded dictionaries. 
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
              */
-            const QList<DictionaryData> &loadedDictionaries() const;
+            const QList<DictionaryDataItem> &loadedDictionaries() const;
 
             /** 
              * Sets a loaded dictionaries.
@@ -80,7 +80,7 @@ namespace MulaCore
              * If dictionary cannot be loaded it will not be added to 
              * availableDicts list.
              */
-            void setLoadedDictionaries(const QList<DictionaryData> &loadedDictionaries);
+            void setLoadedDictionaries(const QList<DictionaryDataItem> &loadedDictionaries);
 
             /**
              * Reloads the loaded dictionaries.

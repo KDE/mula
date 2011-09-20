@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MULA_PLUGIN_STARDICT_DICTIONARYINFO_H
-#define MULA_PLUGIN_STARDICT_DICTIONARYINFO_H
+#ifndef MULA_PLUGIN_STARDICT_STARDICTDICTIONARYINFO_H
+#define MULA_PLUGIN_STARDICT_STARDICTDICTIONARYINFO_H
 
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
@@ -28,11 +28,11 @@ namespace MulaPluginStarDict
     // This class contains all information about the dictionary
     // Note that the dictionary must have at least a bookname, a wordcount and a 
     // idxfilesize, or the load will fail.
-    class DictionaryInfo
+    class StarDictDictionaryInfo
     {
         public:
-            DictionaryInfo();
-            virtual ~DictionaryInfo();
+            StarDictDictionaryInfo();
+            virtual ~StarDictDictionaryInfo();
 
             bool loadFromIfoFile(const QString& ifoFileName, bool isTreeDict);
 
@@ -75,4 +75,4 @@ namespace MulaPluginStarDict
     };
 }
 
-#endif // MULA_PLUGIN_STARDICT_DICTIONARYINFO_H
+#endif // MULA_PLUGIN_STARDICT_STARDICTDICTIONARYINFO_H

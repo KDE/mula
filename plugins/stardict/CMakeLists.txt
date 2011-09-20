@@ -5,13 +5,13 @@ set(stardict_SRCS
     dictionary.cpp
     dictionarybase.cpp
     dictionarycache.cpp
-    dictionaryinfo.cpp
     dictionaryzip.cpp
     distance.cpp
     indexfile.cpp
     lib.cpp
     offsetindex.cpp
     stardict.cpp
+    stardictdictionaryinfo.cpp
     wordlistindex.cpp
 )
 

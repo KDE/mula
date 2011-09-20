@@ -44,7 +44,7 @@ set(MULA_CORE_INCLUDES
 
 set(MulaCore_SRCS
     debughelper.cpp
-    dictionarydata.cpp
+    dictionarydataitem.cpp
     dictionaryinfo.cpp
     dictionarymanager.cpp
     dictionaryplugin.cpp
@@ -55,7 +55,7 @@ set(MulaCore_SRCS
 
 set(MulaCore_HEADERS
     debughelper.h
-    dictionarydata.h
+    dictionarydataitem.h
     dictionaryinfo.h
     dictionaryplugin.h
     mula_core_export.h

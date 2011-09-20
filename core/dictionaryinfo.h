@@ -55,7 +55,7 @@ namespace MulaCore
 
             const QString &description() const;
 
-            long wordsCount() const;
+            long wordCount() const;
 
             void setPlugin(const QString &plugin);
 
@@ -65,7 +65,7 @@ namespace MulaCore
 
             void setDescription(const QString &description);
 
-            void setWordsCount(long wordsCount);
+            void setWordCount(long wordCount);
 
         private:
             class Private;

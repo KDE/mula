@@ -17,11 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "dictionarydata.h"
+#include "dictionarydataitem.h"
 
 using namespace MulaCore;
 
-class DictionaryData::Private
+class DictionaryDataItem::Private
 {
     public:
         Private()
@@ -36,48 +36,48 @@ class DictionaryData::Private
         QString name;
 };
 
-DictionaryData::DictionaryData(const QString &plugin, const QString &name)
+DictionaryDataItem::DictionaryDataItem(const QString &plugin, const QString &name)
     : d(new Private)
 {
     d->plugin = plugin;
     d->name = name;
 }
 
-DictionaryData::DictionaryData()
+DictionaryDataItem::DictionaryDataItem()
     : d(new Private)
 {
 }
 
-DictionaryData::~DictionaryData()
+DictionaryDataItem::~DictionaryDataItem()
 {
 }
 
 const QString&
-DictionaryData::plugin() const
+DictionaryDataItem::plugin() const
 {   
     return d->plugin;
 }   
 
 const QString&
-DictionaryData::name() const
+DictionaryDataItem::name() const
 {   
     return d->name;
 }   
 
 void
-DictionaryData::setPlugin(const QString &plugin)
+DictionaryDataItem::setPlugin(const QString &plugin)
 {   
     d->plugin = plugin;
 }   
 
 void
-DictionaryData::setName(const QString &name)
+DictionaryDataItem::setName(const QString &name)
 {   
     d->name = name;
 }   
 
 bool
-DictionaryData::operator == (const DictionaryData &dictionaryData)
+DictionaryDataItem::operator == (const DictionaryDataItem &dictionaryDataItem)
 {   
-    return d->name == dictionaryData.name() && d->plugin == dictionaryData.plugin();
+    return d->name == dictionaryDataItem.name() && d->plugin == dictionaryDataItem.plugin();
 } 

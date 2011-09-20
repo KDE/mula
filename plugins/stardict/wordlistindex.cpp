@@ -19,7 +19,11 @@
 
 #include "wordlistindex.h"
 
+#include "file.h"
+
 #include <QtCore/QDebug>
+#include <QtCore/QStringList>
+#include <QtCore/QFile>
 
 #include <arpa/inet.h>
 
@@ -47,7 +51,7 @@ WordListIndex::~WordListIndex()
 bool
 WordListIndex::load(const QString& filePath, long wc, qulonglong fileSize)
 {
-    Qfile file(filePath);
+    QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
     {
         qDebug() << Q_FUNC_INFO << "Failed to open file:" << filePath;
@@ -61,30 +65,31 @@ WordListIndex::load(const QString& filePath, long wc, qulonglong fileSize)
     // To avoid the calculation in each iteration
     int calculatedConst = 1 + 2 * sizeof(quint32);
 
-    for (int i = 0, j = 0; i < wc; ++i)
+    int position = 0;
+    for (int i = 0; i < wc; ++i)
     {
-        d->wordList[i] = d->indexDataBuf.at(j);
-        j += d->indexDataBuf.at(j) + calculatedConst;
+        d->wordList[i] = d->indexDataBuffer.at(position);
+        position += d->indexDataBuffer.at(position) + calculatedConst;
     }
 
-    d->wordList.insert(wc, d->indexDataBuf.at(j));
+    d->wordList.insert(wc, QString::fromUtf8(d->indexDataBuffer.mid(position)));
 
     return true;
 }
 
 QByteArray
-WordListIndex::key(long index) const
+WordListIndex::key(long index)
 {
-    return d->wordList.at(index);
+    return d->wordList.at(index).toUtf8();
 }
 
 void
 WordListIndex::data(long index)
 {
-    int position = index + qstrlen(wordlist.mid(index)) + sizeof(char);
-    wordentry_offset = ntohl(*reinterpret_cast<quint32 *>(d->wordList[position]));
-    position += sizeof(guint32);
-    d->wordEntrySize = ntohl(*reinterpret_cast<quint32 *>(d->wordList[position]));
+    int position = index + qstrlen(d->wordList.at(index).toUtf8().data()) + sizeof(char);
+    setWordEntryOffset(ntohl(*reinterpret_cast<quint32 *>(d->wordList[position].toUtf8().data())));
+    position += sizeof(quint32);
+    setWordEntrySize(ntohl(*reinterpret_cast<quint32 *>(d->wordList[position].toUtf8().data())));
 }
 
 QByteArray
@@ -95,7 +100,7 @@ WordListIndex::keyAndData(long index)
 }
 
 bool
-WordListIndex::lookup(const QString &string, long &index)
+WordListIndex::lookup(const QByteArray &string, long &index)
 {
     bool found = false;
     long indexTo = d->wordList.size() - 2;
@@ -147,8 +152,20 @@ WordListIndex::wordEntryOffset() const
     return IndexFile::wordEntryOffset();
 }
 
+void
+WordListIndex::setWordEntryOffset(quint32 offset)
+{
+    IndexFile::setWordEntryOffset(offset);
+}
+
 quint32
 WordListIndex::wordEntrySize() const
 {
     return IndexFile::wordEntrySize();
+}
+
+void
+WordListIndex::setWordEntrySize(quint32 size)
+{
+    IndexFile::setWordEntrySize(size);
 }

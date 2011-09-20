@@ -41,7 +41,7 @@ class DictionaryManager::Private
         {
         }
 
-        QList<DictionaryData> loadedDictionaries;
+        QList<DictionaryDataItem> loadedDictionaries;
 };
 
 DictionaryManager::DictionaryManager(QObject *parent)
@@ -59,7 +59,7 @@ DictionaryManager::~DictionaryManager()
 bool
 DictionaryManager::isTranslatable(const QString &word)
 {
-    foreach (const DictionaryData& dictionary, d->loadedDictionaries)
+    foreach (const DictionaryDataItem& dictionary, d->loadedDictionaries)
     {
         MulaCore::DictionaryPlugin* dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(dictionary.plugin());
         if (!dictionaryPlugin)
@@ -78,7 +78,7 @@ DictionaryManager::translate(const QString &word)
     QString simplifiedWord = word.simplified();
     QString translatedWord;
 
-    foreach (const DictionaryData& dictionary, d->loadedDictionaries)
+    foreach (const DictionaryDataItem& dictionary, d->loadedDictionaries)
     {
         MulaCore::DictionaryPlugin* dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(dictionary.plugin());
         if (!dictionaryPlugin)
@@ -103,7 +103,7 @@ DictionaryManager::findSimilarWords(const QString &word)
     QString simplifiedWord = word.simplified();
     QStringList similarWords;
 
-    foreach (const DictionaryData& dictionary, d->loadedDictionaries)
+    foreach (const DictionaryDataItem& dictionary, d->loadedDictionaries)
     {
         MulaCore::DictionaryPlugin* dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(dictionary.plugin());
         if (!dictionaryPlugin)
@@ -123,27 +123,27 @@ DictionaryManager::findSimilarWords(const QString &word)
     return similarWords;
 }
 
-QList<DictionaryData>
+QList<DictionaryDataItem>
 DictionaryManager::availableDictionaries() const
 {
-    QList<DictionaryData> availableDictionaries;
+    QList<DictionaryDataItem> availableDictionaries;
 
     // for (QHash<QString, QPluginLoader*>::const_iterator i = m_plugins.begin(); i != m_plugins.end(); ++i)
     // {
         // DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>((*i)->instance());
         // QStringList dictionaries = plugin->availableDictionaries();
         // foreach (const QString& dictionary, dictionaries)
-            // availableDictionaries.append(DictionaryData(i.key(), dictionary));
+            // availableDictionaries.append(DictionaryDataItem(i.key(), dictionary));
     // }
 
     return availableDictionaries;
 }
 
 void
-DictionaryManager::setLoadedDictionaries(const QList<DictionaryData> &loadedDictionaries)
+DictionaryManager::setLoadedDictionaries(const QList<DictionaryDataItem> &loadedDictionaries)
 {
     QHash<QString, QStringList> dictionaries;
-    foreach (const DictionaryData& dictionary, loadedDictionaries)
+    foreach (const DictionaryDataItem& dictionary, loadedDictionaries)
         dictionaries[dictionary.plugin()] = QStringList() << dictionary.name();
 
     for (QHash<QString, QStringList>::const_iterator i = dictionaries.begin(); i != dictionaries.end(); ++i)
@@ -157,7 +157,7 @@ DictionaryManager::setLoadedDictionaries(const QList<DictionaryData> &loadedDict
     }
 
     d->loadedDictionaries.clear();
-    foreach (const DictionaryData& dictionary, loadedDictionaries)
+    foreach (const DictionaryDataItem& dictionary, loadedDictionaries)
     {
         if (dictionaries.contains(dictionary.plugin()) && dictionaries[dictionary.plugin()].contains(dictionary.name()))
             d->loadedDictionaries.append(dictionary);
@@ -169,7 +169,7 @@ DictionaryManager::saveDictionarySettings()
 {
     QStringList rawDictionaryList;
 
-    foreach (const DictionaryData& dictionary, d->loadedDictionaries)
+    foreach (const DictionaryDataItem& dictionary, d->loadedDictionaries)
     {
         rawDictionaryList.append(dictionary.plugin());
         rawDictionaryList.append(dictionary.name());
@@ -191,9 +191,9 @@ DictionaryManager::loadDictionarySettings()
     }
     else
     {
-        QList<DictionaryData> dictionaries;
+        QList<DictionaryDataItem> dictionaries;
         for (QStringList::const_iterator i = rawDictionaryList.begin(); i != rawDictionaryList.end(); i += 2)
-            dictionaries.append(DictionaryData(*i, *(i + 1)));
+            dictionaries.append(DictionaryDataItem(*i, *(i + 1)));
 
         setLoadedDictionaries(dictionaries);
     }
@@ -202,20 +202,20 @@ DictionaryManager::loadDictionarySettings()
 void
 DictionaryManager::reloadDictionaries()
 {
-    QList<DictionaryData> loadedDictionaries;
+    QList<DictionaryDataItem> loadedDictionaries;
     // for (QHash<QString, QPluginLoader*>::const_iterator i = d->plugins.begin(); i != d->plugins.end(); ++i)
     // {
         // DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>((*i)->instance());
         // plugin->setLoadedDictionaries(plugin->loadedDictionaries());
 
         // foreach(const QString& dictionaryName, plugin->loadedDictionaries())
-            // loadedDictionaries.append(DictionaryData(i.key(), dictionaryName));
+            // loadedDictionaries.append(DictionaryDataItem(i.key(), dictionaryName));
     // }
 
-    QList<DictionaryData> oldDictionaries = d->loadedDictionaries;
+    QList<DictionaryDataItem> oldDictionaries = d->loadedDictionaries;
     d->loadedDictionaries.clear();
  
-    foreach (const DictionaryData& dictionary, oldDictionaries)
+    foreach (const DictionaryDataItem& dictionary, oldDictionaries)
     {
         if (loadedDictionaries.contains(dictionary))
             d->loadedDictionaries.append(dictionary);

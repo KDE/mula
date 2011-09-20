@@ -47,9 +47,13 @@ class IfoListSetter
         {
         }
 
+        ~IfoListSetter()
+        {
+        }
+
         void operator () (const QString &fileName, bool)
         {
-            DictionaryInfo info;
+            StarDictDictionaryInfo info;
             if (info.loadFromIfoFile(fileName, false))
                 bookNameList.append(info.bookName());
         }
@@ -67,9 +71,13 @@ class IfoFileFinder
         {
         }
 
+        ~IfoFileFinder()
+        {
+        }
+
         void operator () (const QString &fileName, bool)
         {
-            DictionaryInfo info;
+            StarDictDictionaryInfo info;
             if (info.loadFromIfoFile(fileName, false) && info.bookName() == ifoBookName)
                 ifoFileName = fileName;
         }
@@ -158,7 +166,7 @@ StarDict::authors() const
 MulaCore::DictionaryPlugin::Features
 StarDict::features() const
 {
-    return Features(SearchSimilar | SettingsDialog);
+    return MulaCore::DictionaryPlugin::Features(SearchSimilar | SettingsDialog);
 }
 
 QStringList
@@ -198,12 +206,12 @@ StarDict::setLoadedDictionaries(const QStringList &loadedDictionaries)
 MulaCore::DictionaryInfo
 StarDict::dictionaryInfo(const QString &dictionary)
 {
-    DictionaryInfo nativeInfo;
+    StarDictDictionaryInfo nativeInfo;
     nativeInfo.setWordCount(0);
     if (!nativeInfo.loadFromIfoFile(findDictionary(dictionary, d->dictionaryDirs), false))
-        return DictionaryInfo();
+        return MulaCore::DictionaryInfo();
 
-    DictionaryInfo result(name(), dictionary);
+    MulaCore::DictionaryInfo result(name(), dictionary);
     result.setAuthor(nativeInfo.author());
     result.setDescription(nativeInfo.description());
     result.setWordCount(nativeInfo.wordCount() ? static_cast<long>(nativeInfo.wordCount()) : -1);
@@ -248,30 +256,26 @@ StarDict::findSimilarWords(const QString &dictionary, const QString &word)
         return QStringList();
 
     QStringList fuzzyList;
-    fuzzyList.reserve(MaxFuzzy);
     if (!d->sdLibs->lookupWithFuzzy(word.toUtf8(), fuzzyList, MaxFuzzy, d->loadedDictionaries[dictionary]))
         return QStringList();
 
-    QStringList result;
-    for (char **p = fuzzy_res, **end = fuzzy_res + MaxFuzzy; p != end && *p; ++p)
-    {
-        result << QString::fromUtf8(*p);
-        g_free(*p);
-    }
+    fuzzyList.reserve(MaxFuzzy);
 
-    return result;
+    return fuzzyList;
 }
 
 int
 StarDict::execSettingsDialog(QWidget *parent)
 {
-    SettingsDialog dialog(this, parent);
+    MulaPluginStarDict::SettingsDialog dialog(this, parent);
     return dialog.exec();
 }
 
 QString
 StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces, bool reformatLists, bool expandAbbreviations)
 {
+    Q_UNUSED(expandAbbreviations);
+
     QString result;
     int position;
 
@@ -335,7 +339,7 @@ StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces
             if (d->sdLibs->simpleLookupWord(result.mid(position, regExp.matchedLength()).toUtf8().data(), index, dictionaryIndex))
             {
                 QString expanded = "<font class=\"explanation\">";
-                expanded += parseData(d->sdLibs->poWordData(index, dictionaryIndex));
+                expanded += parseData(d->sdLibs->poWordData(index, dictionaryIndex).toUtf8());
                 if (result[position + regExp.matchedLength() - 1] == ':')
                     expanded += ':';
 
@@ -443,7 +447,7 @@ StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces
                     position += 7 + 1; // sizeof "</font>" + 1
                     break;
                 case '\t':
-                    result.insert(pos, "&nbsp;&nbsp;&nbsp;&nbsp;");
+                    result.insert(position, "&nbsp;&nbsp;&nbsp;&nbsp;");
                     position += 24 + 1; // sizeof "&nbsp;&nbsp;&nbsp;&nbsp;" + 1
                     break;
                 case '\n':
@@ -476,7 +480,7 @@ QString
 StarDict::findDictionary(const QString &name, const QStringList &dictionaryDirs)
 {
     QString fileName;
-    IfoFileFinder finder(name, &fileName);
+    IfoFileFinder finder(name, fileName);
     for_each_file(d->dictionaryDirs, ".ifo", QStringList(), QStringList(), finder);
     return fileName;
 }

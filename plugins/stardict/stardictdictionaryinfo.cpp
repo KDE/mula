@@ -17,13 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "dictionaryinfo.h"
+#include "stardictdictionaryinfo.h"
 
 #include <QtCore/QFile>
 
 using namespace MulaPluginStarDict;
 
-class DictionaryInfo::Private
+class StarDictDictionaryInfo::Private
 {
     public:
         Private()
@@ -50,17 +50,17 @@ class DictionaryInfo::Private
         QString sameTypeSequence;
 };
 
-DictionaryInfo::DictionaryInfo()
+StarDictDictionaryInfo::StarDictDictionaryInfo()
     : d(new Private)
 {
 }
 
-DictionaryInfo::~DictionaryInfo()
+StarDictDictionaryInfo::~StarDictDictionaryInfo()
 {
 }
 
 bool
-DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
+StarDictDictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
                                 bool isTreeDictionary)
 {
     d->ifoFileName = ifoFileName;
@@ -172,133 +172,133 @@ DictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
 }
 
 void
-DictionaryInfo::setIfoFileName(const QString& ifoFileName)
+StarDictDictionaryInfo::setIfoFileName(const QString& ifoFileName)
 {
     d->ifoFileName = ifoFileName;
 }
 
 QString
-DictionaryInfo::ifoFileName() const
+StarDictDictionaryInfo::ifoFileName() const
 {
     return d->ifoFileName;
 }
 
 void
-DictionaryInfo::setWordCount(quint32 wordCount)
+StarDictDictionaryInfo::setWordCount(quint32 wordCount)
 {
     d->wordCount = wordCount;
 }
 
 quint32
-DictionaryInfo::wordCount() const
+StarDictDictionaryInfo::wordCount() const
 {
     return d->wordCount;
 }
 
 void
-DictionaryInfo::setBookName(const QString& bookName)
+StarDictDictionaryInfo::setBookName(const QString& bookName)
 {
     d->bookName = bookName;
 }
 
 QString
-DictionaryInfo::bookName() const
+StarDictDictionaryInfo::bookName() const
 {
     return d->bookName;
 }
 
 void
-DictionaryInfo::setAuthor(const QString& author)
+StarDictDictionaryInfo::setAuthor(const QString& author)
 {
     d->author = author;
 }
 
 QString
-DictionaryInfo::author() const
+StarDictDictionaryInfo::author() const
 {
     return d->author;
 }
 
 void
-DictionaryInfo::setEmail(const QString& email)
+StarDictDictionaryInfo::setEmail(const QString& email)
 {
     d->email = email;
 }
 
 QString
-DictionaryInfo::email() const
+StarDictDictionaryInfo::email() const
 {
     return d->email;
 }
 
 void
-DictionaryInfo::setWebsite(const QString website)
+StarDictDictionaryInfo::setWebsite(const QString website)
 {
     d->website = website;
 }
 
 QString
-DictionaryInfo::website() const
+StarDictDictionaryInfo::website() const
 {
     return d->website;
 }
 
 void
-DictionaryInfo::setDateTime(const QString& dateTime)
+StarDictDictionaryInfo::setDateTime(const QString& dateTime)
 {
     d->date = dateTime;
 }
 
 QString
-DictionaryInfo::dateTime() const
+StarDictDictionaryInfo::dateTime() const
 {
     return d->date;
 }
 
 void
-DictionaryInfo::setDescription(const QString& description)
+StarDictDictionaryInfo::setDescription(const QString& description)
 {
     d->description = description;
 }
 
 QString
-DictionaryInfo::description() const
+StarDictDictionaryInfo::description() const
 {
     return d->description;
 }
 
 void
-DictionaryInfo::setIndexFileSize(quint32 indexFileSize)
+StarDictDictionaryInfo::setIndexFileSize(quint32 indexFileSize)
 {
     d->indexFileSize = indexFileSize;
 }
 
 quint32
-DictionaryInfo::indexFileSize() const
+StarDictDictionaryInfo::indexFileSize() const
 {
     return d->indexFileSize;
 }
 
 void
-DictionaryInfo::setIndexOffsetBits(quint32 indexOffsetBits)
+StarDictDictionaryInfo::setIndexOffsetBits(quint32 indexOffsetBits)
 {
     d->indexOffsetBits = indexOffsetBits;
 }
 
 quint32
-DictionaryInfo::indexOffsetBits() const
+StarDictDictionaryInfo::indexOffsetBits() const
 {
     return d->indexOffsetBits;
 }
 
 void
-DictionaryInfo::setSameTypeSequence(const QString& sameTypeSequence)
+StarDictDictionaryInfo::setSameTypeSequence(const QString& sameTypeSequence)
 {
     d->sameTypeSequence = sameTypeSequence;
 }
 
 QString
-DictionaryInfo::sameTypeSequence() const
+StarDictDictionaryInfo::sameTypeSequence() const
 {
     return d->sameTypeSequence;
 }

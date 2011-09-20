@@ -20,7 +20,7 @@
 #include "dictionary.h"
 
 #include "dictionaryzip.h"
-#include "dictionaryinfo.h"
+#include "stardictdictionaryinfo.h"
 #include "indexfile.h"
 #include "wordlistindex.h"
 #include "offsetindex.h"
@@ -172,7 +172,7 @@ Dictionary::load(const QString& ifoFilePath)
 bool
 Dictionary::loadIfoFile(const QString& ifoFileName)
 {
-    DictionaryInfo dictionaryInfo;
+    StarDictDictionaryInfo dictionaryInfo;
     if (!dictionaryInfo.loadFromIfoFile(ifoFileName, false))
         return false;
 
