@@ -256,7 +256,7 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
         return -1;
     }
 
-    time_t mtime;
+    time_t mtime = 0;
     char chtime;
     for(int i = 0; i < 4; ++i) {
         if (file.read( &chtime, 1 ) < 0) {

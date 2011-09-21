@@ -88,7 +88,7 @@ class OffsetIndex::Private
             void fill(QByteArray data, int nent, long index_)
             {
                 index = index_;
-                ulong position; 
+                ulong position = 0;
                 for (int i = 0; i < nent; ++i) 
                 {    
                     entries[i].keyData = data.mid(position); 
