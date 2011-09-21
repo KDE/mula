@@ -36,7 +36,7 @@ namespace MulaPluginStarDict
     class StarDict : public QObject, public MulaCore::DictionaryPlugin
     {
         Q_OBJECT
-        Q_INTERFACES(MULA::DictionaryPlugin)
+        Q_INTERFACES(MulaCore::DictionaryPlugin)
 
         public:
             StarDict(QObject *parent = 0);
