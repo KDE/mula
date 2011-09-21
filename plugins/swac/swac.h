@@ -21,7 +21,7 @@
 #ifndef MULA_PLUGIN_SWAC_SWAC_H
 #define MULA_PLUGIN_SWAC_SWAC_H
 
-#include "dictionaryplugin.h"
+#include <core/dictionaryplugin.h>
 
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>

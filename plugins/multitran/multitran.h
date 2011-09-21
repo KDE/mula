@@ -21,7 +21,7 @@
 #ifndef MULA_PLUGIN_MULTITRAN_MULTITRAN_H
 #define MULA_PLUGIN_MULTITRAN_MULTITRAN_H
 
-#include "dictionaryplugin.h"
+#include <core/dictionaryplugin.h>
 
 #include <QtCore/QVector>
 #include <QtCore/QHash>

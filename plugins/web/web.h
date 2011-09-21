@@ -21,7 +21,7 @@
 #ifndef MULA_PLUGIN_WEB_WEB_H
 #define MULA_PLUGIN_WEB_WEB_H
 
-#include "dictionaryplugin.h"
+#include <core/dictionaryplugin.h>
 
 #include <QtCore/QHash>
 

@@ -17,10 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.               *
  *****************************************************************************/
 
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
+#ifndef MULA_PLUGIN_WEB_SETTINGSDIALOG_H
+#define MULA_PLUGIN_WEB_SETTINGSDIALOG_H
 
-#include <QDialog>
+#include <QtCore/QDialog>
 #include "ui_settingsdialog.h"
 
 #include "web.h"
