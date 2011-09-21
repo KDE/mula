@@ -108,6 +108,11 @@ class OffsetIndex::Private
         QFile mapFile;
 };
 
+OffsetIndex::OffsetIndex()
+    : d(new Private)
+{
+}
+
 OffsetIndex::~OffsetIndex()
 {
 }

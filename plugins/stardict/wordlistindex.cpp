@@ -44,6 +44,11 @@ class WordListIndex::Private
         QStringList wordList;
 };
 
+WordListIndex::WordListIndex()
+    : d(new Private)
+{
+}
+
 WordListIndex::~WordListIndex()
 {
 }

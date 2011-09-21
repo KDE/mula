@@ -40,6 +40,11 @@ class DictionaryInfo::Private
         long wordCount;
 };
 
+DictionaryInfo::DictionaryInfo()
+    : d(new Private)
+{
+}
+
 DictionaryInfo::DictionaryInfo(const QString &plugin, const QString &name, const QString &author, 
                const QString &description, long wordCount)
     : d(new Private)
