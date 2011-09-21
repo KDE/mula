@@ -84,3 +84,9 @@ Translation::setDictionaryName(const QString &dictionaryName)
 {
     d->dictionaryName = dictionaryName;
 }
+
+void
+Translation::setTranslation(const QString& translation)
+{
+    d->translation = translation;
+}
