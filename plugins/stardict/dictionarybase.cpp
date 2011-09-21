@@ -334,6 +334,12 @@ DictionaryBase::compressedDictionaryFile() const
     return d->compressedDictionaryFile;
 }
 
+QFile*
+DictionaryBase::dictionaryFile() const
+{
+    return d->dictionaryFile;
+}
+
 QString&
 DictionaryBase::sameTypeSequence() const
 {
