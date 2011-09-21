@@ -1,4 +1,7 @@
+find_package(ZLIB)
+if(ZLIB_FOUND)
 add_subdirectory(stardict)
+endif(ZLIB_FOUND)
 #add_subdirectory(multitran)
 #add_subdirectory(swac)
 #add_subdirectory(web)
