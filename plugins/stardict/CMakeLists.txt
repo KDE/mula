@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 
+find_package(ZLIB)
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
 
     ${MULA_CORE_INCLUDES}
+    ${ZLIB_INCLUDE_DIRS}
 )
 
 set(stardict_SRCS
