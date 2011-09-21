@@ -119,5 +119,3 @@ DictionaryInfo::setWordCount(long wordCount)
 {
     d->wordCount = wordCount;
 }
-
-#include "dictionaryinfo.moc"

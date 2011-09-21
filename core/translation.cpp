@@ -84,5 +84,3 @@ Translation::setDictionaryName(const QString &dictionaryName)
 {
     d->dictionaryName = dictionaryName;
 }
-
-#include "translation.moc"

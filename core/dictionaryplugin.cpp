@@ -71,5 +71,3 @@ DictionaryPlugin::workPath() const
 
     return path;
 }
-
-#include "dictionaryplugin.moc"
