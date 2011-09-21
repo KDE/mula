@@ -115,7 +115,7 @@ PluginManager::setLoadedPlugins(const QStringList &loadedPlugins)
 {
     for (QHash<QString, QPluginLoader*>::iterator i = d->plugins.begin(); i != d->plugins.end(); ++i)
     {
-        delete (*i)->instance();
+         (*i)->unload();
         delete *i;
     }
 
@@ -134,7 +134,7 @@ PluginManager::setLoadedPlugins(const QStringList &loadedPlugins)
         QString pluginFileName = plugin;
 
 #else
-        qWarning() << "Function DictCore::setLoadedPlugins(const QStringList &loadedPlugins) is not available on this platform"
+        qWarning() << Q_FUNC_INFO << "is not available on this platform"
 #endif
 
        QStringList pluginDirectoryPaths = MulaCore::DirectoryProvider::instance()->pluginDirectoryPaths();
