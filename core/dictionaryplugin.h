@@ -96,7 +96,7 @@ namespace MulaCore
             /**
              * Return a list of available dictionaries.
              */
-            virtual QStringList availableDictionaries() const = 0;
+            virtual QStringList availableDictionaries() = 0;
 
             /**
              * Return a list of loaded dictionaries.

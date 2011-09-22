@@ -48,8 +48,11 @@ namespace MulaPluginStarDict
             QStringList authors() const;
             MulaCore::DictionaryPlugin::Features features() const;
 
-            QStringList findAvailableDictionaries(const QString& directoryPath, const QString& suffix) const;
-            QStringList availableDictionaries() const;
+            QString findAvailableDictionary(const QString& absolutePath);
+            QString findIfoFile(const QString& absolutePath);
+
+            template <typename Method> QStringList recursiveTemplateFind(const QString& directoryPath, Method method);
+            QStringList availableDictionaries();
 
             QStringList loadedDictionaries() const;
             void setLoadedDictionaries(const QStringList &loadedDictionaries);

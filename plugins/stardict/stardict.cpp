@@ -39,31 +39,6 @@ using namespace MulaPluginStarDict;
 
 const int MaxFuzzy = 24;
 
-class IfoFileFinder
-{
-    public:
-        IfoFileFinder(const QString &bookName, QString fileName)
-            : ifoBookName(bookName)
-            , ifoFileName(fileName)
-        {
-        }
-
-        ~IfoFileFinder()
-        {
-        }
-
-        void operator () (const QString &fileName, bool)
-        {
-            StarDictDictionaryInfo info;
-            if (info.loadFromIfoFile(fileName, false) && info.bookName() == ifoBookName)
-                ifoFileName = fileName;
-        }
-
-    private:
-        QString ifoBookName;
-        QString ifoFileName;
-};
-
 class StarDict::Private
 {
     public:
@@ -83,6 +58,9 @@ class StarDict::Private
         QHash<QString, int> loadedDictionaries;
         bool reformatLists;
         bool expandAbbreviations;
+
+        QString ifoBookName;
+        QString ifoFileName;
 };
 
 StarDict::StarDict(QObject *parent)
@@ -146,8 +124,29 @@ StarDict::features() const
     return MulaCore::DictionaryPlugin::Features(SearchSimilar | SettingsDialog);
 }
 
+QString
+StarDict::findAvailableDictionary(const QString& absolutePath)
+{
+    StarDictDictionaryInfo info;
+    if (info.loadFromIfoFile(absolutePath, false))
+        return info.bookName();
+
+    return QString();
+}
+
+QString
+StarDict::findIfoFile(const QString& absolutePath)
+{
+    StarDictDictionaryInfo info;
+    if (info.loadFromIfoFile(absolutePath, false) && info.bookName() == d->ifoBookName)
+        d->ifoFileName = absolutePath;
+
+    return QString();
+}
+
+template <typename Method>
 QStringList
-StarDict::findAvailableDictionaries(const QString& directoryPath, const QString& suffix) const
+StarDict::recursiveTemplateFind(const QString& directoryPath, Method method)
 {
     QDir dir(directoryPath);
     QStringList result;
@@ -156,30 +155,26 @@ StarDict::findAvailableDictionaries(const QString& directoryPath, const QString&
     foreach (QString entryName, dir.entryList(QDir::Dirs & QDir::NoDotAndDotDot))
     {
         QString absolutePath = dir.absoluteFilePath(entryName);
-        result.append(findAvailableDictionaries(absolutePath, suffix));
+        result.append(recursiveTemplateFind(absolutePath, method));
     }
 
     foreach (QString entryName, dir.entryList(QDir::Files & QDir::Drives & QDir::NoDotAndDotDot))
     {
         QString absolutePath = dir.absoluteFilePath(entryName);
-        if (absolutePath.endsWith(suffix))
-        {
-            StarDictDictionaryInfo info;
-            if (info.loadFromIfoFile(absolutePath, false))
-                result.append(info.bookName());
-        }
+        if (absolutePath.endsWith(".ifo"))
+            result.append((this->*method)(absolutePath));
     }
 
     return result;
 }
 
 QStringList
-StarDict::availableDictionaries() const
+StarDict::availableDictionaries()
 {
     QStringList result;
 
     foreach (const QString& directoryPath, d->dictionaryDirectoryList)
-       result.append(findAvailableDictionaries(directoryPath, ".ifo"));
+       result.append(recursiveTemplateFind(directoryPath, &StarDict::findAvailableDictionary));
 
     return result;
 }
@@ -482,12 +477,13 @@ StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces
 }
 
 QString
-StarDict::findDictionary(const QString &name, const QStringList &dictionaryDirs)
+StarDict::findDictionary(const QString &name, const QStringList &dictionaryDirectoryList)
 {
-    QString fileName;
-    IfoFileFinder finder(name, fileName);
-    for_each_file(dictionaryDirs, ".ifo", QStringList(), QStringList(), finder);
-    return fileName;
+    d->ifoBookName = name;
+    foreach (const QString& directoryPath, dictionaryDirectoryList)
+       recursiveTemplateFind(directoryPath, &StarDict::findIfoFile);
+
+    return d->ifoFileName;
 }
 
 void
