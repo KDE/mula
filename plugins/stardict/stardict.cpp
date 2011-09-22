@@ -39,29 +39,6 @@ using namespace MulaPluginStarDict;
 
 const int MaxFuzzy = 24;
 
-class IfoListSetter
-{
-    public:
-        IfoListSetter(QStringList& bnList)
-            : bookNameList(bnList)
-        {
-        }
-
-        ~IfoListSetter()
-        {
-        }
-
-        void operator () (const QString &fileName, bool)
-        {
-            StarDictDictionaryInfo info;
-            if (info.loadFromIfoFile(fileName, false))
-                bookNameList.append(info.bookName());
-        }
-
-    private:
-        QStringList bookNameList;
-};
-
 class IfoFileFinder
 {
     public:
@@ -170,11 +147,39 @@ StarDict::features() const
 }
 
 QStringList
+StarDict::findAvailableDictionaries(const QString& directoryPath, const QString& suffix) const
+{
+    QDir dir(directoryPath);
+    QStringList result;
+
+    // Going through the subfolders
+    foreach (QString entryName, dir.entryList(QDir::Dirs & QDir::NoDotAndDotDot))
+    {
+        QString absolutePath = dir.absoluteFilePath(entryName);
+        result.append(findAvailableDictionaries(absolutePath, suffix));
+    }
+
+    foreach (QString entryName, dir.entryList(QDir::Files & QDir::Drives & QDir::NoDotAndDotDot))
+    {
+        QString absolutePath = dir.absoluteFilePath(entryName);
+        if (absolutePath.endsWith(suffix))
+        {
+            StarDictDictionaryInfo info;
+            if (info.loadFromIfoFile(absolutePath, false))
+                result.append(info.bookName());
+        }
+    }
+
+    return result;
+}
+
+QStringList
 StarDict::availableDictionaries() const
 {
     QStringList result;
-    IfoListSetter setter(result);
-    for_each_file(d->dictionaryDirectoryList, ".ifo", QStringList(), QStringList(), setter);
+
+    foreach (const QString& directoryPath, d->dictionaryDirectoryList)
+       result = findAvailableDictionaries(directoryPath, ".ifo");
 
     return result;
 }
