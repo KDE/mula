@@ -48,6 +48,7 @@ namespace MulaPluginStarDict
             QStringList authors() const;
             MulaCore::DictionaryPlugin::Features features() const;
 
+            QStringList findAvailableDictionaries(const QString& directoryPath, const QString& suffix) const;
             QStringList availableDictionaries() const;
 
             QStringList loadedDictionaries() const;

@@ -73,11 +73,11 @@ WordListIndex::load(const QString& filePath, long wc, qulonglong fileSize)
     int position = 0;
     for (int i = 0; i < wc; ++i)
     {
-        d->wordList[i] = d->indexDataBuffer.at(position);
-        position += d->indexDataBuffer.at(position) + calculatedConst;
+        d->wordList[i] = d->indexDataBuffer.mid(position);
+        position += qstrlen(d->indexDataBuffer.mid(position)) + calculatedConst;
     }
 
-    d->wordList.insert(wc, QString::fromUtf8(d->indexDataBuffer.mid(position)));
+    d->wordList[wc] = QString::fromUtf8(d->indexDataBuffer.mid(position));
 
     return true;
 }

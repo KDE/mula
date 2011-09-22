@@ -179,7 +179,7 @@ StarDict::availableDictionaries() const
     QStringList result;
 
     foreach (const QString& directoryPath, d->dictionaryDirectoryList)
-       result = findAvailableDictionaries(directoryPath, ".ifo");
+       result.append(findAvailableDictionaries(directoryPath, ".ifo"));
 
     return result;
 }
