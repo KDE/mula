@@ -25,6 +25,7 @@
 
 #include <QtCore/QtAlgorithms>
 #include <QtCore/QString>
+#include <QtCore/QDir>
 #include <QtCore/QDebug>
 
 #include <zlib.h>

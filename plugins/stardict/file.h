@@ -20,52 +20,9 @@
 #ifndef MULA_PLUGIN_STARDICT_FILE
 #define MULA_PLUGIN_STARDICT_FILE
 
-#include <QtCore/QtAlgorithms>
-#include <QtCore/QStringList>
-#include <QtCore/QDir>
+#include <QtCore/QString>
 
 const int invalidIndex = -100;
-
-template <typename Function>
-void __for_each_file(const QString& dirName, const QString& suffix,
-                     const QStringList& orderList, const QStringList& disableList,
-                     Function f)
-{
-    QDir dir(dirName);
-
-    // Going through the subfolders
-    foreach (QString entryName, dir.entryList(QDir::Dirs & QDir::NoDotAndDotDot))
-    {
-        QString absolutePath = dir.absoluteFilePath(entryName);
-        __for_each_file(absolutePath, suffix, orderList, disableList, f);
-    }
-   
-    foreach (QString entryName, dir.entryList(QDir::Files & QDir::Drives & QDir::NoDotAndDotDot))
-    {
-        QString absolutePath = dir.absoluteFilePath(entryName);
-        if (absolutePath.endsWith(suffix)
-                && qFind(orderList.begin(), orderList.end(), absolutePath) == orderList.end())
-        {
-            bool enable = qFind(disableList.begin(), disableList.end(), absolutePath) == disableList.end();
-            f(absolutePath, enable);
-        }
-    }
-}
-
-template <typename Function>
-void for_each_file(const QStringList& dirList, const QString& suffix,
-                   const QStringList& orderList, const QStringList& disableList,
-                   Function f)
-{
-    foreach (const QString& string, orderList)
-    {
-        bool disable = qFind(disableList.begin(), disableList.end(), string) != disableList.end();
-        f(string, disable);
-    }
-
-    foreach (const QString& dirName, dirList)
-        __for_each_file(dirName, suffix, orderList, disableList, f);
-}
 
 static inline int stardictStringCompare(QString string1, QString string2)
 {
