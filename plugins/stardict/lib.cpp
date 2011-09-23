@@ -60,12 +60,12 @@ class Libs::Private
         Private()
             : maximumFuzzyDistance(MAX_FUZZY_DISTANCE) // need to read from cfg
         {
-        }   
+        }
 
         ~Private()
-        {   
-        }   
- 
+        {
+        }
+
         QVector<Dictionary *> dictionaries; // word Libs.
         int maximumFuzzyDistance;
         progress_func_t progressFunction;
@@ -136,33 +136,44 @@ Libs::lookupWord(const char* searchWord, long& iWordIndex, int libIndex)
     return d->dictionaries.at(libIndex)->lookup(searchWord, iWordIndex);
 }
 
-class DictionaryLoader
+template <typename Method>
+void
+Libs::recursiveTemplateHelper(const QString& directoryName, const QStringList& orderList, const QStringList& disableList,
+                        Method method)
 {
-    public:
-        DictionaryLoader(Libs& lib_): lib(lib_)
+    QDir dir(directoryName);
+
+    // Going through the subfolders
+    foreach (QString entryName, dir.entryList(QDir::Dirs & QDir::NoDotAndDotDot))
+    {
+        QString absolutePath = dir.absoluteFilePath(entryName);
+        recursiveTemplateHelper(absolutePath, orderList, disableList, method);
+    }
+
+    foreach (QString entryName, dir.entryList(QDir::Files & QDir::Drives & QDir::NoDotAndDotDot))
+    {
+        QString absolutePath = dir.absoluteFilePath(entryName);
+        if (absolutePath.endsWith(".ifo")
+                && qFind(orderList.begin(), orderList.end(), absolutePath) == orderList.end()
+                && qFind(disableList.begin(), disableList.end(), absolutePath) == disableList.end())
         {
+                (this->*method)(absolutePath);
         }
+    }
+}
 
-        virtual ~DictionaryLoader()
-        {
-        }
-
-        void operator() (const QString& url, bool enable)
-        {
-            if (enable)
-                lib.loadDictionary(url);
-        }
-
-    private:
-        Libs& lib;
-};
-
-void Libs::load(const QStringList& dictionaryDirs,
+void Libs::load(const QStringList& dictionaryDirectoryList,
                 const QStringList& orderList,
                 const QStringList& disableList)
 {
-    for_each_file(dictionaryDirs, ".ifo", orderList, disableList,
-                  DictionaryLoader(*this));
+    foreach (const QString& string, orderList)
+    {
+        if (qFind(disableList.begin(), disableList.end(), string) == disableList.end())
+            loadDictionary(string);
+    }
+
+    foreach (const QString& directoryName, dictionaryDirectoryList)
+        recursiveTemplateHelper(directoryName, orderList, disableList, &Libs::loadDictionary);
 }
 
 class DictionaryReLoader
@@ -696,7 +707,7 @@ bool Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
                     searchNewWord.append('Y'); // add a char "Y"
                 }
                 else
-                { 
+                {
                     searchNewWord.append('y'); // add a char "y"
                 }
 

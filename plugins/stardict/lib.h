@@ -67,6 +67,8 @@ class Libs
 
         bool lookupWord(const char* sWorda, long& iWordIndex, int iLib);
 
+        template <typename Method> void recursiveTemplateHelper(const QString& directoryName, const QStringList& orderList, const QStringList& disableList, Method method);
+
         bool lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib);
         bool simpleLookupWord(QByteArray searchWord, long& iWordIndex, int iLib);
 
