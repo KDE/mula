@@ -26,7 +26,7 @@ class DictionaryInfo::Private
     public:
         Private()
             : wordCount(0)
-        {   
+        {
         }
 
         ~Private()
@@ -45,7 +45,7 @@ DictionaryInfo::DictionaryInfo()
 {
 }
 
-DictionaryInfo::DictionaryInfo(const QString &plugin, const QString &name, const QString &author, 
+DictionaryInfo::DictionaryInfo(const QString &plugin, const QString &name, const QString &author,
                const QString &description, long wordCount)
     : d(new Private)
 {
@@ -62,8 +62,8 @@ DictionaryInfo::~DictionaryInfo()
 
 const QString&
 DictionaryInfo::plugin() const
-{ 
-    return d->plugin; 
+{
+    return d->plugin;
 }
 
 const QString&
@@ -74,7 +74,7 @@ DictionaryInfo::name() const
 
 const QString&
 DictionaryInfo::author() const
-{ 
+{
     return d->author;
 }
 

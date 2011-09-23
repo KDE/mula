@@ -813,7 +813,7 @@ inline bool operator<(const Fuzzystruct & lh, const Fuzzystruct & rh)
 
 bool Libs::lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int resultListSize, int iLib)
 {
-    if (searchWord[0] == '\0')
+    if (searchWord.isEmpty())
         return false;
 
     Fuzzystruct *oFuzzystruct = new Fuzzystruct[resultListSize];
