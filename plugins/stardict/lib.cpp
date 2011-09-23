@@ -69,6 +69,9 @@ class Libs::Private
         QVector<Dictionary *> dictionaries; // word Libs.
         int maximumFuzzyDistance;
         progress_func_t progressFunction;
+
+        QVector<Dictionary *> previous;
+        QVector<Dictionary *> future;
 };
 
 Libs::Libs(progress_func_t progressFunction)
@@ -162,7 +165,8 @@ Libs::recursiveTemplateHelper(const QString& directoryName, const QStringList& o
     }
 }
 
-void Libs::load(const QStringList& dictionaryDirectoryList,
+void
+Libs::load(const QStringList& dictionaryDirectoryList,
                 const QStringList& orderList,
                 const QStringList& disableList)
 {
@@ -176,61 +180,54 @@ void Libs::load(const QStringList& dictionaryDirectoryList,
         recursiveTemplateHelper(directoryName, orderList, disableList, &Libs::loadDictionary);
 }
 
-class DictionaryReLoader
+Dictionary*
+Libs::reloaderFind(const QString& url)
 {
-    public:
-        DictionaryReLoader(QVector<Dictionary *> &p, QVector<Dictionary *> &f, Libs& lib_)
-            : previous(p)
-            , future(f)
-            , lib(lib_)
-        {
-        }
+    QVector<Dictionary *>::iterator it;
+    for (it = d->previous.begin(); it != d->previous.end(); ++it)
+    {
+        if ((*it)->ifoFileName() == url)
+            break;
+    }
 
-        void operator() (const QString& url, bool enable)
-        {
-            if (enable)
-            {
-                Dictionary *dictionary = find(url);
-                if (dictionary)
-                    future.append(dictionary);
-                else
-                    lib.loadDictionary(url);
-            }
-        }
+    if (it != d->previous.end())
+    {
+        Dictionary *result = *it;
+        d->previous.erase(it);
+        return result;
+    }
 
-    private:
-        Dictionary *find(const QString& url)
-        {
-            QVector<Dictionary *>::iterator it;
-            for (it = previous.begin(); it != previous.end(); ++it)
-                if ((*it)->ifoFileName() == url)
-                    break;
-
-            if (it != previous.end())
-            {
-                Dictionary *result = *it;
-                previous.erase(it);
-                return result;
-            }
-            return NULL;
-        }
-
-        QVector<Dictionary *> previous;
-        QVector<Dictionary *> future;
-        Libs& lib;
-};
+    return NULL;
+}
 
 void
-Libs::reload(const QStringList& dictionaryDirs,
+Libs::reloaderHelper(const QString &absolutePath)
+{
+    Dictionary *dictionary = reloaderFind(absolutePath);
+    if (dictionary)
+        d->future.append(dictionary);
+    else
+        loadDictionary(absolutePath);
+}
+
+void
+Libs::reload(const QStringList& dictionaryDirectoryList,
                   const QStringList& orderList,
                   const QStringList& disableList)
 {
-    QVector<Dictionary *> previous(d->dictionaries);
+    d->previous = d->dictionaries;
     d->dictionaries.clear();
-    for_each_file(dictionaryDirs, ".ifo", orderList, disableList,
-                  DictionaryReLoader(previous, d->dictionaries, *this));
 
-    qDeleteAll(previous);
+    foreach (const QString& string, orderList)
+    {
+        if (qFind(disableList.begin(), disableList.end(), string) == disableList.end())
+            reloaderHelper(string);
+    }
+
+    foreach (const QString& directoryName, dictionaryDirectoryList)
+        recursiveTemplateHelper(directoryName, orderList, disableList, &Libs::reloaderHelper);
+
+    qDeleteAll(d->previous);
 }
 
 QByteArray

@@ -28,59 +28,65 @@
 const int MAX_MATCH_ITEM_PER_LIB = 100;
 const int MAX_FUZZY_DISTANCE = 3; // at most MAX_FUZZY_DISTANCE-1 differences allowed when find similar words
 
-class Libs
+namespace MulaPluginStarDict
 {
-    public:
-        enum QueryType {
-            SIMPLE,
-            REGEXP,
-            FUZZY,
-            DATA,
-        };
+    class Dictionary;
+    class Libs
+    {
+        public:
+            enum QueryType {
+                SIMPLE,
+                REGEXP,
+                FUZZY,
+                DATA,
+            };
 
-        typedef void (*progress_func_t)(void);
+            typedef void (*progress_func_t)(void);
 
-        Libs(progress_func_t f = NULL);
-        virtual ~Libs();
+            Libs(progress_func_t f = NULL);
+            virtual ~Libs();
 
-        void loadDictionary(const QString& url);
-        void load(const QStringList& dictionaryDirs,
-                  const QStringList& orderList,
-                  const QStringList& disableList);
-        void reload(const QStringList& dictionaryDirs,
-                    const QStringList& orderList,
-                    const QStringList& disableList);
+            void loadDictionary(const QString& url);
+            void load(const QStringList& dictionaryDirs,
+                      const QStringList& orderList,
+                      const QStringList& disableList);
+            void reload(const QStringList& dictionaryDirs,
+                        const QStringList& orderList,
+                        const QStringList& disableList);
 
-        long articleCount(int index) const;
+            long articleCount(int index) const;
 
-        const QString& dictionaryName(int index) const;
+            const QString& dictionaryName(int index) const;
 
-        int dictionaryCount() const;
+            int dictionaryCount() const;
 
-        const QByteArray poWord(long iIndex, int iLib) const;
+            const QByteArray poWord(long iIndex, int iLib) const;
 
-        QString poWordData(long iIndex, int iLib);
+            QString poWordData(long iIndex, int iLib);
 
-        QByteArray poCurrentWord(long *iCurrent);
-        QByteArray poNextWord(QByteArray searchWord, long *iCurrent);
-        QByteArray poPreviousWord(long *iCurrent);
+            QByteArray poCurrentWord(long *iCurrent);
+            QByteArray poNextWord(QByteArray searchWord, long *iCurrent);
+            QByteArray poPreviousWord(long *iCurrent);
 
-        bool lookupWord(const char* sWorda, long& iWordIndex, int iLib);
+            bool lookupWord(const char* sWorda, long& iWordIndex, int iLib);
 
-        template <typename Method> void recursiveTemplateHelper(const QString& directoryName, const QStringList& orderList, const QStringList& disableList, Method method);
+            Dictionary *reloaderFind(const QString& url);
+            void reloaderHelper(const QString &absolutePath);
+            template <typename Method> void recursiveTemplateHelper(const QString& directoryName, const QStringList& orderList, const QStringList& disableList, Method method);
 
-        bool lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib);
-        bool simpleLookupWord(QByteArray searchWord, long& iWordIndex, int iLib);
+            bool lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib);
+            bool simpleLookupWord(QByteArray searchWord, long& iWordIndex, int iLib);
 
-        bool lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int resultListSize, int iLib);
-        int lookupWithRule(QByteArray searchWord, QStringList resultList);
-        bool lookupData(QByteArray searchWord, QStringList resultList);
+            bool lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int resultListSize, int iLib);
+            int lookupWithRule(QByteArray searchWord, QStringList resultList);
+            bool lookupData(QByteArray searchWord, QStringList resultList);
 
-        QueryType analyzeQuery(QString string, QString& result);
+            QueryType analyzeQuery(QString string, QString& result);
 
-    private:
-        class Private;
-        Private *const d;
-};
+        private:
+            class Private;
+            Private *const d;
+    };
+}
 
 #endif // MULA_PLUGIN_STARDICT_LIB_H
