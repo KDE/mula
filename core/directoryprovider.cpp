@@ -28,19 +28,35 @@ using namespace MulaCore;
 
 MULA_DEFINE_SINGLETON( DirectoryProvider )
 
+class DirectoryProvider::Private
+{
+    public:
+        Private()
+        {   
+        }   
+
+        ~Private()
+        {   
+        }   
+
+        QString userDataPath;
+        QHash<QString, QString> userDirs;
+};
+
 DirectoryProvider::DirectoryProvider( QObject* parent )
     : MulaCore::Singleton< MulaCore::DirectoryProvider >( parent )
+    , d(new Private)
 {
-    m_userDataPath = QDesktopServices::storageLocation( QDesktopServices::DataLocation );
-    m_userDataPath.chop( QString(QCoreApplication::organizationName() + "/" + QCoreApplication::applicationName()).size() );
-    m_userDataPath.append( "mula" );
+    d->userDataPath = QDesktopServices::storageLocation( QDesktopServices::DataLocation );
+    d->userDataPath.chop( QString(QCoreApplication::organizationName() + "/" + QCoreApplication::applicationName()).size() );
+    d->userDataPath.append( "mula" );
 
     //Define standard dirs Mula recommends
-    m_userDirs["data"] =  QDir::fromNativeSeparators( m_userDataPath + "/data" );
+    d->userDirs["data"] =  QDir::fromNativeSeparators( d->userDataPath + "/data" );
 
     //Create standard dirs Mula recommends
     QDir dir;
-    foreach( const QString& dirPath, m_userDirs )
+    foreach( const QString& dirPath, d->userDirs )
     {
         dir.mkpath( dirPath );
     }
@@ -75,15 +91,15 @@ QString DirectoryProvider::libDirectory() const
 
 QString DirectoryProvider::userDirectory( const QString& name )
 {
-    if( !m_userDirs.contains( name ) )
+    if( !d->userDirs.contains( name ) )
     {
-        QString path = QDir::fromNativeSeparators( m_userDataPath + name );
-        m_userDirs[name] = path;
+        QString path = QDir::fromNativeSeparators( d->userDataPath + name );
+        d->userDirs[name] = path;
         QDir dir;
         dir.mkpath( path );
     }
 
-    return m_userDirs[name];
+    return d->userDirs[name];
 }
 
 QStringList DirectoryProvider::pluginDirectoryPaths() const
