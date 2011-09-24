@@ -104,23 +104,23 @@ namespace MulaCore
             virtual Features features() const;
 
             /**
-             * Returns a list of available dictionaries.
+             * Returns the list of the available dictionaries
              *
-             * @return The available dictionaries
+             * @return The list of the available dictionaries
              * @see loadedDictionaryList, setLoadedDictionaryList
              */
             virtual QStringList availableDictionaryList() = 0;
 
             /**
-             * Returns a list of loaded dictionaries.
+             * Returns the list of the loaded dictionaries
              *
-             * @return The loaded dictionaries
+             * @return The list of the loaded dictionaries
              * @see loadedDictionaryList, availableDictionaryList
              */
             virtual QStringList loadedDictionaryList() const = 0;
 
             /**
-             * Set a list of loaded dictionaries.
+             * Set the list of the loaded dictionaries
              *
              * @param loadedDictionaryList The list of the loaded dictionaries
              * @see loadedDictionaryList, availableDictionaryList
@@ -128,7 +128,7 @@ namespace MulaCore
             virtual void setLoadedDictionaryList(const QStringList &loadedDictionaryList) = 0;
 
             /**
-             * Returns true if translation exists in dictionary, otherwise returns false.
+             * Returns true if translation exists in dictionary, otherwise returns false
              *
              * @param dictionary The name of the dictionary
              * @param word The word that is looked up in the desired dictionary

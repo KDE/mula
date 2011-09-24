@@ -39,29 +39,45 @@ namespace MulaCore
 
         public:
             /**
-             * Returns a list of available dictionary plugins.
+             * Returns the list of the available dictionary plugins
+             *
+             * @return The list of the available plugins
+             * @see loadedPlugins, setLoadedPlugins
              */
             QStringList availablePlugins() const;
 
             /**
-             * Returns a list of loaded dictionary plugins.
+             * Returns the list of the loaded dictionary plugins
+             *
+             * @return The list of the loaded plugins
+             * @see availablePlugins, setLoadedPlugins
              */
             QStringList loadedPlugins() const;
 
             /**
-             * Sets the loaded plugins.
+             * Sets the list of the loaded plugins.
              * If plugin cannot be loaded it will not be added to
-             * the list.
+             * the list
+             *
+             * @param loadedPlugins The list of the loaded plugins
+             * @return loadedPlugins The list of the loaded plugins
+             * @see availablePlugins, loadedPlugins
              */
             void setLoadedPlugins(const QStringList &loadedPlugins);
 
             /**
-             * Returns pointer to plugin instance or 0 if not loaded.
+             * Returns the pointer to the dictionary plugin instance or 0 if not
+             * loaded
+             *
+             * @param plugin The identifier of the plugin instance
+             * @return The dictionary plugin instance
              */
             DictionaryPlugin *plugin(const QString &plugin);
 
             /** 
-             * Save the plugin settings.
+             * Save the plugin settings
+             *
+             * @see loadPluginSettings
              */
             void savePluginSettings();
 
@@ -69,7 +85,9 @@ namespace MulaCore
             ~PluginManager();
 
             /** 
-             * Load the plugin settings.
+             * Load the plugin settings
+             *
+             * @see savePluginSettings
              */
             void loadPluginSettings();
 
