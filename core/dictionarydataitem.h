@@ -22,10 +22,7 @@
 
 #include "dictionaryplugin.h"
 
-#include <QtCore/QStringList>
-#include <QtCore/QPair>
-#include <QtCore/QHash>
-#include <QtCore/QPluginLoader>
+class QString;
 
 namespace MulaCore
 {
@@ -39,9 +36,9 @@ namespace MulaCore
             DictionaryDataItem();
             virtual ~DictionaryDataItem();
 
-            const QString &plugin() const;
+            const QString plugin() const;
 
-            const QString &name() const;
+            const QString name() const;
 
             void setPlugin(const QString &plugin);
 

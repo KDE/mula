@@ -19,6 +19,8 @@
 
 #include "dictionarydataitem.h"
 
+#include <QtCore/QString>
+
 using namespace MulaCore;
 
 class DictionaryDataItem::Private
@@ -52,13 +54,13 @@ DictionaryDataItem::~DictionaryDataItem()
 {
 }
 
-const QString&
+const QString
 DictionaryDataItem::plugin() const
 {   
     return d->plugin;
 }   
 
-const QString&
+const QString
 DictionaryDataItem::name() const
 {   
     return d->name;

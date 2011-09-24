@@ -52,10 +52,10 @@ namespace MulaPluginStarDict
             QString findIfoFile(const QString& absolutePath);
 
             template <typename Method> QStringList recursiveTemplateFind(const QString& directoryPath, Method method);
-            QStringList availableDictionaries();
+            QStringList availableDictionaryList();
 
-            QStringList loadedDictionaries() const;
-            void setLoadedDictionaries(const QStringList &loadedDictionaries);
+            QStringList loadedDictionaryList() const;
+            void setLoadedDictionaryList(const QStringList &loadedDictionaryList);
             MulaCore::DictionaryInfo dictionaryInfo(const QString &dictionaryUrl);
 
             bool isTranslatable(const QString &dict, const QString &word);

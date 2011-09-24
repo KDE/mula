@@ -62,7 +62,7 @@ DictionaryPlugin::execSettingsDialog(QWidget *parent)
 }
 
 QString
-DictionaryPlugin::workPath() const
+DictionaryPlugin::pluginDataPath() const
 {
     QString path = QDir::homePath() + "/.config/mula/pluginsdata/" + name();
 

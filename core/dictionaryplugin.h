@@ -69,60 +69,93 @@ namespace MulaCore
             virtual ~DictionaryPlugin();
 
             /**
-             * Return the plugin name.
+             * Returns the name of the dictionary plugin
+             *
+             * @return The name of the dictionary plugin
              */
             virtual QString name() const = 0;
 
             /**
-             * Return the plugin version.
+             * Returns the version of the dictionary plugin
+             *
+             * @return The version of the dictionary plugin
              */
             virtual QString version() const = 0;
 
             /**
-             * Return the plugin description.
+             * Returns the description of the dictionary plugin
+             *
+             * @return The description of the dictionary plugin
              */
             virtual QString description() const = 0;
 
             /**
-             * Return the plugin authors.
+             * Returns all the authors of the dictionary plugin
+             *
+             * @return The list of the dictionary plugin authors
              */
             virtual QStringList authors() const = 0;
 
             /**
-             * Return a features supported by dictionary plugin.
+             * Returns the features supported by dictionary plugin.
+             *
+             * @return The features that are supported
              */
             virtual Features features() const;
 
             /**
-             * Return a list of available dictionaries.
+             * Returns a list of available dictionaries.
+             *
+             * @return The available dictionaries
+             * @see loadedDictionaryList, setLoadedDictionaryList
              */
-            virtual QStringList availableDictionaries() = 0;
+            virtual QStringList availableDictionaryList() = 0;
 
             /**
-             * Return a list of loaded dictionaries.
+             * Returns a list of loaded dictionaries.
+             *
+             * @return The loaded dictionaries
+             * @see loadedDictionaryList, availableDictionaryList
              */
-            virtual QStringList loadedDictionaries() const = 0;
+            virtual QStringList loadedDictionaryList() const = 0;
 
             /**
              * Set a list of loaded dictionaries.
+             *
+             * @param loadedDictionaryList The list of the loaded dictionaries
+             * @see loadedDictionaryList, availableDictionaryList
              */
-            virtual void setLoadedDictionaries(const QStringList &loadedDictionaries) = 0;
+            virtual void setLoadedDictionaryList(const QStringList &loadedDictionaryList) = 0;
 
             /**
-             * Return true if translation exists in dictionary,
-             * otherwise returns false.
+             * Returns true if translation exists in dictionary, otherwise returns false.
+             *
+             * @param dictionary The name of the dictionary
+             * @param word The word that is looked up in the desired dictionary
+             * @return Whether the translation exists in the desired dictionary
+             * @see translate
              */
             virtual bool isTranslatable(const QString &dictionary, const QString &word) = 0;
 
             /**
-             * Return translation for word from dictionary. If word not found
+             * Returns translation for word from dictionary. If word not found
              * returns empty string.
+             *
+             * @param dictionary The name of the dictionary
+             * @param word The word that is looked up in the desired dictionary
+             * @return A translation class object that represents the
+             * translation results
+             * @see isTranslatable
              */
             virtual Translation translate(const QString &dictionary, const QString &word) = 0;
 
             /**
-             * Return a list of similar to "word" words from all loaded dictionaries.
-             * Works only if SearchSimilar feature is enabled.
+             * Returns the list of similar words from all the loaded dictionaries.
+             * It works only if SearchSimilar feature is enabled.
+             *
+             * @param dictionary The name of the desired dictionary
+             * @param word The word that is looked up in the desired dictionary
+             * @return The similar words in a list
              */
             virtual QStringList findSimilarWords(const QString &dictionary, const QString &word);
 
@@ -133,21 +166,31 @@ namespace MulaCore
             virtual QVariant resource(int type, const QUrl &name);
 
             /**
-             * Return information about the dictionary. The dictionary may be not loaded
+             * Returns information about the dictionary. The dictionary may be not loaded
              * but available.
+             *
+             * @param dictionary The name of the desired dictionary
+             * @return The dictionaryInfo class representing in the information
+             * about the given dictionary
              */
             virtual DictionaryInfo dictionaryInfo(const QString &dictionary) = 0;
 
             /**
-             * Run a settings dialog and return QDialog::DialogCode.
+             * Runs a settings dialog and return QDialog::DialogCode.
+             *
+             * @param parent The parent object of the settings dialog
+             * @return The relevant QDialog::DialogCode
              */
             virtual int execSettingsDialog(QWidget *parent = 0);
 
         protected:
             /**
-             * Return a directory that contains the data of the plugin.
+             * Returns a directory that contains the data of the plugin.
+             *
+             * @return The string value containing the dictionary path of the
+             * plugin data
              */
-            QString workPath() const;
+            QString pluginDataPath() const;
     };
 
     Q_DECLARE_OPERATORS_FOR_FLAGS(DictionaryPlugin::Features)

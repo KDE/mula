@@ -169,7 +169,7 @@ StarDict::recursiveTemplateFind(const QString& directoryPath, Method method)
 }
 
 QStringList
-StarDict::availableDictionaries()
+StarDict::availableDictionaryList()
 {
     QStringList result;
 
@@ -180,15 +180,15 @@ StarDict::availableDictionaries()
 }
 
 QStringList
-StarDict::loadedDictionaries() const
+StarDict::loadedDictionaryList() const
 {
     return d->loadedDictionaries.keys();
 }
 
 void
-StarDict::setLoadedDictionaries(const QStringList &loadedDictionaries)
+StarDict::setLoadedDictionaryList(const QStringList &loadedDictionaries)
 {
-    QStringList available = availableDictionaries();
+    QStringList available = availableDictionaryList();
     QStringList disabled;
     foreach (const QString& dictionary, available)
     {

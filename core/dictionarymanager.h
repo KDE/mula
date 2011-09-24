@@ -64,14 +64,14 @@ namespace MulaCore
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
              */
-            QList<DictionaryDataItem> availableDictionaries() const;
+            QList<DictionaryDataItem> availableDictionaryList() const;
 
             /** 
              * Returns a list of loaded dictionaries. 
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
              */
-            const QList<DictionaryDataItem> &loadedDictionaries() const;
+            const QList<DictionaryDataItem> &loadedDictionaryList() const;
 
             /** 
              * Sets a loaded dictionaries.
@@ -80,12 +80,12 @@ namespace MulaCore
              * If dictionary cannot be loaded it will not be added to 
              * availableDicts list.
              */
-            void setLoadedDictionaries(const QList<DictionaryDataItem> &loadedDictionaries);
+            void setLoadedDictionaryList(const QList<DictionaryDataItem> &loadedDictionaryList);
 
             /**
              * Reloads the loaded dictionaries.
              */
-            void reloadDictionaries();
+            void reloadDictionaryList();
 
         private:
             /**
