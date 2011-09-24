@@ -44,10 +44,10 @@ SettingsDialog::SettingsDialog(Web *plugin, QWidget *parent)
 {
     setupUi(this);
     
-    QStringList filenames = QDir(plugin->workPath()).entryList(QStringList("*.webdict"), QDir::Files, QDir::Name);
+    QStringList filenames = QDir(plugin->dataPluginPath()).entryList(QStringList("*.webdict"), QDir::Files, QDir::Name);
     for (QStringList::iterator i = filenames.begin(); i != filenames.end(); ++i)
     {
-        QSettings dict(plugin->workPath() + "/" + *i, QSettings::IniFormat);
+        QSettings dict(plugin->dataPluginPath() + "/" + *i, QSettings::IniFormat);
         m_oldDicts[i->remove(".webdict")] = 
             Dict(dict.value("author").toString(), dict.value("description").toString(),
             dict.value("query").toString(), dict.value("charset").toByteArray());
@@ -117,7 +117,7 @@ void SettingsDialog::accept()
 {
     for (QHash<QString, Dict>::const_iterator i = m_dicts.begin(); i != m_dicts.end(); ++i)
     {
-        QSettings dict(m_plugin->workPath() + "/" + i.key() + ".webdict", QSettings::IniFormat);
+        QSettings dict(m_plugin->pluginDataPath() + "/" + i.key() + ".webdict", QSettings::IniFormat);
         dict.setValue("author", i->author);
         dict.setValue("description", i->description);
         dict.setValue("query", i->query);
@@ -125,7 +125,7 @@ void SettingsDialog::accept()
         m_oldDicts.remove(i.key());
     }
     for (QHash<QString, Dict>::const_iterator i = m_oldDicts.begin(); i != m_oldDicts.end(); ++i)
-        QFile::remove(m_plugin->workPath() + "/" + i.key() + ".webdict");
+        QFile::remove(m_plugin->pluginDataPath() + "/" + i.key() + ".webdict");
 
     QDialog::accept();
 }

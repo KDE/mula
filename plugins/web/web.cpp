@@ -57,7 +57,7 @@ Web::Web(QObject *parent)
 
 QStringList Web::availableDictionaries() const
 {
-    QStringList result = QDir(workPath()).entryList(QStringList("*.webdict"), QDir::Files, QDir::Name);
+    QStringList result = QDir(pluginDataPath()).entryList(QStringList("*.webdict"), QDir::Files, QDir::Name);
     result.replaceInStrings(".webdict", "");
     return result;
 }
@@ -66,7 +66,7 @@ void Web::setLoadedDictionaries(const QStringList &dictionaries)
 {
     for (QStringList::const_iterator i = dictionaries.begin(); i != dictionaries.end(); ++i)
     {
-        QString filename = workPath() + "/" + *i + ".webdict";
+        QString filename = pluginDataPath() + "/" + *i + ".webdict";
         if (!QFile::exists(filename))
             continue;
 
@@ -82,7 +82,7 @@ void Web::setLoadedDictionaries(const QStringList &dictionaries)
 
 Web::DictionaryInfo Web::dictionaryInfo(const QString &dictionary)
 {
-    QString filename = workPath() + "/" + dict + ".webdict";
+    QString filename = pluginDataPath() + "/" + dict + ".webdict";
     if (!QFile::exists(filename))
         return DictionaryInfo();
 

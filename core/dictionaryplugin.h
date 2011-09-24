@@ -42,18 +42,18 @@ namespace MulaCore
                 /**
                  * No features.
                  */
-                None          = 0x00,
+                None,
 
                 /**
                  * Dictionary plugin can search for similar words using
                  * fuzzy algoritms.
                  */
-                SearchSimilar = 0x01,
+                SearchSimilar,
 
                 /**
                  * Dictionary plugin has a settings dialog.
                  */
-                SettingsDialog = 0x02,
+                SettingsDialog,
             };
 
             Q_DECLARE_FLAGS(Features, Feature)
