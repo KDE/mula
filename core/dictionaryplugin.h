@@ -120,7 +120,7 @@ namespace MulaCore
             virtual QStringList loadedDictionaryList() const = 0;
 
             /**
-             * Set the list of the loaded dictionaries
+             * Sets the list of the loaded dictionaries
              *
              * @param loadedDictionaryList The list of the loaded dictionaries
              * @see loadedDictionaryList, availableDictionaryList
@@ -158,12 +158,6 @@ namespace MulaCore
              * @return The similar words in a list
              */
             virtual QStringList findSimilarWords(const QString &dictionary, const QString &word);
-
-            /**
-             * Return a required resource. Scheme of URLs:
-             *   plugin://plugin_name/...
-             */
-            virtual QVariant resource(int type, const QUrl &name);
 
             /**
              * Returns information about the dictionary. The dictionary may be not loaded

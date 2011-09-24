@@ -46,14 +46,6 @@ DictionaryPlugin::findSimilarWords(const QString &dictionary, const QString &wor
     return QStringList(word);
 }
 
-QVariant
-DictionaryPlugin::resource(int type, const QUrl& name)
-{
-    Q_UNUSED(type)
-    Q_UNUSED(name)
-    return QVariant();
-}
-
 int
 DictionaryPlugin::execSettingsDialog(QWidget *parent)
 {
