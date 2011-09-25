@@ -231,10 +231,7 @@ StarDict::isTranslatable(const QString &dictionary, const QString &word)
 MulaCore::Translation
 StarDict::translate(const QString &dictionary, const QString &word)
 {
-    if (!d->loadedDictionaries.contains(dictionary))
-        return MulaCore::Translation();
-
-    if (word.isEmpty())
+    if (!d->loadedDictionaries.contains(dictionary) || word.isEmpty())
         return MulaCore::Translation();
 
     int dictionaryIndex = d->loadedDictionaries[dictionary];
