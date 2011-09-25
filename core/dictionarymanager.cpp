@@ -144,18 +144,15 @@ DictionaryManager::setLoadedDictionaryList(const QMultiHash<QString, QString> &l
 {
     QMultiHash<QString, QString> dictionaries = loadedDictionaryList;
 
-    for (QMultiHash<QString, QString>::const_iterator i = dictionaries.begin(); i != dictionaries.end(); ++i)
+    foreach (const QString& pluginName, dictionaries.keys())
     {
-        MulaCore::DictionaryPlugin* dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(i.key());
+        MulaCore::DictionaryPlugin* dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(pluginName);
         if (!dictionaryPlugin)
             continue;
 
-        // TODO: this statement must be revisited for correction since we should
-        // add the whole list, not values separately or at least change the set
-        // API
-        dictionaryPlugin->setLoadedDictionaryList(QStringList() << i.value());
+        dictionaryPlugin->setLoadedDictionaryList(dictionaries.values());
         foreach (const QString& dictionaryName, dictionaryPlugin->loadedDictionaryList())
-                dictionaries.insert(i.key(), dictionaryName);
+                dictionaries.insert(pluginName, dictionaryName);
     }
 
     d->loadedDictionaryList.clear();
