@@ -37,11 +37,6 @@ namespace MulaCore
         MULA_SINGLETON( DictionaryManager )
 
         public:
-            /**
-             * Saves the dictionary settings.
-             */
-            void saveDictionarySettings();
-
             /** 
              * Returns true if word exists in dictionaries,
              * otherwise false.
@@ -74,27 +69,38 @@ namespace MulaCore
             const QList<DictionaryDataItem> &loadedDictionaryList() const;
 
             /** 
-             * Sets a loaded dictionaries.
+             * Sets the list of the loaded dictionaries.
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
              * If dictionary cannot be loaded it will not be added to 
              * availableDicts list.
+             *
+             * @param loadedDictionaryList The list of the loaded dictionaries
              */
             void setLoadedDictionaryList(const QList<DictionaryDataItem> &loadedDictionaryList);
 
             /**
-             * Reloads the loaded dictionaries.
+             * Reloads the loaded dictionaries
              */
             void reloadDictionaryList();
 
+            /**
+             * Saves the dictionary settings
+             *
+             * @see loadDictionarySettings
+             */
+            void saveDictionarySettings();
+
         private:
             /**
-             * Destructor.
+             * Destructor
              */
             ~DictionaryManager();
 
             /**
-             * Load settings.
+             * Loads settings
+             *
+             * @see saveDictionarySettings
              */
             void loadDictionarySettings();
 
