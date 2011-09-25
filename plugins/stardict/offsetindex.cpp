@@ -222,6 +222,7 @@ OffsetIndex::saveCache(const QString& url)
             return -1;
         }
 
+        d->mapFile.unmap(d->mappedData);
         d->mapFile.setFileName(urlString);
         if( !d->mapFile.open( QIODevice::ReadOnly ) )
         {
