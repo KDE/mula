@@ -69,6 +69,7 @@ namespace MulaCore
              * that the path is created properly, if it is a new location.
              *
              * @param   The identifier of the desired directory location
+             *
              * @return  The desired user directory location
              */
             QString userDirectory( const QString& name );

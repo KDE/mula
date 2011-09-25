@@ -115,6 +115,7 @@ namespace MulaCore
              * Returns the list of the loaded dictionaries
              *
              * @return The list of the loaded dictionaries
+             *
              * @see loadedDictionaryList, availableDictionaryList
              */
             virtual QStringList loadedDictionaryList() const = 0;
@@ -132,7 +133,9 @@ namespace MulaCore
              *
              * @param dictionary The name of the dictionary
              * @param word The word that is looked up in the desired dictionary
+             *
              * @return Whether the translation exists in the desired dictionary
+             *
              * @see translate
              */
             virtual bool isTranslatable(const QString &dictionary, const QString &word) = 0;
@@ -143,8 +146,9 @@ namespace MulaCore
              *
              * @param dictionary The name of the dictionary
              * @param word The word that is looked up in the desired dictionary
-             * @return A translation class object that represents the
-             * translation results
+             *
+             * @return A translation class object that represents the translation results
+             *
              * @see isTranslatable
              */
             virtual Translation translate(const QString &dictionary, const QString &word) = 0;
@@ -155,6 +159,7 @@ namespace MulaCore
              *
              * @param dictionary The name of the desired dictionary
              * @param word The word that is looked up in the desired dictionary
+             *
              * @return The similar words in a list
              */
             virtual QStringList findSimilarWords(const QString &dictionary, const QString &word);
@@ -173,6 +178,7 @@ namespace MulaCore
              * Runs a settings dialog and return QDialog::DialogCode.
              *
              * @param parent The parent object of the settings dialog
+             *
              * @return The relevant QDialog::DialogCode
              */
             virtual int execSettingsDialog(QWidget *parent = 0);

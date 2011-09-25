@@ -291,7 +291,7 @@ OffsetIndex::load(const QString& url, long wc, qulonglong fileSize)
                 ++j;
             }
 
-            position += strlen(byteArray.mid(position)) + 1 + 2 * sizeof(quint32);
+            position += qstrlen(byteArray.mid(position)) + 1 + 2 * sizeof(quint32);
         }
 
         d->wordOffset[j] = position;
@@ -320,10 +320,10 @@ ulong
 OffsetIndex::loadPage(long pageIndex)
 {
     ulong entryCount = d->entriesPerPage;
-    if (pageIndex == ulong(d->wordOffset.size() - 2))
-        if ((entryCount = d->wordCount % d->entriesPerPage) == 0)
-            entryCount = d->entriesPerPage;
-
+    if (pageIndex == ulong(d->wordOffset.size() - 2) && (entryCount = d->wordCount % d->entriesPerPage) == 0)
+    {
+        entryCount = d->entriesPerPage;
+    }
 
     if (pageIndex != d->page.index)
     {
