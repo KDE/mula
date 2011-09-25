@@ -21,13 +21,10 @@
 #define MULA_CORE_DICTIONARYMANAGER_H
 
 #include "dictionaryplugin.h"
-#include "dictionarydataitem.h"
 #include "singleton.h"
 
 #include <QtCore/QStringList>
-#include <QtCore/QPair>
 #include <QtCore/QMultiHash>
-#include <QtCore/QPluginLoader>
 
 namespace MulaCore
 {
