@@ -38,6 +38,7 @@ class OffsetIndex::Private
         Private()
             : wordCount(0)
             , cacheMagicString("StarDict's Cache, Version: 0.1")
+            , mappedData(0)
         {   
         }
 
@@ -106,6 +107,7 @@ class OffsetIndex::Private
 
         QByteArray cacheMagicString;
         QFile mapFile;
+        uchar *mappedData;
 };
 
 OffsetIndex::OffsetIndex()
@@ -182,6 +184,7 @@ OffsetIndex::loadCache(const QString& url)
         if (fileInfoCache.lastModified() < fileInfoIndex.lastModified())
             continue;
 
+        d->mapFile.unmap(d->mappedData);
         d->mapFile.setFileName(urlString);
         if( !d->mapFile.open( QIODevice::ReadOnly ) )
         {
@@ -189,17 +192,17 @@ OffsetIndex::loadCache(const QString& url)
             return -1;
         }
 
-        uchar *data = d->mapFile.map(0, d->mapFile.size());
-        if (data == NULL)
+        d->mappedData = d->mapFile.map(0, d->mapFile.size());
+        if (d->mappedData == NULL)
         {
             qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(urlString);
             return false;
         }
 
-        if (d->cacheMagicString != data)
+        if (d->cacheMagicString != d->mappedData)
             continue;
 
-        memcpy(&d->wordOffset[0], data + d->cacheMagicString.size(), d->wordOffset.size()*sizeof(d->wordOffset[0]));
+        memcpy(d->wordOffset.data(), d->mappedData + d->cacheMagicString.size(), d->wordOffset.size()*sizeof(d->wordOffset.at(0)));
         return true;
     }
 
