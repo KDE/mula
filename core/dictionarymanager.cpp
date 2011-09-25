@@ -123,10 +123,10 @@ DictionaryManager::findSimilarWords(const QString &word)
     return similarWords;
 }
 
-QList<DictionaryDataItem>
+QMultiHash<QString, QString>
 DictionaryManager::availableDictionaryList() const
 {
-    QList<DictionaryDataItem> availableDictionaryList;
+    QMultiHash<QString, QString> availableDictionaryList;
 
     // for (QHash<QString, QPluginLoader*>::const_iterator i = m_plugins.begin(); i != m_plugins.end(); ++i)
     // {
@@ -140,27 +140,29 @@ DictionaryManager::availableDictionaryList() const
 }
 
 void
-DictionaryManager::setLoadedDictionaryList(const QList<DictionaryDataItem> &loadedDictionaryList)
+DictionaryManager::setLoadedDictionaryList(const QMultiHash<QString, QString> &loadedDictionaryList)
 {
-    QHash<QString, QStringList> dictionaries;
-    foreach (const DictionaryDataItem& dictionary, loadedDictionaryList)
-        dictionaries[dictionary.plugin()] = QStringList() << dictionary.name();
+    QMultiHash<QString, QString> dictionaries = loadedDictionaryList;
 
-    for (QHash<QString, QStringList>::const_iterator i = dictionaries.begin(); i != dictionaries.end(); ++i)
+    for (QMultiHash<QString, QString>::const_iterator i = dictionaries.begin(); i != dictionaries.end(); ++i)
     {
         MulaCore::DictionaryPlugin* dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(i.key());
         if (!dictionaryPlugin)
             continue;
 
-        dictionaryPlugin->setLoadedDictionaryList(*i);
-        dictionaries[i.key()] = dictionaryPlugin->loadedDictionaryList();
+        // TODO: this statement must be revisited for correction since we should
+        // add the whole list, not values separately or at least change the set
+        // API
+        dictionaryPlugin->setLoadedDictionaryList(QStringList() << i.value());
+        foreach (const QString& dictionaryName, dictionaryPlugin->loadedDictionaryList())
+                dictionaries.insert(i.key(), dictionaryName);
     }
 
     d->loadedDictionaryList.clear();
-    foreach (const DictionaryDataItem& dictionary, loadedDictionaryList)
+    for (QMultiHash<QString, QString>::const_iterator i = loadedDictionaryList.begin(); i != loadedDictionaryList.end(); ++i)
     {
-        // if (dictionaries.contains(dictionary.plugin()) && dictionaries[dictionary.plugin()].contains(dictionary.name()))
-            // d->loadedDictionaryList.append(dictionary);
+        if (dictionaries.keys().contains(i.key()) && dictionaries.value(i.key()).contains(i.value()))
+            d->loadedDictionaryList.insert(i.key(), i.value());
     }
 }
 
@@ -191,9 +193,9 @@ DictionaryManager::loadDictionarySettings()
     }
     else
     {
-        QList<DictionaryDataItem> dictionaries;
+        QMultiHash<QString, QString> dictionaries;
         for (QStringList::const_iterator i = rawDictionaryList.begin(); i != rawDictionaryList.end(); i += 2)
-            dictionaries.append(DictionaryDataItem(*i, *(i + 1)));
+            dictionaries.insert(*i, *(i + 1));
 
         setLoadedDictionaryList(dictionaries);
     }
@@ -202,7 +204,7 @@ DictionaryManager::loadDictionarySettings()
 void
 DictionaryManager::reloadDictionaryList()
 {
-    QList<DictionaryDataItem> loadedDictionaryList;
+    QMultiHash<QString, QString> loadedDictionaryList;
     // for (QHash<QString, QPluginLoader*>::const_iterator i = d->plugins.begin(); i != d->plugins.end(); ++i)
     // {
         // DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>((*i)->instance());
@@ -212,14 +214,14 @@ DictionaryManager::reloadDictionaryList()
             // loadedDictionaryList.append(DictionaryDataItem(i.key(), dictionaryName));
     // }
 
-    // QList<DictionaryDataItem> oldDictionaryList = d->loadedDictionaryList;
-    // d->loadedDictionaryList.clear();
+    QMultiHash<QString, QString> oldDictionaryList = d->loadedDictionaryList;
+    d->loadedDictionaryList.clear();
  
-    // foreach (const DictionaryDataItem& dictionary, oldDictionaryList)
-    // {
-        // if (loadedDictionaryList.contains(dictionary))
-            // d->loadedDictionaryList.append(dictionary);
-    // }
+    for (QMultiHash<QString, QString>::const_iterator i = oldDictionaryList.begin(); i != oldDictionaryList.end(); ++i)
+    {
+        if (loadedDictionaryList.contains(i.key(), i.value()))
+            d->loadedDictionaryList.insert(i.key(), i.value());
+    }
 }
 
 #include "dictionarymanager.moc"

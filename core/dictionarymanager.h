@@ -26,7 +26,7 @@
 
 #include <QtCore/QStringList>
 #include <QtCore/QPair>
-#include <QtCore/QHash>
+#include <QtCore/QMultiHash>
 #include <QtCore/QPluginLoader>
 
 namespace MulaCore
@@ -59,14 +59,14 @@ namespace MulaCore
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
              */
-            QList<DictionaryDataItem> availableDictionaryList() const;
+            QMultiHash<QString, QString> availableDictionaryList() const;
 
             /** 
              * Returns a list of loaded dictionaries. 
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
              */
-            const QList<DictionaryDataItem> &loadedDictionaryList() const;
+            const QMultiHash<QString, QString> &loadedDictionaryList() const;
 
             /** 
              * Sets the list of the loaded dictionaries.
@@ -77,7 +77,7 @@ namespace MulaCore
              *
              * @param loadedDictionaryList The list of the loaded dictionaries
              */
-            void setLoadedDictionaryList(const QList<DictionaryDataItem> &loadedDictionaryList);
+            void setLoadedDictionaryList(const QMultiHash<QString, QString> &loadedDictionaryList);
 
             /**
              * Reloads the loaded dictionaries
