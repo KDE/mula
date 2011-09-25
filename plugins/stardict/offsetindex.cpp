@@ -149,6 +149,26 @@ OffsetIndex::firstOnPageKey(long pageIndex)
     }
 }
 
+QStringList
+OffsetIndex::cacheVariant(const QString& url)
+{
+    QStringList result;
+    result.append(url + ".oft");
+
+    QString cacheLocation = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
+    QFileInfo cacheLocationFileInfo(cacheLocation);
+    QDir cacheLocationDir;
+
+    if (!cacheLocationFileInfo.exists() && cacheLocationDir.mkdir(cacheLocation) == false)
+        return result;
+
+    if (!cacheLocationFileInfo.isDir())
+        return result;
+
+    result.append(cacheLocation + QDir::separator() + "sdcv" + QDir::separator() + QFileInfo(url).fileName() + ".oft");
+    return result;
+}
+
 bool
 OffsetIndex::loadCache(const QString& url)
 {
@@ -184,26 +204,6 @@ OffsetIndex::loadCache(const QString& url)
     }
 
     return false;
-}
-
-QStringList
-OffsetIndex::cacheVariant(const QString& url)
-{
-    QStringList result;
-    result.append(url + ".oft");
-
-    QString cacheLocation = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
-    QFileInfo cacheLocationFileInfo(cacheLocation);
-    QDir cacheLocationDir;
-
-    if (!cacheLocationFileInfo.exists() && cacheLocationDir.mkdir(cacheLocation) == false)
-        return result;
-
-    if (!cacheLocationFileInfo.isDir())
-        return result;
-
-    result.append(cacheLocation + QDir::separator() + "sdcv" + QDir::separator() + QFileInfo(url).fileName() + ".oft");
-    return result;
 }
 
 bool
