@@ -229,8 +229,8 @@ OffsetIndex::saveCache(const QString& url)
             return -1;
         }
 
-        uchar *data = d->mapFile.map(0, d->mapFile.size());
-        if (data == NULL)
+        d->mappedData = d->mapFile.map(0, d->mapFile.size());
+        if (d->mappedData == NULL)
         {
             qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(urlString);
             return false;
@@ -271,14 +271,14 @@ OffsetIndex::load(const QString& url, long wc, qulonglong fileSize)
             return -1;
         }
 
-        uchar *data = d->mapFile.map(0, d->mapFile.size());
-        if (data == NULL)
+        d->mappedData = d->mapFile.map(0, d->mapFile.size());
+        if (d->mappedData == NULL)
         {
             qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(url);
             return false;
         }
 
-        QByteArray byteArray = QByteArray::fromRawData(reinterpret_cast<const char*>(data), d->mapFile.size());
+        QByteArray byteArray = QByteArray::fromRawData(reinterpret_cast<const char*>(d->mappedData), d->mapFile.size());
 
         int position = 0;
         int j = 0;
