@@ -132,8 +132,8 @@ DictionaryManager::availableDictionaryList() const
     {
         DictionaryPlugin *dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(pluginName);
         QStringList dictionaries = dictionaryPlugin->availableDictionaryList();
-        foreach (const QString& dictionary, dictionaries)
-            availableDictionaryList.insert(pluginName, dictionary);
+        foreach (const QString& dictionaryName, dictionaries)
+            availableDictionaryList.insert(pluginName, dictionaryName);
     }
 
     return availableDictionaryList;
@@ -202,14 +202,14 @@ void
 DictionaryManager::reloadDictionaryList()
 {
     QMultiHash<QString, QString> loadedDictionaryList;
-    // for (QHash<QString, QPluginLoader*>::const_iterator i = d->plugins.begin(); i != d->plugins.end(); ++i)
-    // {
-        // DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>((*i)->instance());
-        // plugin->setLoadedDictionaryList(plugin->loadedDictionaryList());
-
-        // foreach(const QString& dictionaryName, plugin->loadedDictionaryList())
-            // loadedDictionaryList.append(DictionaryDataItem(i.key(), dictionaryName));
-    // }
+    foreach (const QString& pluginName, MulaCore::PluginManager::instance()->availablePlugins())
+    {
+        DictionaryPlugin *dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(pluginName);
+        dictionaryPlugin->setLoadedDictionaryList(dictionaryPlugin->loadedDictionaryList());
+        QStringList dictionaries = dictionaryPlugin->availableDictionaryList();
+        foreach (const QString& dictionaryName, dictionaryPlugin->loadedDictionaryList())
+            loadedDictionaryList.insert(pluginName, dictionaryName);
+    }
 
     QMultiHash<QString, QString> oldDictionaryList = d->loadedDictionaryList;
     d->loadedDictionaryList.clear();
