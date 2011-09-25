@@ -192,7 +192,6 @@ OffsetIndex::cacheVariant(const QString& url)
     QStringList result;
     result.append(url + ".oft");
 
-    QFileInfo urlFileInfo(url);
     QString cacheLocation = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
     QFileInfo cacheLocationFileInfo(cacheLocation);
     QDir cacheLocationDir;
@@ -200,19 +199,10 @@ OffsetIndex::cacheVariant(const QString& url)
     if (!cacheLocationFileInfo.exists() && cacheLocationDir.mkdir(cacheLocation) == false)
         return result;
 
-    QString cacheDir = cacheLocation + QDir::separator() + "sdcv";
-
-    if (!cacheLocationFileInfo.exists())
-    {
-        if (!cacheLocationDir.mkdir(cacheLocation))
-            return result;
-    }
-    else if (!cacheLocationFileInfo.isDir())
-    {
+    if (!cacheLocationFileInfo.isDir())
         return result;
-    }
 
-    result.append(cacheDir + QDir::separator() + urlFileInfo.fileName() + ".oft");
+    result.append(cacheLocation + QDir::separator() + "sdcv" + QDir::separator() + QFileInfo(url).fileName() + ".oft");
     return result;
 }
 
