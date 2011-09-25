@@ -177,7 +177,7 @@ OffsetIndex::loadCache(const QString& url)
     foreach (const QString& urlString, urlStrings)
     {
         QFileInfo fileInfoIndex(url);
-        QFileInfo fileInfoCache(url);
+        QFileInfo fileInfoCache(urlString);
 
         if (fileInfoCache.lastModified() < fileInfoIndex.lastModified())
             continue;
