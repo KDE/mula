@@ -128,13 +128,13 @@ DictionaryManager::availableDictionaryList() const
 {
     QMultiHash<QString, QString> availableDictionaryList;
 
-    // for (QHash<QString, QPluginLoader*>::const_iterator i = m_plugins.begin(); i != m_plugins.end(); ++i)
-    // {
-        // DictionaryPlugin *plugin = qobject_cast<DictionaryPlugin*>((*i)->instance());
-        // QStringList dictionaries = plugin->availableDictionaryList();
-        // foreach (const QString& dictionary, dictionaries)
-            // availableDictionaryList.append(DictionaryDataItem(i.key(), dictionary));
-    // }
+    foreach (const QString& pluginName, MulaCore::PluginManager::instance()->availablePlugins())
+    {
+        DictionaryPlugin *dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(pluginName);
+        QStringList dictionaries = dictionaryPlugin->availableDictionaryList();
+        foreach (const QString& dictionary, dictionaries)
+            availableDictionaryList.insert(pluginName, dictionary);
+    }
 
     return availableDictionaryList;
 }
