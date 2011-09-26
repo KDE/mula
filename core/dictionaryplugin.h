@@ -29,7 +29,7 @@
 namespace MulaCore
 {
     /**
-     * This is a base, interface class for all the dictionary plugins classes.
+     * This is a base, interface class for all the dictionary plugin classes.
      */
     class MULA_CORE_EXPORT DictionaryPlugin
     {
@@ -115,7 +115,6 @@ namespace MulaCore
              * Returns the list of the loaded dictionaries
              *
              * @return The list of the loaded dictionaries
-             *
              * @see loadedDictionaryList, availableDictionaryList
              */
             virtual QStringList loadedDictionaryList() const = 0;
@@ -129,37 +128,33 @@ namespace MulaCore
             virtual void setLoadedDictionaryList(const QStringList &loadedDictionaryList) = 0;
 
             /**
-             * Returns true if translation exists in dictionary, otherwise returns false
+             * Returns true if the translation exists in the dictionary,
+             * otherwise returns false
              *
              * @param dictionary The name of the dictionary
              * @param word The word that is looked up in the desired dictionary
-             *
              * @return Whether the translation exists in the desired dictionary
-             *
              * @see translate
              */
             virtual bool isTranslatable(const QString &dictionary, const QString &word) = 0;
 
             /**
-             * Returns translation for word from dictionary. If word not found
-             * returns empty string.
+             * Returns the translation of the word from the desired dictionary.
+             * If the word can not be found, returns empty string.
              *
              * @param dictionary The name of the dictionary
-             * @param word The word that is looked up in the desired dictionary
-             *
+             * @param word The word that to look up in the desired dictionary
              * @return A translation class object that represents the translation results
-             *
              * @see isTranslatable
              */
             virtual Translation translate(const QString &dictionary, const QString &word) = 0;
 
             /**
-             * Returns the list of similar words from all the loaded dictionaries.
-             * It works only if SearchSimilar feature is enabled.
+             * Returns the list of the similar words from all the loaded
+             * dictionaries.  It works only if SearchSimilar feature is enabled.
              *
              * @param dictionary The name of the desired dictionary
              * @param word The word that is looked up in the desired dictionary
-             *
              * @return The similar words in a list
              */
             virtual QStringList findSimilarWords(const QString &dictionary, const QString &word);
@@ -175,17 +170,16 @@ namespace MulaCore
             virtual DictionaryInfo dictionaryInfo(const QString &dictionary) = 0;
 
             /**
-             * Runs a settings dialog and return QDialog::DialogCode.
+             * Runs a settings dialog and return QDialog::DialogCode
              *
              * @param parent The parent object of the settings dialog
-             *
              * @return The relevant QDialog::DialogCode
              */
             virtual int execSettingsDialog(QWidget *parent = 0);
 
         protected:
             /**
-             * Returns a directory that contains the data of the plugin.
+             * Returns the directory containing the data of the plugin
              *
              * @return The string value containing the dictionary path of the
              * plugin data

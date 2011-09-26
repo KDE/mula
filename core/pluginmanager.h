@@ -56,8 +56,8 @@ namespace MulaCore
 
             /**
              * Sets the list of the loaded plugins.
-             * If plugin cannot be loaded it will not be added to
-             * the list
+             * If the plugin cannot be loaded it will not be added
+             * to the list
              *
              * @param loadedPlugins The list of the loaded plugins
              * @return loadedPlugins The list of the loaded plugins
