@@ -154,7 +154,7 @@ namespace MulaCore
              * dictionaries.  It works only if SearchSimilar feature is enabled.
              *
              * @param dictionary The name of the desired dictionary
-             * @param word The word that is looked up in the desired dictionary
+             * @param word The desired word to look up in the desired dictionary
              * @return The similar words in a list
              */
             virtual QStringList findSimilarWords(const QString &dictionary, const QString &word);

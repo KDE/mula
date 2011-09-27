@@ -100,8 +100,8 @@ DictionaryBase::DictionaryBase()
 
 DictionaryBase::~DictionaryBase()
 {
-    delete d->compressedDictionaryFile;
     delete d->dictionaryFile;
+    delete d->compressedDictionaryFile;
     delete d;
 }
 

@@ -27,19 +27,19 @@
 namespace MulaCore
 {
     /**
-     * This class represent a translation.
+     * This class represents a translation.
      */
     class MULA_CORE_EXPORT Translation
     {
         public:
 
             /**
-             * Construct an empty translation.
+             * Constructs an empty translation.
              */
             Translation();
 
             /**
-             * Construct a translation from data.
+             * Constructs a translation from data.
              * @param title A translation title
              * @param dictionaryName A full dictionary name
              * @param translation A translation
@@ -50,32 +50,44 @@ namespace MulaCore
             virtual ~Translation();
 
             /**
-             * Return the translation title.
+             * Returns the translation title.
+             *
+             * @return The translation title
              */
             const QString &title() const;
 
             /**
-             * Return the dictionary name.
+             * Returns the dictionary name.
+             *
+             * @return The dictionary name
              */
             const QString &dictionaryName() const;
 
             /**
-             * Return the translation.
+             * Returns the translation.
+             *
+             * @return The translation
              */
             const QString &translation() const;
 
             /**
-             * Set a translation title.
+             * Sets a translation title.
+             *
+             * @param title The translation title
              */
             void setTitle(const QString &title);
 
             /**
-             * Set a dictionary name.
+             * Sets a dictionary name.
+             *
+             * @param dictionaryName The dictionary name
              */
             void setDictionaryName(const QString &dictionaryName);
 
             /**
-             * Set a translation.
+             * Sets a translation.
+             *
+             * @param translation The translation
              */
             void setTranslation(const QString &translation);
 

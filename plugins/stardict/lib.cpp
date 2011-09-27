@@ -35,13 +35,15 @@ using namespace MulaPluginStarDict;
 // Notice: read src/tools/DICTFILE_FORMAT for the dictionary
 // file's format information!
 
-static bool isVowel(QChar inputChar)
+static bool
+isVowel(QChar inputChar)
 {
     QChar ch = inputChar.toUpper();
     return ( ch == 'A' || ch == 'E' || ch == 'I' || ch == 'O' || ch == 'U' );
 }
 
-static bool isPureEnglish(const QByteArray& word)
+static bool
+isPureEnglish(const QByteArray& word)
 {
     foreach (char c, word)
     {
@@ -381,7 +383,13 @@ Libs::poPreviousWord(long *iCurrent)
     return poCurrentWord;
 }
 
-bool Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
+bool
+findWord1(QByteArray searchWords, QByteArray suffix, QByteArray replace)
+{
+}
+
+bool
+Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
 {
     long iIndex;
     bool found = false;
@@ -785,7 +793,8 @@ bool Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
     return found;
 }
 
-bool Libs::simpleLookupWord(QByteArray searchWord, long &iWordIndex, int iLib)
+bool
+Libs::simpleLookupWord(QByteArray searchWord, long &iWordIndex, int iLib)
 {
     bool found = d->dictionaries.at(iLib)->lookup(searchWord, iWordIndex);
     if (!found)
@@ -794,13 +803,15 @@ bool Libs::simpleLookupWord(QByteArray searchWord, long &iWordIndex, int iLib)
     return found;
 }
 
-struct Fuzzystruct
+struct
+Fuzzystruct
 {
     QByteArray pMatchWord;
     int matchWordDistance;
 };
 
-inline bool operator<(const Fuzzystruct & lh, const Fuzzystruct & rh)
+inline bool
+operator<(const Fuzzystruct & lh, const Fuzzystruct & rh)
 {
     if (lh.matchWordDistance != rh.matchWordDistance)
         return lh.matchWordDistance < rh.matchWordDistance;
@@ -811,7 +822,8 @@ inline bool operator<(const Fuzzystruct & lh, const Fuzzystruct & rh)
     return false;
 }
 
-bool Libs::lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int resultListSize, int iLib)
+bool
+Libs::lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int resultListSize, int iLib)
 {
     if (searchWord.isEmpty())
         return false;
@@ -909,12 +921,14 @@ bool Libs::lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int re
     return found;
 }
 
-inline bool lessForCompare(QString lh, QString rh)
+inline bool
+lessForCompare(QString lh, QString rh)
 {
     return stardictStringCompare(lh, rh) < 0;
 }
 
-int Libs::lookupWithRule(QByteArray patternWord, QStringList patternMatchWords)
+int
+Libs::lookupWithRule(QByteArray patternWord, QStringList patternMatchWords)
 {
     long aiIndex[MAX_MATCH_ITEM_PER_LIB + 1];
     int matchCount = 0;
@@ -945,7 +959,8 @@ int Libs::lookupWithRule(QByteArray patternWord, QStringList patternMatchWords)
     return matchCount;
 }
 
-bool Libs::lookupData(QByteArray search_word, QStringList resultList)
+bool
+Libs::lookupData(QByteArray search_word, QStringList resultList)
 {
     QStringList searchWords;
     QString searchWord;
