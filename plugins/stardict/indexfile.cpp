@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "wordlistindex.h"
+#include "indexfile.h"
 
 #include "file.h"
 
@@ -29,7 +29,7 @@
 
 using namespace MulaPluginStarDict;
 
-class WordListIndex::Private
+class IndexFile::Private
 {
     public:
         Private()
@@ -43,17 +43,17 @@ class WordListIndex::Private
         QStringList wordList;
 };
 
-WordListIndex::WordListIndex()
+IndexFile::IndexFile()
     : d(new Private)
 {
 }
 
-WordListIndex::~WordListIndex()
+IndexFile::~IndexFile()
 {
 }
 
 bool
-WordListIndex::load(const QString& filePath, long wc, qulonglong fileSize)
+IndexFile::load(const QString& filePath, long wc, qulonglong fileSize)
 {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
@@ -82,13 +82,13 @@ WordListIndex::load(const QString& filePath, long wc, qulonglong fileSize)
 }
 
 QByteArray
-WordListIndex::key(long index)
+IndexFile::key(long index)
 {
     return d->wordList.at(index).toUtf8();
 }
 
 void
-WordListIndex::data(long index)
+IndexFile::data(long index)
 {
     int position = index + qstrlen(d->wordList.at(index).toUtf8().data()) + sizeof(char);
     setWordEntryOffset(ntohl(*reinterpret_cast<quint32 *>(d->wordList[position].toUtf8().data())));
@@ -97,14 +97,14 @@ WordListIndex::data(long index)
 }
 
 QByteArray
-WordListIndex::keyAndData(long index)
+IndexFile::keyAndData(long index)
 {
     data(index);
     return key(index);
 }
 
 bool
-WordListIndex::lookup(const QByteArray &string, long &index)
+IndexFile::lookup(const QByteArray &string, long &index)
 {
     bool found = false;
     long indexTo = d->wordList.size() - 2;
@@ -151,25 +151,25 @@ WordListIndex::lookup(const QByteArray &string, long &index)
 }
 
 quint32
-WordListIndex::wordEntryOffset() const
+IndexFile::wordEntryOffset() const
 {
     return AbstractIndexFile::wordEntryOffset();
 }
 
 void
-WordListIndex::setWordEntryOffset(quint32 offset)
+IndexFile::setWordEntryOffset(quint32 offset)
 {
     AbstractIndexFile::setWordEntryOffset(offset);
 }
 
 quint32
-WordListIndex::wordEntrySize() const
+IndexFile::wordEntrySize() const
 {
     return AbstractIndexFile::wordEntrySize();
 }
 
 void
-WordListIndex::setWordEntrySize(quint32 size)
+IndexFile::setWordEntrySize(quint32 size)
 {
     AbstractIndexFile::setWordEntrySize(size);
 }

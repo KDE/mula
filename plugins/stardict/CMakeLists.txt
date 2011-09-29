@@ -18,12 +18,12 @@ set(stardict_SRCS
     dictionarycache.cpp
     dictionaryzip.cpp
     distance.cpp
+    indexfile.cpp
     offsetindex.cpp
     #settingsdialog.cpp
     stardict.cpp
     stardictdictionaryinfo.cpp
     stardictdictionarymanager.cpp
-    wordlistindex.cpp
 )
 
 set(stardict_HEADERS
@@ -34,12 +34,12 @@ set(stardict_HEADERS
     dictionarycache.h
     dictionaryzip.h
     distance.h
+    indexfile.h
     offsetindex.h
     #settingsdialog.h
     stardict.h
     stardictdictionaryinfo.h
     stardictdictionarymanager.h
-    wordlistindex.h
 )
 
 qt4_automoc(${stardict_SRCS})

@@ -21,7 +21,7 @@
 
 #include "dictionaryzip.h"
 #include "stardictdictionaryinfo.h"
-#include "wordlistindex.h"
+#include "indexfile.h"
 #include "offsetindex.h"
 
 #include <QtCore/QScopedPointer>
@@ -154,7 +154,7 @@ Dictionary::load(const QString& ifoFilePath)
 
     if (QFile(completeFilePath).exists())
     {
-        d->indexFile.reset(new WordListIndex);
+        d->indexFile.reset(new IndexFile);
     }
     else
     {

@@ -17,18 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MULA_PLUGIN_STARDICT_WORDLISTINDEX_H
-#define MULA_PLUGIN_STARDICT_WORDLISTINDEX_H
+#ifndef MULA_PLUGIN_STARDICT_INDEXFILE_H
+#define MULA_PLUGIN_STARDICT_INDEXFILE_H
 
 #include "abstractindexfile.h"
 
 namespace MulaPluginStarDict
 {
-    class WordListIndex : public AbstractIndexFile
+    class IndexFile : public AbstractIndexFile
     {       
         public:
-            WordListIndex();
-            virtual ~WordListIndex();
+            IndexFile();
+            virtual ~IndexFile();
 
             bool load(const QString& url, long wc, qulonglong sffile);
             QByteArray key(long index);
@@ -48,4 +48,4 @@ namespace MulaPluginStarDict
     };
 }
 
-#endif // MULA_PLUGIN_STARDICT_WORDLISTINDEX_H
+#endif // MULA_PLUGIN_STARDICT_INDEXFILE_H
