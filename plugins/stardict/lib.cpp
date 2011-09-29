@@ -407,8 +407,8 @@ Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
         // If not Found, try other status of searchWord.
         int searchWordLength = searchWord.size();
         bool isUpperCase;
+        QByteArray searchNewWord;
 
-        QByteArray searchNewWord = searchWord.left(searchWordLength - 1); //cut one char "s" or "d"
         if (!found && searchWordLength > 1)
         {
             isUpperCase = searchWord.endsWith('S') || searchWord.endsWith("ED");
