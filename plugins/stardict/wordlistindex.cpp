@@ -40,7 +40,6 @@ class WordListIndex::Private
         {
         }
 
-        QByteArray indexDataBuffer;
         QStringList wordList;
 };
 
@@ -63,7 +62,7 @@ WordListIndex::load(const QString& filePath, long wc, qulonglong fileSize)
         return -1;
     }
 
-    d->indexDataBuffer = file.read(fileSize);
+    QByteArray indexDataBuffer = file.read(fileSize);
 
     file.close();
 
@@ -73,11 +72,11 @@ WordListIndex::load(const QString& filePath, long wc, qulonglong fileSize)
     int position = 0;
     for (int i = 0; i < wc; ++i)
     {
-        d->wordList[i] = d->indexDataBuffer.mid(position);
-        position += qstrlen(d->indexDataBuffer.mid(position)) + calculatedConst;
+        d->wordList[i] = indexDataBuffer.mid(position);
+        position += qstrlen(indexDataBuffer.mid(position)) + calculatedConst;
     }
 
-    d->wordList[wc] = QString::fromUtf8(d->indexDataBuffer.mid(position));
+    d->wordList[wc] = QString::fromUtf8(indexDataBuffer.mid(position));
 
     return true;
 }
