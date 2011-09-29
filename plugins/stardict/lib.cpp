@@ -398,10 +398,11 @@ Libs::lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int
             if (isUpperCase || searchWord.endsWith(suffix.toLower()))
             {
                 QString searchNewWord = searchWord.left(searchWordLength - length);
-                if ( check && searchWordLength > length && (searchNewWord.at(searchWordLength - (length - 2)) == searchNewWord.at(searchWordLength - (length - 1)))
-                        && !isVowel(searchNewWord.at(searchWordLength - (length - 1))) && isVowel(searchNewWord.at(searchWordLength - length)))
+                int searchNewWordLength = searchNewWord.length;
+                if ( check && searchNewWordLength > 3 && (searchNewWord.at(searchNewWordLength - 1) == searchNewWord.at(searchNewWordLength - 2))
+                        && !isVowel(searchNewWord.at(searchNewWordLength - 2)) && isVowel(searchNewWord.at(searchNewWordLength - 3)))
                 {  //doubled
-                    searchNewWord.remove(searchNewWord.length() - 1, 1);
+                    searchNewWord.remove(searchNewWordLength - 1, 1);
                     if (d->dictionaries.at(dictionaryIndex)->lookup(searchNewWord, index))
                     {
                         d->found = true;
@@ -493,6 +494,7 @@ Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
         QByteArray searchNewWord;
 
         // Cut "s" or "ed"
+        lookupPattern(searchWord, iLib, "S", 1, QString(), false);
         if (!found && searchWordLength > 1)
         {
             isUpperCase = searchWord.endsWith('S') || searchWord.endsWith("ED");
