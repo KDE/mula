@@ -34,78 +34,45 @@ namespace MulaCore
         MULA_SINGLETON( DictionaryManager )
 
         public:
-            /**
-             * Returns true if word exists in dictionaries of the plugins,
+            /** 
+             * Returns true if word exists in dictionaries,
              * otherwise false.
-             *
-             * @param word The desired word to look up in the dictionaries of the
-             * plugins
-             * @return Whether the translation exists in the the dictionaries of
-             * the plugins
-             * @see translate
              */
             bool isTranslatable(const QString &word);
 
-            /**
-             * Returns the translation of the word from the dictionaries of the
-             * plugins. If the word can not be found, the method returns "Not
-             * found!"
-             *
-             * @param word The desired word to look up in the dictionaries of
-             * the plugins
-             * @return The translation of the desired word in the dictionaries
-             * of the plugins
-             * @see isTranslatable
+            /** 
+             * Returns translation for word. If word not found, returns
+             * "Not found!"
              */
             QString translate(const QString &word);
 
-            /**
-             * Returns the list of the similar words contained in the dictionaries
-             * of the plugins. If the word can not be found, the method returns
-             * an empty list.
-             *
-             * @param word The desired word to look up in the dictionaries of
-             * the plugins
-             * @return The similar words in a list
+            /** 
+             * Returns a list of similar words contained in dictionaries.
              */
             QStringList findSimilarWords(const QString &word);
 
-            /**
-             * Returns the list of the available dictionaries.
-             * The first item (key) is the plugin name, the second item (value) is
-             * the dictionary name in the multihash.
-             * Note: Plugins can have multi dictionaries, not just one, thus
-             * that is why it is stored as a multihash
-             *
-             * @return The multihash containing the available plugin names and
-             * the relevant dictionaries accordingly
-             * @see loadedDictionaryList, setLoadedDictionaryList
+            /** 
+             * Returns a list of available dictionaries.
+             * The first item in pair is a plugin name, the second item
+             * in pair is a dictionary name.
              */
             QMultiHash<QString, QString> availableDictionaryList() const;
 
-            /**
-             * Returns the list of the loaded dictionaries.
-             * The first item (key) is the plugin name, the second item is
-             * the dictionary name in the multihash.
-             * Note: Plugins can have multi dictionaries, not just one, thus
-             * that is why it is stored as a multihash
-             *
-             * @return  The multihash containing the loaded plugin names and the
-             * relevant dictionaries accordingly
-             * @see availableDictionaryList, setLoadedDictionaryList
+            /** 
+             * Returns a list of loaded dictionaries. 
+             * The first item in pair is a plugin name, the second item
+             * in pair is a dictionary name.
              */
             const QMultiHash<QString, QString> &loadedDictionaryList() const;
 
-            /**
+            /** 
              * Sets the list of the loaded dictionaries.
-             * The first item (key) is the plugin name, the second item is
-             * the dictionary name in the multihash.
-             * Note: Plugins can have multi dictionaries, not just one, thus
-             * that is why it is stored as a multihash
+             * The first item in pair is a plugin name, the second item
+             * in pair is a dictionary name.
+             * If dictionary cannot be loaded it will not be added to 
+             * availableDicts list.
              *
-             * @param loadedDictionaryList The multihash containing the loaded
-             * plugin names and the relevant dictionaries accordingly
-             * @see availableDictionaryList, loadedDictionaryList
+             * @param loadedDictionaryList The list of the loaded dictionaries
              */
             void setLoadedDictionaryList(const QMultiHash<QString, QString> &loadedDictionaryList);
 
@@ -128,7 +95,7 @@ namespace MulaCore
             ~DictionaryManager();
 
             /**
-             * Loads the dictionary settings
+             * Loads settings
              *
              * @see saveDictionarySettings
              */

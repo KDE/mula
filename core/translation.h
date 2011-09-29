@@ -27,19 +27,19 @@
 namespace MulaCore
 {
     /**
-     * This class represents a translation.
+     * This class represent a translation.
      */
     class MULA_CORE_EXPORT Translation
     {
         public:
 
             /**
-             * Constructs an empty translation.
+             * Construct an empty translation.
              */
             Translation();
 
             /**
-             * Constructs a translation from data.
+             * Construct a translation from data.
              * @param title A translation title
              * @param dictionaryName A full dictionary name
              * @param translation A translation
@@ -50,44 +50,32 @@ namespace MulaCore
             virtual ~Translation();
 
             /**
-             * Returns the translation title.
-             *
-             * @return The translation title
+             * Return the translation title.
              */
             const QString &title() const;
 
             /**
-             * Returns the dictionary name.
-             *
-             * @return The dictionary name
+             * Return the dictionary name.
              */
             const QString &dictionaryName() const;
 
             /**
-             * Returns the translation.
-             *
-             * @return The translation
+             * Return the translation.
              */
             const QString &translation() const;
 
             /**
-             * Sets a translation title.
-             *
-             * @param title The translation title
+             * Set a translation title.
              */
             void setTitle(const QString &title);
 
             /**
-             * Sets a dictionary name.
-             *
-             * @param dictionaryName The dictionary name
+             * Set a dictionary name.
              */
             void setDictionaryName(const QString &dictionaryName);
 
             /**
-             * Sets a translation.
-             *
-             * @param translation The translation
+             * Set a translation.
              */
             void setTranslation(const QString &translation);
 
