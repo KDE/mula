@@ -440,7 +440,7 @@ Libs::lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int
                     }
                 }
 
-                if (!d->found)
+                if (!d->found && !addition.isNull())
                 {
                     if (isUpperCase)
                         searchNewWord.append(addition.toUpper());
