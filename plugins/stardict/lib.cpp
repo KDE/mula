@@ -409,6 +409,7 @@ Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
         bool isUpperCase;
         QByteArray searchNewWord;
 
+        // Cut "s" or "ed"
         if (!found && searchWordLength > 1)
         {
             isUpperCase = searchWord.endsWith('S') || searchWord.endsWith("ED");
@@ -439,8 +440,8 @@ Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
             if (isUpperCase || searchWord.endsWith("ly"))
             {
                 searchNewWord = searchWord.left(searchWordLength - 2); // cut "ly"
-                if (searchWordLength > 5 && searchNewWord.at(searchWordLength - 3) == searchNewWord.at(searchWordLength - 4)
-                        && !isVowel(searchNewWord.at(searchWordLength - 4)) && isVowel(searchNewWord.at(searchWordLength - 5)))
+                if (searchWordLength > 3 && searchNewWord.at(searchWordLength - 1) == searchNewWord.at(searchWordLength - 2)
+                        && !isVowel(searchNewWord.at(searchWordLength - 2)) && isVowel(searchNewWord.at(searchWordLength - 3)))
                 { //doubled
 
                     searchNewWord.remove(searchNewWord.length() - 1, 1);
@@ -491,8 +492,8 @@ Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
             if (isUpperCase || searchWord.endsWith("ing"))
             {
                 searchNewWord = searchWord.left(searchWordLength - 3);
-                if ( searchWordLength > 6 && (searchNewWord.at(searchWordLength - 4) == searchNewWord.at(searchWordLength - 5))
-                        && !isVowel(searchNewWord.at(searchWordLength - 5)) && isVowel(searchNewWord.at(searchWordLength - 6)))
+                if ( searchWordLength > 3 && (searchNewWord.at(searchWordLength - 1) == searchNewWord.at(searchWordLength - 2))
+                        && !isVowel(searchNewWord.at(searchWordLength - 2)) && isVowel(searchNewWord.at(searchWordLength - 3)))
                 {  //doubled
                     searchNewWord.remove(searchNewWord.length() - 1, 1);
                     if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
@@ -599,8 +600,8 @@ Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
             if (isUpperCase || searchWord.endsWith("ed"))
             {
                 searchNewWord = searchWord.left(searchWordLength - 2);
-                if (searchWordLength > 5 && (searchNewWord.at(searchWordLength - 3) == searchNewWord.at(searchWordLength - 4))
-                        && !isVowel(searchNewWord.at(searchWordLength - 4)) && isVowel(searchNewWord.at(searchWordLength - 5)))
+                if (searchWordLength > 3 && (searchNewWord.at(searchWordLength - 1) == searchNewWord.at(searchWordLength - 2))
+                        && !isVowel(searchNewWord.at(searchWordLength - 2)) && isVowel(searchNewWord.at(searchWordLength - 3)))
                 { //doubled
                     searchNewWord.remove(searchNewWord.length() - 1, 1);
                     if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
