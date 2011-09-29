@@ -384,53 +384,26 @@ Libs::poPreviousWord(long *iCurrent)
 }
 
 bool
-findWord1(QByteArray searchWords, QByteArray suffix, QByteArray replace)
-{
-}
-
-bool
 Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
 {
     long iIndex;
     bool found = false;
-    QString caseString;
 
-    if (!found)
-    {
-        // to lower case.
-        caseString = searchWord.toLower();
-        if (caseString.compare(searchWord))
-        {
-            if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
-                found = true;
-        }
+    // Upper case lookup
+    if (d->dictionaries.at(iLib)->lookup(searchWord.toUpper(), iIndex))
+        found = true;
 
-        // to upper case.
-        if (!found)
-        {
-            caseString = searchWord.toUpper();
-            if (caseString.compare(searchWord))
-            {
-                if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
-                    found = true;
-            }
-        }
+    // Lower case lookup
+    if (!found && d->dictionaries.at(iLib)->lookup(searchWord.toLower(), iIndex))
+        found = true;
 
-        // Upper the first character and lower others.
-        if (!found)
-        {
-            caseString = searchWord.toLower();
-            caseString[0] = caseString[0].toUpper();
-            if (caseString.compare(searchWord))
-            {
-                if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
-                    found = true;
-            }
-        }
-    }
+    // Upper the first character and lower others
+    if (!found && d->dictionaries.at(iLib)->lookup(QString(QString(searchWord)[0].toUpper()) + searchWord.mid(1).toLower(), iIndex))
+        found = true;
 
     if (isPureEnglish(searchWord))
     {
+        QString caseString;
         // If not Found, try other status of searchWord.
         int searchWordLength = searchWord.size();
         bool isUpperCase;
