@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "lib.h"
+#include "stardictdictionarymanager.h"
 
 #include "distance.h"
 #include "dictionary.h"
@@ -57,7 +57,7 @@ isPureEnglish(const QByteArray& word)
     return true;
 }
 
-class Libs::Private
+class StarDictDictionaryManager::Private
 {
     public:
         Private()
@@ -70,7 +70,7 @@ class Libs::Private
         {
         }
 
-        QVector<Dictionary *> dictionaries; // word Libs.
+        QVector<Dictionary *> dictionaries;
         int maximumFuzzyDistance;
         progress_func_t progressFunction;
 
@@ -80,19 +80,19 @@ class Libs::Private
         bool found;
 };
 
-Libs::Libs(progress_func_t progressFunction)
+StarDictDictionaryManager::StarDictDictionaryManager(progress_func_t progressFunction)
     : d(new Private)
 {
     d->progressFunction = progressFunction;
 }
 
-Libs::~Libs()
+StarDictDictionaryManager::~StarDictDictionaryManager()
 {
     qDeleteAll(d->dictionaries);
     delete d;
 }
 
-void Libs::loadDictionary(const QString& url)
+void StarDictDictionaryManager::loadDictionary(const QString& url)
 {
     Dictionary *dictionary = new Dictionary;
     if (dictionary->load(url))
@@ -107,31 +107,31 @@ void Libs::loadDictionary(const QString& url)
 }
 
 long
-Libs::articleCount(int index) const
+StarDictDictionaryManager::articleCount(int index) const
 {
     return d->dictionaries.at(index)->articleCount();
 }
 
 const QString&
-Libs::dictionaryName(int index) const
+StarDictDictionaryManager::dictionaryName(int index) const
 {
     return d->dictionaries.at(index)->dictionaryName();
 }
 
 int
-Libs::dictionaryCount() const
+StarDictDictionaryManager::dictionaryCount() const
 {
     return d->dictionaries.size();
 }
 
 const QByteArray
-Libs::poWord(long keyIndex, int libIndex) const
+StarDictDictionaryManager::poWord(long keyIndex, int libIndex) const
 {
     return d->dictionaries.at(libIndex)->key(keyIndex).toUtf8();
 }
 
 QString
-Libs::poWordData(long dataIndex, int libIndex)
+StarDictDictionaryManager::poWordData(long dataIndex, int libIndex)
 {
     if (libIndex == invalidIndex)
         return NULL;
@@ -140,14 +140,14 @@ Libs::poWordData(long dataIndex, int libIndex)
 }
 
 bool
-Libs::lookupWord(const char* searchWord, long& iWordIndex, int libIndex)
+StarDictDictionaryManager::lookupWord(const char* searchWord, long& iWordIndex, int libIndex)
 {
     return d->dictionaries.at(libIndex)->lookup(searchWord, iWordIndex);
 }
 
 template <typename Method>
 void
-Libs::recursiveTemplateHelper(const QString& directoryName, const QStringList& orderList, const QStringList& disableList,
+StarDictDictionaryManager::recursiveTemplateHelper(const QString& directoryName, const QStringList& orderList, const QStringList& disableList,
                         Method method)
 {
     QDir dir(directoryName);
@@ -172,7 +172,7 @@ Libs::recursiveTemplateHelper(const QString& directoryName, const QStringList& o
 }
 
 void
-Libs::load(const QStringList& dictionaryDirectoryList,
+StarDictDictionaryManager::load(const QStringList& dictionaryDirectoryList,
                 const QStringList& orderList,
                 const QStringList& disableList)
 {
@@ -183,11 +183,11 @@ Libs::load(const QStringList& dictionaryDirectoryList,
     }
 
     foreach (const QString& directoryName, dictionaryDirectoryList)
-        recursiveTemplateHelper(directoryName, orderList, disableList, &Libs::loadDictionary);
+        recursiveTemplateHelper(directoryName, orderList, disableList, &StarDictDictionaryManager::loadDictionary);
 }
 
 Dictionary*
-Libs::reloaderFind(const QString& url)
+StarDictDictionaryManager::reloaderFind(const QString& url)
 {
     QVector<Dictionary *>::iterator it;
     for (it = d->previous.begin(); it != d->previous.end(); ++it)
@@ -207,7 +207,7 @@ Libs::reloaderFind(const QString& url)
 }
 
 void
-Libs::reloaderHelper(const QString &absolutePath)
+StarDictDictionaryManager::reloaderHelper(const QString &absolutePath)
 {
     Dictionary *dictionary = reloaderFind(absolutePath);
     if (dictionary)
@@ -217,7 +217,7 @@ Libs::reloaderHelper(const QString &absolutePath)
 }
 
 void
-Libs::reload(const QStringList& dictionaryDirectoryList,
+StarDictDictionaryManager::reload(const QStringList& dictionaryDirectoryList,
                   const QStringList& orderList,
                   const QStringList& disableList)
 {
@@ -231,13 +231,13 @@ Libs::reload(const QStringList& dictionaryDirectoryList,
     }
 
     foreach (const QString& directoryName, dictionaryDirectoryList)
-        recursiveTemplateHelper(directoryName, orderList, disableList, &Libs::reloaderHelper);
+        recursiveTemplateHelper(directoryName, orderList, disableList, &StarDictDictionaryManager::reloaderHelper);
 
     qDeleteAll(d->previous);
 }
 
 QByteArray
-Libs::poCurrentWord(long *iCurrent)
+StarDictDictionaryManager::poCurrentWord(long *iCurrent)
 {
     const char *poCurrentWord = NULL;
     const char *word;
@@ -266,7 +266,7 @@ Libs::poCurrentWord(long *iCurrent)
 }
 
 QByteArray
-Libs::poNextWord(QByteArray searchWord, long *iCurrent)
+StarDictDictionaryManager::poNextWord(QByteArray searchWord, long *iCurrent)
 {
     // the input can be:
     // (word,iCurrent),read word,write iNext to iCurrent,and return next word. used by TopWin::NextCallback();
@@ -328,7 +328,7 @@ Libs::poNextWord(QByteArray searchWord, long *iCurrent)
 }
 
 QByteArray
-Libs::poPreviousWord(long *iCurrent)
+StarDictDictionaryManager::poPreviousWord(long *iCurrent)
 {
     // used by TopWin::PreviousCallback(); the iCurrent is cached by AppCore::TopWinWordChange();
     QByteArray poCurrentWord = NULL;
@@ -387,7 +387,7 @@ Libs::poPreviousWord(long *iCurrent)
 }
 
 bool
-Libs::lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int wordLength, int truncateLength, QString addition, bool check)
+StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int wordLength, int truncateLength, QString addition, bool check)
 {
         int searchWordLength = searchWord.length();
         if (!d->found && searchWordLength > wordLength)
@@ -468,7 +468,7 @@ Libs::lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int
 }
 
 bool
-Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
+StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
 {
     long iIndex;
     bool found = false;
@@ -557,7 +557,7 @@ Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
 }
 
 bool
-Libs::simpleLookupWord(QByteArray searchWord, long &iWordIndex, int iLib)
+StarDictDictionaryManager::simpleLookupWord(QByteArray searchWord, long &iWordIndex, int iLib)
 {
     bool found = d->dictionaries.at(iLib)->lookup(searchWord, iWordIndex);
     if (!found)
@@ -586,7 +586,7 @@ operator<(const Fuzzystruct & lh, const Fuzzystruct & rh)
 }
 
 bool
-Libs::lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int resultListSize, int iLib)
+StarDictDictionaryManager::lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int resultListSize, int iLib)
 {
     if (searchWord.isEmpty())
         return false;
@@ -691,14 +691,14 @@ lessForCompare(QString lh, QString rh)
 }
 
 int
-Libs::lookupWithRule(QByteArray patternWord, QStringList patternMatchWords)
+StarDictDictionaryManager::lookupWithRule(QByteArray patternWord, QStringList patternMatchWords)
 {
     long aiIndex[MAX_MATCH_ITEM_PER_LIB + 1];
     int matchCount = 0;
 
     for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
     {
-        //if(oLibs.LookdupWordsWithRule(pspec,aiIndex,MAX_MATCH_ITEM_PER_LIB+1-iMatchCount,iLib))
+        //if(oStarDictDictionaryManager.LookdupWordsWithRule(pspec,aiIndex,MAX_MATCH_ITEM_PER_LIB+1-iMatchCount,iLib))
         // -iMatchCount,so save time,but may got less result and the word may repeat.
 
         if (d->dictionaries.at(iLib)->lookupWithRule(patternWord, aiIndex, MAX_MATCH_ITEM_PER_LIB + 1))
@@ -723,7 +723,7 @@ Libs::lookupWithRule(QByteArray patternWord, QStringList patternMatchWords)
 }
 
 bool
-Libs::lookupData(QByteArray search_word, QStringList resultList)
+StarDictDictionaryManager::lookupData(QByteArray search_word, QStringList resultList)
 {
     QStringList searchWords;
     QString searchWord;
@@ -807,8 +807,8 @@ Libs::lookupData(QByteArray search_word, QStringList resultList)
     return i != d->dictionaries.size();
 }
 
-Libs::QueryType
-Libs::analyzeQuery(QString string, QString& result)
+StarDictDictionaryManager::QueryType
+StarDictDictionaryManager::analyzeQuery(QString string, QString& result)
 {
     if (string.isNull() || result.isNull())
     {

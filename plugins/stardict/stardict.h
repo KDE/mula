@@ -20,7 +20,7 @@
 #ifndef MULA_PLUGIN_STARDICT_STARDICT_H
 #define MULA_PLUGIN_STARDICT_STARDICT_H
 
-#include "lib.h"
+#include "stardictdictionarymanager.h"
 #include "stardictdictionaryinfo.h"
 
 #include <core/dictionaryplugin.h>

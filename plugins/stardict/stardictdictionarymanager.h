@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MULA_PLUGIN_STARDICT_LIB_H
-#define MULA_PLUGIN_STARDICT_LIB_H
+#ifndef MULA_PLUGIN_STARDICT_DICTIONARYMANAGER_H
+#define MULA_PLUGIN_STARDICT_DICTIONARYMANAGER_H
 
 #include "dictionaryzip.h"
 
@@ -31,7 +31,7 @@ const int MAX_FUZZY_DISTANCE = 3; // at most MAX_FUZZY_DISTANCE-1 differences al
 namespace MulaPluginStarDict
 {
     class Dictionary;
-    class Libs
+    class StarDictDictionaryManager
     {
         public:
             enum QueryType {
@@ -43,8 +43,8 @@ namespace MulaPluginStarDict
 
             typedef void (*progress_func_t)(void);
 
-            Libs(progress_func_t f = NULL);
-            virtual ~Libs();
+            StarDictDictionaryManager(progress_func_t f = NULL);
+            virtual ~StarDictDictionaryManager();
 
             void loadDictionary(const QString& url);
             void load(const QStringList& dictionaryDirs,
@@ -90,4 +90,4 @@ namespace MulaPluginStarDict
     };
 }
 
-#endif // MULA_PLUGIN_STARDICT_LIB_H
+#endif // MULA_PLUGIN_STARDICT_DICTIONARYMANAGER_H

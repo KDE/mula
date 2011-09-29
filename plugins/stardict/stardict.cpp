@@ -19,7 +19,6 @@
 
 #include "stardict.h"
 
-#include "lib.h"
 #include "settingsdialog.h"
 #include "file.h"
 
@@ -43,7 +42,7 @@ class StarDict::Private
 {
     public:
         Private()
-            : sdLibs(new Libs)
+            : sdLibs(new StarDictDictionaryManager)
             , reformatLists(false)
             , expandAbbreviations(false)
         {
@@ -53,7 +52,7 @@ class StarDict::Private
         {
         }
 
-        Libs *sdLibs;
+        StarDictDictionaryManager *sdLibs;
         QStringList dictionaryDirectoryList;
         QHash<QString, int> loadedDictionaries;
         bool reformatLists;
