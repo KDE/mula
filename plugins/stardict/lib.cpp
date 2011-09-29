@@ -62,6 +62,7 @@ class Libs::Private
     public:
         Private()
             : maximumFuzzyDistance(MAX_FUZZY_DISTANCE) // need to read from cfg
+           , found(false)
         {
         }
 
@@ -75,6 +76,8 @@ class Libs::Private
 
         QVector<Dictionary *> previous;
         QVector<Dictionary *> future;
+
+        bool found;
 };
 
 Libs::Libs(progress_func_t progressFunction)
@@ -381,6 +384,86 @@ Libs::poPreviousWord(long *iCurrent)
         }
     }
     return poCurrentWord;
+}
+
+bool
+Libs::lookupPattern(QByteArray searchWord, int dictionaryIndex, QString suffix, int length, QString addition, bool check)
+{
+        int searchWordLength = searchWord.length();
+        if (!d->found && searchWordLength > length)
+        {
+            QString caseString;
+            long index;
+            bool isUpperCase = QString::fromUtf8(searchWord).endsWith(suffix.toUpper());
+            if (isUpperCase || QString::fromUtf8(searchWord).endsWith(suffix.toLower()))
+            {
+                QString searchNewWord = QString::fromUtf8(searchWord).left(searchWordLength - length);
+                if ( check && searchWordLength > length && (searchNewWord.at(searchWordLength - (length - 2)) == searchNewWord.at(searchWordLength - (length - 1)))
+                        && !isVowel(searchNewWord.at(searchWordLength - (length - 1))) && isVowel(searchNewWord.at(searchWordLength - length)))
+                {  //doubled
+                    searchNewWord.remove(searchNewWord.length() - 1, 1);
+                    if (d->dictionaries.at(dictionaryIndex)->lookup(searchNewWord, index))
+                    {
+                        d->found = true;
+                    }
+                    else
+                    {
+                        if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
+                        {
+                            caseString = searchNewWord.toLower();
+                            if (caseString.compare(searchNewWord))
+                            {
+                                if (d->dictionaries.at(dictionaryIndex)->lookup(caseString, index))
+                                    d->found = true;
+                            }
+                        }
+
+                        if (!d->found)
+                            searchNewWord.append(searchNewWord.at(searchNewWord.length() - 1));  //restore
+                    }
+                }
+
+                if (!d->found)
+                {
+                    if (d->dictionaries.at(dictionaryIndex)->lookup(searchNewWord, index))
+                    {
+                        d->found = true;
+                    }
+                    else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
+                    {
+                        caseString = searchNewWord.toLower();
+                        if (caseString.compare(searchNewWord))
+                        {
+                            if (d->dictionaries.at(dictionaryIndex)->lookup(caseString, index))
+                                d->found = true;
+                        }
+                    }
+                }
+
+                if (!d->found)
+                {
+                    if (isUpperCase)
+                        searchNewWord.append(addition.toUpper());
+                    else
+                        searchNewWord.append(addition.toLower());
+
+                    if (d->dictionaries.at(dictionaryIndex)->lookup(searchNewWord, index))
+                    {
+                        d->found = true;
+                    }
+                    else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
+                    {
+                        caseString = searchNewWord.toLower();
+                        if (caseString.compare(searchNewWord))
+                        {
+                            if (d->dictionaries.at(dictionaryIndex)->lookup(caseString, index))
+                                d->found = true;
+                        }
+                    }
+                }
+            }
+        }
+        return d->found;
 }
 
 bool
