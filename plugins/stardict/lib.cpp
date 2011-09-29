@@ -387,17 +387,17 @@ Libs::poPreviousWord(long *iCurrent)
 }
 
 bool
-Libs::lookupPattern(QByteArray searchWord, int dictionaryIndex, QString suffix, int length, QString addition, bool check)
+Libs::lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int length, QString addition, bool check)
 {
         int searchWordLength = searchWord.length();
         if (!d->found && searchWordLength > length)
         {
             QString caseString;
             long index;
-            bool isUpperCase = QString::fromUtf8(searchWord).endsWith(suffix.toUpper());
-            if (isUpperCase || QString::fromUtf8(searchWord).endsWith(suffix.toLower()))
+            bool isUpperCase = searchWord.endsWith(suffix.toUpper());
+            if (isUpperCase || searchWord.endsWith(suffix.toLower()))
             {
-                QString searchNewWord = QString::fromUtf8(searchWord).left(searchWordLength - length);
+                QString searchNewWord = searchWord.left(searchWordLength - length);
                 if ( check && searchWordLength > length && (searchNewWord.at(searchWordLength - (length - 2)) == searchNewWord.at(searchWordLength - (length - 1)))
                         && !isVowel(searchNewWord.at(searchWordLength - (length - 1))) && isVowel(searchNewWord.at(searchWordLength - length)))
                 {  //doubled
@@ -408,7 +408,7 @@ Libs::lookupPattern(QByteArray searchWord, int dictionaryIndex, QString suffix, 
                     }
                     else
                     {
-                        if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
+                        if (isUpperCase || searchWord.at(0).isUpper())
                         {
                             caseString = searchNewWord.toLower();
                             if (caseString.compare(searchNewWord))
@@ -429,7 +429,7 @@ Libs::lookupPattern(QByteArray searchWord, int dictionaryIndex, QString suffix, 
                     {
                         d->found = true;
                     }
-                    else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
+                    else if (isUpperCase || searchWord.at(0).isUpper())
                     {
                         caseString = searchNewWord.toLower();
                         if (caseString.compare(searchNewWord))
@@ -451,7 +451,7 @@ Libs::lookupPattern(QByteArray searchWord, int dictionaryIndex, QString suffix, 
                     {
                         d->found = true;
                     }
-                    else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
+                    else if (isUpperCase || searchWord.at(0).isUpper())
                     {
                         caseString = searchNewWord.toLower();
                         if (caseString.compare(searchNewWord))
