@@ -47,7 +47,7 @@ class Dictionary::Private
         long wordCount;
         QString bookName;
 
-        QScopedPointer<IndexFile> indexFile;
+        QScopedPointer<AbstractIndexFile> indexFile;
         int indexFileSize;
 };
 

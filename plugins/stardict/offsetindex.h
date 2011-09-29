@@ -20,13 +20,13 @@
 #ifndef MULA_PLUGIN_STARDICT_OFFSETINDEX_H
 #define MULA_PLUGIN_STARDICT_OFFSETINDEX_H
 
-#include "indexfile.h"
+#include "abstractindexfile.h"
 
 #include <QtCore/QStringList>
 
 namespace MulaPluginStarDict
 {
-    class OffsetIndex : public IndexFile
+    class OffsetIndex : public AbstractIndexFile
     {
         public:
             OffsetIndex();

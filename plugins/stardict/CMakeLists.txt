@@ -11,34 +11,34 @@ include_directories(
 )
 
 set(stardict_SRCS
+    abstractindexfile.cpp
     cacheitem.cpp
     dictionary.cpp
     dictionarybase.cpp
     dictionarycache.cpp
     dictionaryzip.cpp
     distance.cpp
-    indexfile.cpp
-    stardictdictionarymanager.cpp
     offsetindex.cpp
     #settingsdialog.cpp
     stardict.cpp
     stardictdictionaryinfo.cpp
+    stardictdictionarymanager.cpp
     wordlistindex.cpp
 )
 
 set(stardict_HEADERS
+    abstractindexfile.h
     cacheitem.h
     dictionary.h
     dictionarybase.h
     dictionarycache.h
     dictionaryzip.h
     distance.h
-    indexfile.h
-    stardictdictionarymanager.h
     offsetindex.h
     #settingsdialog.h
     stardict.h
     stardictdictionaryinfo.h
+    stardictdictionarymanager.h
     wordlistindex.h
 )
 

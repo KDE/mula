@@ -153,23 +153,23 @@ WordListIndex::lookup(const QByteArray &string, long &index)
 quint32
 WordListIndex::wordEntryOffset() const
 {
-    return IndexFile::wordEntryOffset();
+    return AbstractIndexFile::wordEntryOffset();
 }
 
 void
 WordListIndex::setWordEntryOffset(quint32 offset)
 {
-    IndexFile::setWordEntryOffset(offset);
+    AbstractIndexFile::setWordEntryOffset(offset);
 }
 
 quint32
 WordListIndex::wordEntrySize() const
 {
-    return IndexFile::wordEntrySize();
+    return AbstractIndexFile::wordEntrySize();
 }
 
 void
 WordListIndex::setWordEntrySize(quint32 size)
 {
-    IndexFile::setWordEntrySize(size);
+    AbstractIndexFile::setWordEntrySize(size);
 }

@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MULA_PLUGIN_STARDICT_INDEXFILE_H
-#define MULA_PLUGIN_STARDICT_INDEXFILE_H
+#ifndef MULA_PLUGIN_STARDICT_ABSTRACTINDEXFILE_H
+#define MULA_PLUGIN_STARDICT_ABSTRACTINDEXFILE_H
 
 #include <QtCore/QtGlobal>
 
@@ -26,11 +26,11 @@ class QString;
 
 namespace MulaPluginStarDict
 {
-    class IndexFile
+    class AbstractIndexFile
     {
         public:
-            IndexFile();
-            virtual ~IndexFile();
+            AbstractIndexFile();
+            virtual ~AbstractIndexFile();
 
             virtual bool load(const QString& url, long wc, qulonglong sfile) = 0;
             virtual QByteArray key(long index) = 0;
@@ -50,4 +50,4 @@ namespace MulaPluginStarDict
     };
 }
 
-#endif // MULA_PLUGIN_STARDICT_INDEXFILE_H
+#endif // MULA_PLUGIN_STARDICT_ABSTRACTINDEXFILE_H

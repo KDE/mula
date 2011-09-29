@@ -20,11 +20,11 @@
 #ifndef MULA_PLUGIN_STARDICT_WORDLISTINDEX_H
 #define MULA_PLUGIN_STARDICT_WORDLISTINDEX_H
 
-#include "indexfile.h"
+#include "abstractindexfile.h"
 
 namespace MulaPluginStarDict
 {
-    class WordListIndex : public IndexFile
+    class WordListIndex : public AbstractIndexFile
     {       
         public:
             WordListIndex();

@@ -17,13 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "indexfile.h"
+#include "abstractindexfile.h"
 
 #include <QtCore/QString>
 
 using namespace MulaPluginStarDict;
 
-class IndexFile::Private
+class AbstractIndexFile::Private
 {
     public:
         Private()
@@ -40,35 +40,35 @@ class IndexFile::Private
         quint32 wordEntrySize;
 };
 
-IndexFile::IndexFile()
+AbstractIndexFile::AbstractIndexFile()
     : d(new Private)
 {
 }
 
-IndexFile::~IndexFile()
+AbstractIndexFile::~AbstractIndexFile()
 {
 }
 
 quint32
-IndexFile::wordEntryOffset() const
+AbstractIndexFile::wordEntryOffset() const
 {
     return d->wordEntryOffset;
 }
 
 void
-IndexFile::setWordEntryOffset(quint32 wordEntryOffset)
+AbstractIndexFile::setWordEntryOffset(quint32 wordEntryOffset)
 {
     d->wordEntryOffset = wordEntryOffset;
 }
 
 quint32
-IndexFile::wordEntrySize() const
+AbstractIndexFile::wordEntrySize() const
 {
     return d->wordEntrySize;
 }
 
 void
-IndexFile::setWordEntrySize(quint32 wordEntrySize)
+AbstractIndexFile::setWordEntrySize(quint32 wordEntrySize)
 {
     d->wordEntrySize = wordEntrySize;
 }

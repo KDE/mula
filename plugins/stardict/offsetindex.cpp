@@ -439,23 +439,23 @@ OffsetIndex::lookup(const QByteArray& word, long &index)
 quint32
 OffsetIndex::wordEntryOffset() const
 {
-    return IndexFile::wordEntryOffset();
+    return AbstractIndexFile::wordEntryOffset();
 }
 
 void
 OffsetIndex::setWordEntryOffset(quint32 wordEntryOffset)
 {
-    IndexFile::setWordEntryOffset(wordEntryOffset);
+    AbstractIndexFile::setWordEntryOffset(wordEntryOffset);
 }
 
 quint32
 OffsetIndex::wordEntrySize() const
 {
-    return IndexFile::wordEntrySize();
+    return AbstractIndexFile::wordEntrySize();
 }
 
 void
 OffsetIndex::setWordEntrySize(quint32 wordEntrySize)
 {
-    IndexFile::setWordEntrySize(wordEntrySize);
+    AbstractIndexFile::setWordEntrySize(wordEntrySize);
 }
