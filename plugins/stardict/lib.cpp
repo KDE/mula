@@ -387,17 +387,17 @@ Libs::poPreviousWord(long *iCurrent)
 }
 
 bool
-Libs::lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int length, QString addition, bool check)
+Libs::lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int wordLength, int truncateLength, QString addition, bool check)
 {
         int searchWordLength = searchWord.length();
-        if (!d->found && searchWordLength > length)
+        if (!d->found && searchWordLength > wordLength)
         {
             QString caseString;
             long index;
             bool isUpperCase = searchWord.endsWith(suffix.toUpper());
             if (isUpperCase || searchWord.endsWith(suffix.toLower()))
             {
-                QString searchNewWord = searchWord.left(searchWordLength - length);
+                QString searchNewWord = searchWord.left(searchWordLength - truncateLength);
                 int searchNewWordLength = searchNewWord.length();
                 if ( check && searchNewWordLength > 3 && (searchNewWord.at(searchNewWordLength - 1) == searchNewWord.at(searchNewWordLength - 2))
                         && !isVowel(searchNewWord.at(searchNewWordLength - 2)) && isVowel(searchNewWord.at(searchNewWordLength - 3)))
@@ -493,14 +493,12 @@ Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
         bool isUpperCase;
         QByteArray searchNewWord;
 
-        // Cut "s" or "ed"
-        lookupPattern(searchWord, iLib, "S", 1, QString(), false);
-        lookupPattern(searchWord, iLib, "ED", 1, QString(), false);
-        lookupPattern(searchWord, iLib, "LY", 2, QString(), true);
-        lookupPattern(searchWord, iLib, "ING", 3, "E", true);
+        lookupPattern(searchWord, iLib, "S", 1, 1, QString(), false);
+        lookupPattern(searchWord, iLib, "ED", 1, 1, QString(), false);
+        lookupPattern(searchWord, iLib, "LY", 2, 2, QString(), true);
+        lookupPattern(searchWord, iLib, "ING", 3, 3, "E", true);
 
 
-        //cut two char "es"
         if (!found && searchWordLength > 3)
         {
             isUpperCase = (searchWord.endsWith("ES")
@@ -537,60 +535,11 @@ Libs::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
             }
         }
 
-        //cut "ed"
-        if (!found && searchWordLength > 3)
-        {
-            isUpperCase = searchWord.endsWith("ED");
-            if (isUpperCase || searchWord.endsWith("ed"))
-            {
-                searchNewWord = searchWord.left(searchWordLength - 2);
-                if (searchWordLength > 3 && (searchNewWord.at(searchWordLength - 1) == searchNewWord.at(searchWordLength - 2))
-                        && !isVowel(searchNewWord.at(searchWordLength - 2)) && isVowel(searchNewWord.at(searchWordLength - 3)))
-                { //doubled
-                    searchNewWord.remove(searchNewWord.length() - 1, 1);
-                    if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
-                    {
-                        found = true;
-                    }
-                    else
-                    {
-                        if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
-                        {
-                            caseString = searchNewWord.toLower();
-                            if (caseString.compare(searchNewWord))
-                            {
-                                if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
-                                    found = true;
-                            }
-                        }
-                        if (!found)
-                            searchNewWord.append(searchNewWord.at(searchNewWord.length() - 1));  //restore
-                    }
-                }
-
-                if (!found)
-                {
-                    if (d->dictionaries.at(iLib)->lookup(searchNewWord, iIndex))
-                    {
-                        found = true;
-                    }
-                    else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
-                    {
-                        caseString = searchNewWord.toLower();
-                        if (caseString.compare(searchNewWord))
-                        {
-                            if (d->dictionaries.at(iLib)->lookup(caseString, iIndex))
-                                found = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        lookupPattern(searchWord, iLib, "IED", 3, "Y", false);
-        lookupPattern(searchWord, iLib, "IES", 3, "Y", false);
-        lookupPattern(searchWord, iLib, "ER", 2, QString(), false);
-        lookupPattern(searchWord, iLib, "EST", 3, QString(), false);
+        lookupPattern(searchWord, iLib, "ED", 3, 2, QString(), true);
+        lookupPattern(searchWord, iLib, "IED", 3, 3, "Y", false);
+        lookupPattern(searchWord, iLib, "IES", 3, 3, "Y", false);
+        lookupPattern(searchWord, iLib, "ER", 2, 3, QString(), false);
+        lookupPattern(searchWord, iLib, "EST", 3, 3, QString(), false);
 
     }
 

@@ -68,7 +68,7 @@ namespace MulaPluginStarDict
             QByteArray poNextWord(QByteArray searchWord, long *iCurrent);
             QByteArray poPreviousWord(long *iCurrent);
 
-            bool lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int length, QString addition, bool check);
+            bool lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int wordLength, int truncateLength, QString addition, bool check);
             bool lookupWord(const char* sWorda, long& iWordIndex, int iLib);
 
             Dictionary *reloaderFind(const QString& url);
