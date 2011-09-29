@@ -19,7 +19,7 @@ set(stardict_SRCS
     dictionaryzip.cpp
     distance.cpp
     indexfile.cpp
-    offsetindex.cpp
+    offsetcachefile.cpp
     #settingsdialog.cpp
     stardict.cpp
     stardictdictionaryinfo.cpp
@@ -35,7 +35,7 @@ set(stardict_HEADERS
     dictionaryzip.h
     distance.h
     indexfile.h
-    offsetindex.h
+    offsetcachefile.h
     #settingsdialog.h
     stardict.h
     stardictdictionaryinfo.h

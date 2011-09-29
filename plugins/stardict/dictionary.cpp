@@ -22,7 +22,7 @@
 #include "dictionaryzip.h"
 #include "stardictdictionaryinfo.h"
 #include "indexfile.h"
-#include "offsetindex.h"
+#include "offsetcachefile.h"
 
 #include <QtCore/QScopedPointer>
 #include <QtCore/QFile>
@@ -159,7 +159,7 @@ Dictionary::load(const QString& ifoFilePath)
     else
     {
         completeFilePath.remove(completeFilePath.length() - sizeof(".gz") + 1, sizeof(".gz") - 1);
-        d->indexFile.reset(new OffsetIndex);
+        d->indexFile.reset(new OffsetCacheFile);
     }
 
     if (!d->indexFile->load(completeFilePath, d->wordCount, d->indexFileSize))

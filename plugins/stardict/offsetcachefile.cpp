@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "offsetindex.h"
+#include "offsetcachefile.h"
 #include "file.h"
 
 #include <QtCore/QVector>
@@ -32,7 +32,7 @@
 
 using namespace MulaPluginStarDict;
 
-class OffsetIndex::Private
+class OffsetCacheFile::Private
 {
     public:
         Private()
@@ -110,17 +110,17 @@ class OffsetIndex::Private
         uchar *mappedData;
 };
 
-OffsetIndex::OffsetIndex()
+OffsetCacheFile::OffsetCacheFile()
     : d(new Private)
 {
 }
 
-OffsetIndex::~OffsetIndex()
+OffsetCacheFile::~OffsetCacheFile()
 {
 }
 
 QByteArray
-OffsetIndex::readFirstOnPageKey(long pageIndex)
+OffsetCacheFile::readFirstOnPageKey(long pageIndex)
 {
     d->indexFile.seek(d->wordOffset.at(pageIndex));
     int pageSize = d->wordOffset.at(pageIndex + 1) - d->wordOffset.at(pageIndex);
@@ -129,7 +129,7 @@ OffsetIndex::readFirstOnPageKey(long pageIndex)
 }
 
 QByteArray
-OffsetIndex::firstOnPageKey(long pageIndex)
+OffsetCacheFile::firstOnPageKey(long pageIndex)
 {
     if (pageIndex < d->middle.index)
     {
@@ -152,7 +152,7 @@ OffsetIndex::firstOnPageKey(long pageIndex)
 }
 
 QStringList
-OffsetIndex::cacheVariant(const QString& url)
+OffsetCacheFile::cacheVariant(const QString& url)
 {
     QStringList result;
     result.append(url + ".oft");
@@ -172,7 +172,7 @@ OffsetIndex::cacheVariant(const QString& url)
 }
 
 bool
-OffsetIndex::loadCache(const QString& url)
+OffsetCacheFile::loadCache(const QString& url)
 {
     QStringList urlStrings = cacheVariant(url);
 
@@ -210,7 +210,7 @@ OffsetIndex::loadCache(const QString& url)
 }
 
 bool
-OffsetIndex::saveCache(const QString& url)
+OffsetCacheFile::saveCache(const QString& url)
 {
     QStringList urlStrings = cacheVariant(url);
     foreach (const QString& urlString, urlStrings)
@@ -255,7 +255,7 @@ OffsetIndex::saveCache(const QString& url)
 }
 
 bool
-OffsetIndex::load(const QString& url, long wc, qulonglong fileSize)
+OffsetCacheFile::load(const QString& url, long wc, qulonglong fileSize)
 {
     Q_UNUSED(fileSize);
 
@@ -317,7 +317,7 @@ OffsetIndex::load(const QString& url, long wc, qulonglong fileSize)
 }
 
 ulong
-OffsetIndex::loadPage(long pageIndex)
+OffsetCacheFile::loadPage(long pageIndex)
 {
     ulong entryCount = d->entriesPerPage;
     if (pageIndex == ulong(d->wordOffset.size() - 2) && (entryCount = d->wordCount % d->entriesPerPage) == 0)
@@ -337,7 +337,7 @@ OffsetIndex::loadPage(long pageIndex)
 }
 
 QByteArray
-OffsetIndex::key(long index)
+OffsetCacheFile::key(long index)
 {
     loadPage(index / d->entriesPerPage);
     ulong indexInPage = index % d->entriesPerPage;
@@ -348,19 +348,19 @@ OffsetIndex::key(long index)
 }
 
 void
-OffsetIndex::data(long index)
+OffsetCacheFile::data(long index)
 {
     key(index);
 }
 
 QByteArray
-OffsetIndex::keyAndData(long index)
+OffsetCacheFile::keyAndData(long index)
 {
     return key(index);
 }
 
 bool
-OffsetIndex::lookup(const QByteArray& word, long &index)
+OffsetCacheFile::lookup(const QByteArray& word, long &index)
 {
     bool found = false;
     long indexFrom;
@@ -437,25 +437,25 @@ OffsetIndex::lookup(const QByteArray& word, long &index)
 }
 
 quint32
-OffsetIndex::wordEntryOffset() const
+OffsetCacheFile::wordEntryOffset() const
 {
     return AbstractIndexFile::wordEntryOffset();
 }
 
 void
-OffsetIndex::setWordEntryOffset(quint32 wordEntryOffset)
+OffsetCacheFile::setWordEntryOffset(quint32 wordEntryOffset)
 {
     AbstractIndexFile::setWordEntryOffset(wordEntryOffset);
 }
 
 quint32
-OffsetIndex::wordEntrySize() const
+OffsetCacheFile::wordEntrySize() const
 {
     return AbstractIndexFile::wordEntrySize();
 }
 
 void
-OffsetIndex::setWordEntrySize(quint32 wordEntrySize)
+OffsetCacheFile::setWordEntrySize(quint32 wordEntrySize)
 {
     AbstractIndexFile::setWordEntrySize(wordEntrySize);
 }

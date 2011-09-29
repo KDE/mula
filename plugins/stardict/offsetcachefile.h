@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MULA_PLUGIN_STARDICT_OFFSETINDEX_H
-#define MULA_PLUGIN_STARDICT_OFFSETINDEX_H
+#ifndef MULA_PLUGIN_STARDICT_OFFSETCACHEFILE_H
+#define MULA_PLUGIN_STARDICT_OFFSETCACHEFILE_H
 
 #include "abstractindexfile.h"
 
@@ -26,11 +26,11 @@
 
 namespace MulaPluginStarDict
 {
-    class OffsetIndex : public AbstractIndexFile
+    class OffsetCacheFile : public AbstractIndexFile
     {
         public:
-            OffsetIndex();
-            virtual ~OffsetIndex();
+            OffsetCacheFile();
+            virtual ~OffsetCacheFile();
 
             bool load(const QString& url, long wordCount, qulonglong fileSize);
             QByteArray key(long index);
@@ -58,4 +58,4 @@ namespace MulaPluginStarDict
     };
 }
 
-#endif // MULA_PLUGIN_STARDICT_OFFSETINDEX_H
+#endif // MULA_PLUGIN_STARDICT_OFFSETCACHEFILE_H
