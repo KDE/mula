@@ -66,7 +66,6 @@ namespace MulaPluginStarDict
              * @see data
              */
             void setData(QByteArray data);
-            void setData(char *data);
 
             /**
              * Returns the data of the word entry representing the utf-8 string

@@ -49,12 +49,6 @@ WordEntry::~WordEntry()
 }
 
 void
-WordEntry::setData(char *data)
-{
-    d->data.setRawData(data, QByteArray(data).size());
-}
-
-void
 WordEntry::setData(QByteArray data)
 {
     d->data = data;
