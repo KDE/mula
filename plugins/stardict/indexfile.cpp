@@ -20,6 +20,7 @@
 #include "indexfile.h"
 
 #include "file.h"
+#include "wordentry.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
@@ -40,7 +41,7 @@ class IndexFile::Private
         {
         }
 
-        QStringList wordList;
+        QList<WordEntry> wordEntryList;
 };
 
 IndexFile::IndexFile()
@@ -66,17 +67,19 @@ IndexFile::load(const QString& filePath, long wc, qulonglong fileSize)
 
     file.close();
 
-    // To avoid the calculation in each iteration
-    int calculatedConst = 1 + 2 * sizeof(quint32);
-
     int position = 0;
-    for (int i = 0; i < wc; ++i)
+    for (int i = 0; i < wc + 1; ++i)
     {
-        d->wordList[i] = indexDataBuffer.mid(position);
-        position += qstrlen(indexDataBuffer.mid(position)) + calculatedConst;
-    }
+        WordEntry wordEntry;
+        wordEntry.setData(indexDataBuffer.mid(position));
+        ++position;
+        wordEntry.setOffset(ntohl(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
+        position += sizeof(quint32);
+        wordEntry.setDataSize(ntohl(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
+        position += sizeof(quint32);
 
-    d->wordList[wc] = indexDataBuffer.mid(position);
+        d->wordEntryList.append(wordEntry);
+    }
 
     return true;
 }
@@ -84,7 +87,7 @@ IndexFile::load(const QString& filePath, long wc, qulonglong fileSize)
 QByteArray
 IndexFile::key(long index)
 {
-    return d->wordList.at(index).toUtf8();
+    return d->wordEntryList.at(index).data();
 }
 
 void
