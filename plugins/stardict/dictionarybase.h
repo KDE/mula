@@ -26,8 +26,6 @@ class QFile;
 
 namespace MulaPluginStarDict
 {
-    const int WORDDATA_CACHE_NUM = 10;
-
     class DictionaryZip;
 
     class DictionaryBase

@@ -76,7 +76,7 @@ IndexFile::load(const QString& filePath, long wc, qulonglong fileSize)
         position += qstrlen(indexDataBuffer.mid(position)) + calculatedConst;
     }
 
-    d->wordList[wc] = QString::fromUtf8(indexDataBuffer.mid(position));
+    d->wordList[wc] = indexDataBuffer.mid(position);
 
     return true;
 }

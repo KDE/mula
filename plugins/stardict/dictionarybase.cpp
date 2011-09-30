@@ -90,12 +90,13 @@ class DictionaryBase::Private
 
         QList<CacheItem> cacheItemList;
         int currentCacheItemIndex;
+        static const int wordDataCacheSize = 10;
 };
 
 DictionaryBase::DictionaryBase()
     : d(new Private)
 {
-    d->cacheItemList.reserve(WORDDATA_CACHE_NUM);
+    d->cacheItemList.reserve(d->wordDataCacheSize);
 }
 
 DictionaryBase::~DictionaryBase()
@@ -176,7 +177,7 @@ DictionaryBase::wordData(quint32 indexItemOffset, qint32 indexItemSize)
     d->cacheItemList[d->currentCacheItemIndex].setOffset(indexItemOffset);
     ++d->currentCacheItemIndex;
 
-    if (d->currentCacheItemIndex == WORDDATA_CACHE_NUM)
+    if (d->currentCacheItemIndex == d->wordDataCacheSize)
         d->currentCacheItemIndex = 0;
 
     return resultData;
