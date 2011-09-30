@@ -19,7 +19,7 @@
 
 #include "dictionarybase.h"
 
-#include "cacheitem.h"
+#include "wordentry.h"
 #include "dictionaryzip.h"
 
 #include <QtCore/QFile>
@@ -88,7 +88,7 @@ class DictionaryBase::Private
         QFile *dictionaryFile;
         DictionaryZip *compressedDictionaryFile;
 
-        QList<CacheItem> cacheItemList;
+        QList<WordEntry> cacheItemList;
         int currentCacheItemIndex;
         static const int wordDataCacheSize = 10;
 };
@@ -109,7 +109,7 @@ DictionaryBase::~DictionaryBase()
 const QByteArray
 DictionaryBase::wordData(quint32 indexItemOffset, qint32 indexItemSize)
 {
-    foreach(CacheItem cacheItem, d->cacheItemList)
+    foreach(WordEntry cacheItem, d->cacheItemList)
     {
         if (!cacheItem.data().isEmpty() && cacheItem.offset() == indexItemOffset)
             return cacheItem.data();

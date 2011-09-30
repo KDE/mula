@@ -12,7 +12,6 @@ include_directories(
 
 set(stardict_SRCS
     abstractindexfile.cpp
-    cacheitem.cpp
     dictionary.cpp
     dictionarybase.cpp
     dictionarycache.cpp
@@ -24,11 +23,11 @@ set(stardict_SRCS
     stardict.cpp
     stardictdictionaryinfo.cpp
     stardictdictionarymanager.cpp
+    wordentry.cpp
 )
 
 set(stardict_HEADERS
     abstractindexfile.h
-    cacheitem.h
     dictionary.h
     dictionarybase.h
     dictionarycache.h
@@ -40,6 +39,7 @@ set(stardict_HEADERS
     stardict.h
     stardictdictionaryinfo.h
     stardictdictionarymanager.h
+    wordentry.h
 )
 
 qt4_automoc(${stardict_SRCS})

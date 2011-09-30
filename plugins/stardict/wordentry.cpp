@@ -17,33 +17,75 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MULA_PLUGIN_STARDICT_CACHEITEM_H
-#define MULA_PLUGIN_STARDICT_CACHEITEM_H
+#include "wordentry.h"
 
-#include <QtCore/QByteArray>
+using namespace MulaPluginStarDict;
 
-namespace MulaPluginStarDict
+class WordEntry::Private
 {
-    class CacheItem
-    {
-        public:
-            CacheItem();
-            virtual ~CacheItem();
+    public:
+        Private()
+            : offset(0)
+            , dataSize(0)
+        {   
+        }
 
-            void setData(char *data);
-            void setData(QByteArray data);
-            QByteArray& data() const;
+        ~Private()
+        {
+        }
+ 
+        QByteArray data;
+        quint32 offset;
+        quint32 dataSize;
+};
 
-            void setOffset(quint32 offset);
-            quint32 offset() const;
-
-            void setDataSize(quint32 dataSize);
-            quint32 dataSize() const;
-
-        private:
-            class Private;
-            Private *const d;
-    };
+WordEntry::WordEntry()
+    : d(new Private)
+{
 }
 
-#endif // MULA_PLUGIN_STARDICT_CACHEITEM_H
+WordEntry::~WordEntry()
+{
+}
+
+void
+WordEntry::setData(char *data)
+{
+    d->data.setRawData(data, QByteArray(data).size());
+}
+
+void
+WordEntry::setData(QByteArray data)
+{
+    d->data = data;
+}
+
+QByteArray&
+WordEntry::data() const
+{
+    return d->data;
+}
+
+void
+WordEntry::setOffset(quint32 offset)
+{
+    d->offset = offset;
+}
+
+quint32
+WordEntry::offset() const
+{
+    return d->offset;
+}
+
+void
+WordEntry::setDataSize(quint32 dataSize)
+{
+    d->dataSize = dataSize;
+}
+
+quint32
+WordEntry::dataSize() const
+{
+    return d->dataSize;
+}
