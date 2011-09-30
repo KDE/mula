@@ -87,14 +87,13 @@ Dictionary::key(long index) const
 QString
 Dictionary::data(long index)
 {
-    d->indexFile->data(index);
     return DictionaryBase::wordData(d->indexFile->wordEntryOffset(), d->indexFile->wordEntrySize());
 }
 
 void
 Dictionary::keyAndData(long index, QByteArray key, qint32 &offset, qint32 &size)
 {
-    key = d->indexFile->keyAndData(index);
+    key = d->indexFile->key(index);
     offset = d->indexFile->wordEntryOffset();
     size = d->indexFile->wordEntrySize();
 }

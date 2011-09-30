@@ -68,7 +68,7 @@ IndexFile::load(const QString& filePath, long wc, qulonglong fileSize)
     file.close();
 
     int position = 0;
-    for (int i = 0; i < wc + 1; ++i)
+    for (int i = 0; i < wc; ++i)
     {
         WordEntry wordEntry;
         wordEntry.setData(indexDataBuffer.mid(position));
@@ -90,27 +90,11 @@ IndexFile::key(long index)
     return d->wordEntryList.at(index).data();
 }
 
-void
-IndexFile::data(long index)
-{
-    int position = index + qstrlen(d->wordList.at(index).toUtf8().data()) + sizeof(char);
-    setWordEntryOffset(ntohl(*reinterpret_cast<quint32 *>(d->wordList[position].toUtf8().data())));
-    position += sizeof(quint32);
-    setWordEntrySize(ntohl(*reinterpret_cast<quint32 *>(d->wordList[position].toUtf8().data())));
-}
-
-QByteArray
-IndexFile::keyAndData(long index)
-{
-    data(index);
-    return key(index);
-}
-
 bool
 IndexFile::lookup(const QByteArray &string, long &index)
 {
     bool found = false;
-    long indexTo = d->wordList.size() - 2;
+    long indexTo = d->wordEntryList.size() - 2;
 
     if (stardictStringCompare(string, key(0)) < 0)
     {
