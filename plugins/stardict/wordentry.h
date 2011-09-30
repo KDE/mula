@@ -80,10 +80,10 @@ namespace MulaPluginStarDict
              * Set the offset of the word entry representing the offset of the
              * word data in the desired ".dict" file
              *
-             * @param plugin The offset of the word data
+             * @param plugin The dataOffset of the word data
              * @see offset
              */
-            void setOffset(quint32 offset);
+            void setDataOffset(quint32 dataOffset);
 
             /**
              * Returns the offset of the word entry representing the offset of
@@ -92,7 +92,7 @@ namespace MulaPluginStarDict
              * @return The offset of the word data
              * @see setOffset
              */
-            quint32 offset() const;
+            quint32 dataOffset() const;
 
             /**
              * Set the size of the word entry in this word entry representing

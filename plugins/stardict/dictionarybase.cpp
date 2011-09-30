@@ -111,7 +111,7 @@ DictionaryBase::wordData(quint32 indexItemOffset, qint32 indexItemSize)
 {
     foreach(WordEntry cacheItem, d->cacheItemList)
     {
-        if (!cacheItem.data().isEmpty() && cacheItem.offset() == indexItemOffset)
+        if (!cacheItem.data().isEmpty() && cacheItem.dataOffset() == indexItemOffset)
             return cacheItem.data();
     }
 
@@ -174,7 +174,7 @@ DictionaryBase::wordData(quint32 indexItemOffset, qint32 indexItemSize)
     }
 
     d->cacheItemList[d->currentCacheItemIndex].setData(resultData);
-    d->cacheItemList[d->currentCacheItemIndex].setOffset(indexItemOffset);
+    d->cacheItemList[d->currentCacheItemIndex].setDataOffset(indexItemOffset);
     ++d->currentCacheItemIndex;
 
     if (d->currentCacheItemIndex == d->wordDataCacheSize)

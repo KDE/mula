@@ -25,7 +25,7 @@ class WordEntry::Private
 {
     public:
         Private()
-            : offset(0)
+            : dataOffset(0)
             , dataSize(0)
         {   
         }
@@ -35,7 +35,7 @@ class WordEntry::Private
         }
  
         QByteArray data;
-        quint32 offset;
+        quint32 dataOffset;
         quint32 dataSize;
 };
 
@@ -61,15 +61,15 @@ WordEntry::data() const
 }
 
 void
-WordEntry::setOffset(quint32 offset)
+WordEntry::setDataOffset(quint32 dataOffset)
 {
-    d->offset = offset;
+    d->dataOffset = dataOffset;
 }
 
 quint32
-WordEntry::offset() const
+WordEntry::dataOffset() const
 {
-    return d->offset;
+    return d->dataOffset;
 }
 
 void

@@ -73,7 +73,7 @@ IndexFile::load(const QString& filePath, long wc, qulonglong fileSize)
         WordEntry wordEntry;
         wordEntry.setData(indexDataBuffer.mid(position));
         ++position;
-        wordEntry.setOffset(ntohl(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
+        wordEntry.setDataOffset(ntohl(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
         position += sizeof(quint32);
         wordEntry.setDataSize(ntohl(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
         position += sizeof(quint32);
