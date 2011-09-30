@@ -60,7 +60,7 @@ WordEntry::setData(QByteArray data)
     d->data = data;
 }
 
-QByteArray&
+QByteArray
 WordEntry::data() const
 {
     return d->data;

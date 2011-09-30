@@ -32,7 +32,7 @@ namespace MulaPluginStarDict
 
             void setData(char *data);
             void setData(QByteArray data);
-            QByteArray& data() const;
+            QByteArray data() const;
 
             void setOffset(quint32 offset);
             quint32 offset() const;
