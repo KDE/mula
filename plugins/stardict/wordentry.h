@@ -24,20 +24,93 @@
 
 namespace MulaPluginStarDict
 {
+    /** 
+    * \brief Collection of data which describes the word entry
+    *
+    * A word entry is an object containing a set of data.
+    * Each member describes the relevant information related to the desired
+    * ".dict" file
+    *
+    * Each entry in the word list contains three fields, one after the other:
+    * 1) The utf-8 string: It represents the string that is looked up by the
+    * application. The length of the string should be less than 256. Two or more
+    * entries may have the same string value with different offset and size.
+    * This may be useful for some dictionaries, but this feature is only well
+    * supported by StarDict-2.4.8 and newer versions.
+    *
+    * 2) The offset of the word data in the desired ".dict" file: If the version
+    * is "3.0.0" and "idxoffsetbits=64": offset will be 64-bits unsigned number
+    * in network byte order. Otherwise it will be 32-bits.
+    *
+    * 3) The total size of the word data in the desired ".dict" file: It should
+    * be 32-bits unsigned number in network byte order.
+    *
+    * Note: It is possible the different strings have the same offset and size
+    * value. In other words, multiple word indices point to the same definition.
+    * This is not recommended, for mutiple words have the same definition,
+    * you may create a ".syn" file for them.
+    *
+    * \see Indexfile
+    */
     class WordEntry
     {
         public:
             WordEntry();
             virtual ~WordEntry();
 
-            void setData(char *data);
+            /**
+             * Set the data of the word entry representing the the utf-8 string
+             * terminated by '\0' in the desired ".dict" file
+             *
+             * @param plugin The utf-8 string in a raw format
+             * @see data
+             */
             void setData(QByteArray data);
+            void setData(char *data);
+
+            /**
+             * Returns the data of the word entry representing the utf-8 string
+             * terminated by '\0' in the desired ".dict" file
+             *
+             * @return The utf-8 string of the word entry in a raw format
+             * @see setData
+             */
             QByteArray data() const;
 
+            /**
+             * Set the offset of the word entry representing the offset of the
+             * word data in the desired ".dict" file
+             *
+             * @param plugin The offset of the word data
+             * @see offset
+             */
             void setOffset(quint32 offset);
+
+            /**
+             * Returns the offset of the word entry representing the offset of
+             * the word data in the desired ".dict" file
+             *
+             * @return The offset of the word data
+             * @see setOffset
+             */
             quint32 offset() const;
 
+            /**
+             * Set the size of the word entry in this word entry representing
+             * the total size of the word data in the desired ".dict" file
+             *
+             * @param plugin The size of the word data
+             * @see dataSize
+             */
             void setDataSize(quint32 dataSize);
+
+            /**
+             * Returns the size of the word entry representing the total size
+             * of the word data in the desired ".dict" file
+             *
+             * @return The size of the word data
+             * @see setDataSize
+             */
             quint32 dataSize() const;
 
         private:
