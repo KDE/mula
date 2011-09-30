@@ -91,28 +91,28 @@ IndexFile::key(long index)
 }
 
 bool
-IndexFile::lookup(const QByteArray &string, long &index)
+IndexFile::lookup(const QByteArray &word, long &index)
 {
     bool found = false;
-    long indexTo = d->wordEntryList.size() - 2;
+    int indexTo = d->wordEntryList.size() - 1;
 
-    if (stardictStringCompare(string, key(0)) < 0)
+    if (stardictStringCompare(word, d->wordEntryList.first().data()) < 0)
     {
         index = 0;
     }
-    else if (stardictStringCompare(string, key(indexTo)) > 0)
+    else if (stardictStringCompare(word, key(indexTo)) > 0)
     {
         index = invalidIndex;
     }
     else
     {
-        long indexThisIndex = 0;
-        long indexFrom = 0;
+        int indexThisIndex = 0;
+        int indexFrom = 0;
         int cmpint;
         while (indexFrom <= indexTo)
         {
             indexThisIndex = (indexFrom + indexTo) / 2;
-            cmpint = stardictStringCompare(string, key(indexThisIndex));
+            cmpint = stardictStringCompare(word, key(indexThisIndex));
             if (cmpint > 0)
             {
                 indexFrom = indexThisIndex + 1;
