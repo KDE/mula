@@ -90,51 +90,27 @@ IndexFile::key(long index)
     return d->wordEntryList.at(index).data();
 }
 
+inline bool
+lessThanCompare(const QString string1, const QString string2)
+{
+    return stardictStringCompare(string1, string2) < 0;
+}
+
 bool
 IndexFile::lookup(const QByteArray &word, long &index)
 {
-    bool found = false;
-    int indexTo = d->wordEntryList.size() - 1;
+    QStringList wordList;
+    foreach (const WordEntry &wordEntry, d->wordEntryList)
+        wordList.append(QString::fromUtf8(wordEntry.data()));
 
-    if (stardictStringCompare(word, d->wordEntryList.first().data()) < 0)
-    {
-        index = 0;
-    }
-    else if (stardictStringCompare(word, key(indexTo)) > 0)
-    {
-        index = invalidIndex;
-    }
+    QStringList::iterator i = qBinaryFind(wordList.begin(), wordList.end(), QString::fromUtf8(word), lessThanCompare);
+
+    if (i == wordList.end())
+        index = -1;
     else
-    {
-        int indexThisIndex = 0;
-        int indexFrom = 0;
-        int cmpint;
-        while (indexFrom <= indexTo)
-        {
-            indexThisIndex = (indexFrom + indexTo) / 2;
-            cmpint = stardictStringCompare(word, key(indexThisIndex));
-            if (cmpint > 0)
-            {
-                indexFrom = indexThisIndex + 1;
-            }
-            else if (cmpint < 0)
-            {
-                indexTo = indexThisIndex - 1;
-            }
-            else
-            {
-                found = true;
-                break;
-            }
-        }
+        index = i - wordList.begin();
 
-        if (!found)
-            index = indexFrom;    //next
-        else
-            index = indexThisIndex;
-    }
-
-    return found;
+    return true;
 }
 
 quint32
