@@ -87,6 +87,7 @@ Dictionary::key(long index) const
 QString
 Dictionary::data(long index)
 {
+    Q_UNUSED(index);
     return DictionaryBase::wordData(d->indexFile->wordEntryOffset(), d->indexFile->wordEntrySize());
 }
 

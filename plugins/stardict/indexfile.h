@@ -32,7 +32,7 @@ namespace MulaPluginStarDict
 
             bool load(const QString& url, long wc, qulonglong sffile);
             QByteArray key(long index);
-            bool lookup(const QByteArray& string, long &index);
+            bool lookup(const QByteArray& word, long &index);
 
             virtual quint32 wordEntryOffset() const;
             virtual void setWordEntryOffset(quint32 offset);
