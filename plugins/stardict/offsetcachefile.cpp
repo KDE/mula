@@ -152,7 +152,7 @@ OffsetCacheFile::firstOnPageKey(long pageIndex)
 }
 
 QStringList
-OffsetCacheFile::cacheVariant(const QString& url)
+OffsetCacheFile::cacheLocations(const QString& url)
 {
     QStringList result;
     result.append(url + ".oft");
@@ -174,9 +174,7 @@ OffsetCacheFile::cacheVariant(const QString& url)
 bool
 OffsetCacheFile::loadCache(const QString& url)
 {
-    QStringList urlStrings = cacheVariant(url);
-
-    foreach (const QString& urlString, urlStrings)
+    foreach (const QString& urlString, cacheLocations(url))
     {
         QFileInfo fileInfoIndex(url);
         QFileInfo fileInfoCache(urlString);
@@ -212,8 +210,7 @@ OffsetCacheFile::loadCache(const QString& url)
 bool
 OffsetCacheFile::saveCache(const QString& url)
 {
-    QStringList urlStrings = cacheVariant(url);
-    foreach (const QString& urlString, urlStrings)
+    foreach (const QString& urlString, cacheLocations(url))
     {
         QFile file(urlString);
         if( !file.open( QIODevice::WriteOnly ) )

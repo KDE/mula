@@ -51,7 +51,7 @@ namespace MulaPluginStarDict
             QByteArray firstOnPageKey(long pageIndex);
             bool loadCache(const QString& url);
             bool saveCache(const QString& url);
-            static QStringList cacheVariant(const QString& url);
+            static QStringList cacheLocations(const QString& url);
 
             class Private;
             Private *const d;
