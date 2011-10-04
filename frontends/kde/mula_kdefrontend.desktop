@@ -1,8 +1,6 @@
 [Desktop Entry]
 Name=Mula KDE Frontend
-Name[x-test]=xxMula KDE Frontendxx
 GenericName=Mula KDE Frontend Launcher
-GenericName[x-test]=xxMula KDE Frontend Launcherxx
 Exec=mula_kdefrontend
 Icon=mula-kdefrontend
 Type=Application

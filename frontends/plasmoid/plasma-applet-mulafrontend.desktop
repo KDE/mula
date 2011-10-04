@@ -1,8 +1,6 @@
 [Desktop Entry]
 Name=Mula Plasmoid Frontend
-Name[x-test]=xxMula Plasmoid Frontendxx
 Comment=Mula Plasmoid Frontend
-Comment[x-test]=xxMula Plasmoid Frontendxx
 Type=Service
 ServiceTypes=Plasma/Applet
 

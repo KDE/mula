@@ -1,8 +1,6 @@
 [Desktop Entry]
 Name=Mula Qt Frontend
-Name[x-test]=xxMula Qt Frontendxx
 GenericName=Mula Qt Frontend Launcher
-GenericName[x-test]=xxMula Qt Frontend Launcherxx
 Exec=mula_qtfrontend
 Icon=mula-qtfrontend
 Type=Application
