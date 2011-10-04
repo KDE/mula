@@ -18,7 +18,9 @@
  */
 
 #include "offsetcachefile.h"
+
 #include "file.h"
+#include "wordentry.h"
 
 #include <QtCore/QVector>
 #include <QtCore/QFile>
@@ -39,7 +41,7 @@ class OffsetCacheFile::Private
             : wordCount(0)
             , cacheMagicString("StarDict's Cache, Version: 0.1")
             , mappedData(0)
-        {   
+        {
         }
 
         ~Private()
@@ -71,13 +73,6 @@ class OffsetCacheFile::Private
         indexEntry middle;
         indexEntry realLast;
 
-        struct pageEntry
-        {
-            QByteArray keyData;
-            quint32 offset;
-            quint32 size;
-        };
-
         QByteArray pageData;
         struct page_t
         {
@@ -90,19 +85,19 @@ class OffsetCacheFile::Private
             {
                 index = index_;
                 ulong position = 0;
-                for (int i = 0; i < nent; ++i) 
-                {    
-                    entries[i].keyData = data.mid(position); 
+                for (int i = 0; i < nent; ++i)
+                {
+                    entries[i].setData(data.mid(position));
                     position = qstrlen(data.mid(position)) + 1;
-                    entries[i].offset = ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data()));
+                    entries[i].setDataOffset(ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data())));
                     position += sizeof(quint32);
-                    entries[i].size = ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data()));
+                    entries[i].setDataSize(ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data())));
                     position += sizeof(quint32);
                 }
             }
 
             long index;
-            pageEntry entries[entriesPerPage];
+            QList<WordEntry> entries;
         } page;
 
         QByteArray cacheMagicString;
@@ -338,10 +333,10 @@ OffsetCacheFile::key(long index)
 {
     loadPage(index / d->entriesPerPage);
     ulong indexInPage = index % d->entriesPerPage;
-    setWordEntryOffset(d->page.entries[indexInPage].offset);
-    setWordEntrySize(d->page.entries[indexInPage].size);
+    setWordEntryOffset(d->page.entries.at(indexInPage).dataOffset());
+    setWordEntrySize(d->page.entries.at(indexInPage).dataSize());
 
-    return d->page.entries[indexInPage].keyData;
+    return d->page.entries.at(indexInPage).data();
 }
 
 void
@@ -407,7 +402,7 @@ OffsetCacheFile::lookup(const QByteArray& word, long &index)
         while (indexFrom <= indexTo)
         {
             indexThisIndex = (indexFrom + indexTo) / 2;
-            cmpint = stardictStringCompare(word, d->page.entries[indexThisIndex].keyData);
+            cmpint = stardictStringCompare(word, d->page.entries.at(indexThisIndex).data());
             if (cmpint > 0)
                 indexFrom = indexThisIndex + 1;
             else if (cmpint < 0)
