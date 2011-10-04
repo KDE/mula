@@ -174,26 +174,26 @@ OffsetCacheFile::cacheLocations(const QString& url)
 bool
 OffsetCacheFile::loadCache(const QString& url)
 {
-    foreach (const QString& urlString, cacheLocations(url))
+    foreach (const QString& cacheLocation, cacheLocations(url))
     {
         QFileInfo fileInfoIndex(url);
-        QFileInfo fileInfoCache(urlString);
+        QFileInfo fileInfoCache(cacheLocation);
 
         if (fileInfoCache.lastModified() < fileInfoIndex.lastModified())
             continue;
 
         d->mapFile.unmap(d->mappedData);
-        d->mapFile.setFileName(urlString);
+        d->mapFile.setFileName(cacheLocation);
         if( !d->mapFile.open( QIODevice::ReadOnly ) )
         {
-            qDebug() << "Failed to open file:" << urlString;
+            qDebug() << "Failed to open file:" << cacheLocation;
             return -1;
         }
 
         d->mappedData = d->mapFile.map(0, d->mapFile.size());
         if (d->mappedData == NULL)
         {
-            qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(urlString);
+            qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(cacheLocation);
             return false;
         }
 
@@ -210,27 +210,27 @@ OffsetCacheFile::loadCache(const QString& url)
 bool
 OffsetCacheFile::saveCache(const QString& url)
 {
-    foreach (const QString& urlString, cacheLocations(url))
+    foreach (const QString& cacheLocation, cacheLocations(url))
     {
-        QFile file(urlString);
+        QFile file(cacheLocation);
         if( !file.open( QIODevice::WriteOnly ) )
         {
-            qDebug() << "Failed to open file for writing:" << urlString;
+            qDebug() << "Failed to open file for writing:" << cacheLocation;
             return -1;
         }
 
         d->mapFile.unmap(d->mappedData);
-        d->mapFile.setFileName(urlString);
+        d->mapFile.setFileName(cacheLocation);
         if( !d->mapFile.open( QIODevice::ReadOnly ) )
         {
-            qDebug() << "Failed to open file:" << urlString;
+            qDebug() << "Failed to open file:" << cacheLocation;
             return -1;
         }
 
         d->mappedData = d->mapFile.map(0, d->mapFile.size());
         if (d->mappedData == NULL)
         {
-            qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(urlString);
+            qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(cacheLocation);
             return false;
         }
 
