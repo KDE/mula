@@ -1,6 +1,16 @@
 [Desktop Entry]
 Name=Mula Plasmoid Frontend
+Name[nl]=Plasmoid-schil voor Mula
+Name[pt]=Interface de Plasmóide do Mula
+Name[sv]=Mula Plasmoid-gränssnitt
+Name[uk]=Оболонка плазмоїда Mula
+Name[x-test]=xxMula Plasmoid Frontendxx
 Comment=Mula Plasmoid Frontend
+Comment[nl]=Plasmoid-schil voor Mula
+Comment[pt]=Interface de Plasmóide do Mula
+Comment[sv]=Mula Plasmoid-gränssnitt
+Comment[uk]=Оболонка плазмоїда Mula
+Comment[x-test]=xxMula Plasmoid Frontendxx
 Type=Service
 ServiceTypes=Plasma/Applet
 

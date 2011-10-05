@@ -1,6 +1,16 @@
 [Desktop Entry]
 Name=Mula Qt Frontend
+Name[nl]=Qt-schil voor Mula
+Name[pt]=Interface Qt do Mula
+Name[sv]=Mula Qt-gränssnitt
+Name[uk]=Оболонка Mula на основі Qt
+Name[x-test]=xxMula Qt Frontendxx
 GenericName=Mula Qt Frontend Launcher
+GenericName[nl]=Procestarter van Qt-schil voor Mula
+GenericName[pt]=Lançamento da Interface Qt do Mula
+GenericName[sv]=Startprogram för Mula Qt-gränssnitt
+GenericName[uk]=Інструмент запуску оболонки Mula для Qt
+GenericName[x-test]=xxMula Qt Frontend Launcherxx
 Exec=mula_qtfrontend
 Icon=mula-qtfrontend
 Type=Application
