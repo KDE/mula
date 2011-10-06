@@ -61,7 +61,7 @@ class StarDictDictionaryManager::Private
 {
     public:
         Private()
-            : maximumFuzzyDistance(MAX_FUZZY_DISTANCE) // need to read from cfg
+            : maximumFuzzyDistance(maxFuzzyDistance) // need to read from cfg
            , found(false)
         {
         }
@@ -78,6 +78,9 @@ class StarDictDictionaryManager::Private
         QVector<Dictionary *> future;
 
         bool found;
+        static const int maxMatchItemPerLib = 100;
+        static const int maxFuzzyDistance = 3; // at most MAX_FUZZY_DISTANCE-1 differences allowed when find similar words
+
 };
 
 StarDictDictionaryManager::StarDictDictionaryManager(progress_func_t progressFunction)
@@ -693,7 +696,7 @@ lessForCompare(QString lh, QString rh)
 int
 StarDictDictionaryManager::lookupWithRule(QByteArray patternWord, QStringList patternMatchWords)
 {
-    long aiIndex[MAX_MATCH_ITEM_PER_LIB + 1];
+    long aiIndex[d->maxMatchItemPerLib + 1];
     int matchCount = 0;
 
     for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
@@ -701,7 +704,7 @@ StarDictDictionaryManager::lookupWithRule(QByteArray patternWord, QStringList pa
         //if(oStarDictDictionaryManager.LookdupWordsWithRule(pspec,aiIndex,MAX_MATCH_ITEM_PER_LIB+1-iMatchCount,iLib))
         // -iMatchCount,so save time,but may got less result and the word may repeat.
 
-        if (d->dictionaries.at(iLib)->lookupWithRule(patternWord, aiIndex, MAX_MATCH_ITEM_PER_LIB + 1))
+        if (d->dictionaries.at(iLib)->lookupWithRule(patternWord, aiIndex, d->maxMatchItemPerLib + 1))
         {
             if (d->progressFunction)
                 d->progressFunction();
