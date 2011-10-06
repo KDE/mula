@@ -32,7 +32,13 @@ namespace MulaPluginStarDict
             Dictionary();
             virtual ~Dictionary();
 
-            bool load(const QString& ifoFileName);
+            /**
+             * Loads the ifo file
+             *
+             * @param ifoFilePath The path of the ifo file
+             * @return True if the loading went fine, otherwise false.
+             */
+            bool load(const QString& ifoFilePath);
 
             int articleCount() const;
 
