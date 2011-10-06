@@ -40,6 +40,11 @@ namespace MulaPluginStarDict
              */
             bool load(const QString& ifoFilePath);
 
+            /** 
+             * Returns the count of the word entries in the .idx file.
+             *
+             * @return The count of the word entries
+             */
             int articleCount() const;
 
             const QString dictionaryName() const;

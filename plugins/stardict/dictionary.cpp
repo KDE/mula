@@ -81,6 +81,9 @@ Dictionary::ifoFilePath() const
 const QString
 Dictionary::key(long index) const
 {
+    if (d->indexFile.isNull())
+        return QString();
+
     return d->indexFile->key(index);
 }
 
@@ -88,6 +91,9 @@ QString
 Dictionary::data(long index)
 {
     Q_UNUSED(index);
+    if (d->indexFile.isNull())
+        return QString();
+
     return DictionaryBase::wordData(d->indexFile->wordEntryOffset(), d->indexFile->wordEntrySize());
 }
 
@@ -102,6 +108,9 @@ Dictionary::keyAndData(long index, QByteArray key, qint32 &offset, qint32 &size)
 bool
 Dictionary::lookup(const QString string, long &index)
 {
+    if (d->indexFile.isNull())
+        return false;
+
     return d->indexFile->lookup(string.toUtf8(), index);
 }
 

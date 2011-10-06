@@ -56,7 +56,7 @@ namespace MulaPluginStarDict
 
             long articleCount(int index) const;
 
-            const QString& dictionaryName(int index) const;
+            const QString dictionaryName(int index) const;
 
             int dictionaryCount() const;
 

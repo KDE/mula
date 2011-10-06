@@ -112,7 +112,7 @@ StarDictDictionaryManager::articleCount(int index) const
     return d->dictionaries.at(index)->articleCount();
 }
 
-const QString&
+const QString
 StarDictDictionaryManager::dictionaryName(int index) const
 {
     return d->dictionaries.at(index)->dictionaryName();
