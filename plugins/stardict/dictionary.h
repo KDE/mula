@@ -42,9 +42,9 @@ namespace MulaPluginStarDict
 
             int articleCount() const;
 
-            const QString& dictionaryName() const;
+            const QString dictionaryName() const;
 
-            const QString& ifoFilePath() const;
+            const QString ifoFilePath() const;
 
             const QString key(long index) const;
 

@@ -66,13 +66,13 @@ Dictionary::articleCount() const
     return d->wordCount;
 }
 
-const QString&
+const QString
 Dictionary::dictionaryName() const
 {
     return d->bookName;
 }
 
-const QString&
+const QString
 Dictionary::ifoFilePath() const
 {
     return d->ifoFilePath;
