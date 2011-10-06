@@ -28,6 +28,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
+#include <QtCore/QPair>
 #include <QtGui/QDesktopServices>
 
 #include <arpa/inet.h>
@@ -56,22 +57,11 @@ class OffsetCacheFile::Private
         ulong wordCount;
 
         QByteArray wordEntryBuffer; // 256 + sizeof(quint32)*2) - The length of "word_str" should be less than 256. See src/tools/DICTFILE_FORMAT.
-        struct indexEntry
-        {
-            long index;
-            QByteArray keyData;
 
-            void assign(ulong i, QByteArray data)
-            {
-                index = i;
-                keyData = data;
-            }
-        };
-
-        indexEntry first;
-        indexEntry last;
-        indexEntry middle;
-        indexEntry realLast;
+        QPair<int, QByteArray> first;
+        QPair<int, QByteArray> last;
+        QPair<int, QByteArray> middle;
+        QPair<int, QByteArray> realLast;
 
         QByteArray pageData;
         struct page_t
@@ -126,23 +116,23 @@ OffsetCacheFile::readFirstOnPageKey(long pageIndex)
 QByteArray
 OffsetCacheFile::firstOnPageKey(long pageIndex)
 {
-    if (pageIndex < d->middle.index)
+    if (pageIndex < d->middle.first)
     {
-        if (pageIndex == d->first.index)
-            return d->first.keyData;
+        if (pageIndex == d->first.first)
+            return d->first.second;
 
         return readFirstOnPageKey(pageIndex);
     }
-    else if (pageIndex > d->middle.index)
+    else if (pageIndex > d->middle.first)
     {
-        if (pageIndex == d->last.index)
-            return d->last.keyData;
+        if (pageIndex == d->last.first)
+            return d->last.second;
 
         return readFirstOnPageKey(pageIndex);
     }
     else
     {
-        return d->middle.keyData;
+        return d->middle.second;
     }
 }
 
@@ -300,10 +290,10 @@ OffsetCacheFile::load(const QString& url, long wc, qulonglong fileSize)
         return false;
     }
 
-    d->first.assign(0, readFirstOnPageKey(0));
-    d->last.assign(d->wordOffset.size() - 2, readFirstOnPageKey(d->wordOffset.size() - 2));
-    d->middle.assign((d->wordOffset.size() - 2) / 2, readFirstOnPageKey((d->wordOffset.size() - 2) / 2));
-    d->realLast.assign(wc - 1, key(wc - 1));
+    d->first = qMakePair(0, readFirstOnPageKey(0));
+    d->last = qMakePair(d->wordOffset.size() - 2, readFirstOnPageKey(d->wordOffset.size() - 2));
+    d->middle = qMakePair((d->wordOffset.size() - 2) / 2, readFirstOnPageKey((d->wordOffset.size() - 2) / 2));
+    d->realLast = qMakePair(wc - 1, key(wc - 1));
 
     return true;
 }
@@ -359,12 +349,12 @@ OffsetCacheFile::lookup(const QByteArray& word, long &index)
     long indexTo = d->wordOffset.size() - 2;
     int cmpint;
     long indexThisIndex;
-    if (stardictStringCompare(word, d->first.keyData) < 0)
+    if (stardictStringCompare(word, d->first.second) < 0)
     {
         index = 0;
         return false;
     }
-    else if (stardictStringCompare(word, d->realLast.keyData) > 0)
+    else if (stardictStringCompare(word, d->realLast.second) > 0)
     {
         index = invalidIndex;
         return false;
