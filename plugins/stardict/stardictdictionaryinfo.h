@@ -145,17 +145,17 @@ namespace MulaPluginStarDict
              * Sets the path of the ifo file
              *
              * @param ifoFilePath The path of the ifo file
-             * @see ifoFileName
+             * @see ifoFilePath
              */
-            void setIfoFileName(const QString& ifoFilePath);
+            void setIfoFilePath(const QString& ifoFilePath);
 
             /**
              * Returns the path of the ifo file
              *
              * @return The path of the ifo file
-             * @see setIfoFileName
+             * @see setIfoFilePath
              */
-            QString ifoFileName() const;
+            QString ifoFilePath() const;
 
             /**
              * Sets the count of the word entries in the .idx file.

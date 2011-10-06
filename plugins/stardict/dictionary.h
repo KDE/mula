@@ -44,7 +44,7 @@ namespace MulaPluginStarDict
 
             const QString& dictionaryName() const;
 
-            const QString& ifoFileName() const;
+            const QString& ifoFilePath() const;
 
             const QString key(long index) const;
 
@@ -63,7 +63,13 @@ namespace MulaPluginStarDict
             void setSameTypeSequence(const QString& sameTypeSequence);
 
         private:
-            bool loadIfoFile(const QString& ifoFileName);
+            /**
+             * Loads the ifo file. Only for internal use.
+             *
+             * @param ifoFilePath The path of the ifo file
+             * @return True if the loading went fine, otherwise false.
+             */
+            bool loadIfoFile(const QString& ifoFilePath);
 
             class Private;
             Private *const d;

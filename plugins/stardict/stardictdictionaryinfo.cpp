@@ -37,7 +37,7 @@ class StarDictDictionaryInfo::Private
         {
         }
  
-        QString ifoFileName;
+        QString ifoFilePath;
         quint32 wordCount;
         QString bookName;
         QString author;
@@ -60,11 +60,11 @@ StarDictDictionaryInfo::~StarDictDictionaryInfo()
 }
 
 bool
-StarDictDictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
+StarDictDictionaryInfo::loadFromIfoFile(const QString& ifoFilePath,
                                 bool isTreeDictionary)
 {
-    d->ifoFileName = ifoFileName;
-    QFile ifoFile(ifoFileName);
+    d->ifoFilePath = ifoFilePath;
+    QFile ifoFile(ifoFilePath);
     QByteArray buffer = ifoFile.readAll();
 
     if (buffer.isEmpty())
@@ -172,15 +172,15 @@ StarDictDictionaryInfo::loadFromIfoFile(const QString& ifoFileName,
 }
 
 void
-StarDictDictionaryInfo::setIfoFileName(const QString& ifoFileName)
+StarDictDictionaryInfo::setIfoFilePath(const QString& ifoFilePath)
 {
-    d->ifoFileName = ifoFileName;
+    d->ifoFilePath = ifoFilePath;
 }
 
 QString
-StarDictDictionaryInfo::ifoFileName() const
+StarDictDictionaryInfo::ifoFilePath() const
 {
-    return d->ifoFileName;
+    return d->ifoFilePath;
 }
 
 void

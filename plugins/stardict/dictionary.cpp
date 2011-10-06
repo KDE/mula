@@ -43,7 +43,7 @@ class Dictionary::Private
         {
         }
 
-        QString ifoFileName;
+        QString ifoFilePath;
         long wordCount;
         QString bookName;
 
@@ -73,9 +73,9 @@ Dictionary::dictionaryName() const
 }
 
 const QString&
-Dictionary::ifoFileName() const
+Dictionary::ifoFilePath() const
 {
-    return d->ifoFileName;
+    return d->ifoFilePath;
 }
 
 const QString
@@ -169,16 +169,16 @@ Dictionary::load(const QString& ifoFilePath)
 }
 
 bool
-Dictionary::loadIfoFile(const QString& ifoFileName)
+Dictionary::loadIfoFile(const QString& ifoFilePath)
 {
     StarDictDictionaryInfo dictionaryInfo;
-    if (!dictionaryInfo.loadFromIfoFile(ifoFileName, false))
+    if (!dictionaryInfo.loadFromIfoFile(ifoFilePath, false))
         return false;
 
     if (dictionaryInfo.wordCount() == 0)
         return false;
 
-    d->ifoFileName = dictionaryInfo.ifoFileName();
+    d->ifoFilePath = dictionaryInfo.ifoFilePath();
     d->wordCount = dictionaryInfo.wordCount();
     d->bookName = dictionaryInfo.bookName();
 

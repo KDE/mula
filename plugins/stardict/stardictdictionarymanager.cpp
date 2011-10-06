@@ -192,7 +192,7 @@ StarDictDictionaryManager::reloaderFind(const QString& url)
     QVector<Dictionary *>::iterator it;
     for (it = d->previous.begin(); it != d->previous.end(); ++it)
     {
-        if ((*it)->ifoFileName() == url)
+        if ((*it)->ifoFilePath() == url)
             break;
     }
 
