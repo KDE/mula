@@ -32,7 +32,7 @@ namespace MulaPluginStarDict
             OffsetCacheFile();
             virtual ~OffsetCacheFile();
 
-            bool load(const QString& url, int wordCount, qulonglong fileSize);
+            bool load(const QString& completeFilePath, int wordCount, qulonglong fileSize);
             QByteArray key(long index);
 
             bool lookup(const QByteArray& string, long &index);

@@ -60,6 +60,7 @@ class OffsetCacheFile::Private
 
         QByteArray wordEntryBuffer; // 256 + sizeof(quint32)*2) - The length of "word_str" should be less than 256. See src/tools/DICTFILE_FORMAT.
 
+        // index/date based key and value pair
         QPair<int, QByteArray> first;
         QPair<int, QByteArray> last;
         QPair<int, QByteArray> middle;
@@ -233,7 +234,7 @@ OffsetCacheFile::saveCache(const QString& url)
 }
 
 bool
-OffsetCacheFile::load(const QString& url, int wordCount, qulonglong fileSize)
+OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong fileSize)
 {
     Q_UNUSED(fileSize);
 
@@ -241,19 +242,19 @@ OffsetCacheFile::load(const QString& url, int wordCount, qulonglong fileSize)
     qulonglong npages = (wordCount - 1) / d->entriesPerPage + 2;
     d->wordOffset.resize(npages);
 
-    if (!loadCache(url))
+    if (!loadCache(completeFilePath))
     { //map file will close after finish of block
-        d->mapFile.setFileName(url);
+        d->mapFile.setFileName(completeFilePath);
         if (!d->mapFile.open(QIODevice::ReadOnly))
         {
-            qDebug() << "Failed to open file:" << url;
+            qDebug() << "Failed to open file:" << completeFilePath;
             return -1;
         }
 
         d->mappedData = d->mapFile.map(0, d->mapFile.size());
         if (d->mappedData == NULL)
         {
-            qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(url);
+            qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(completeFilePath);
             return false;
         }
 
@@ -261,7 +262,7 @@ OffsetCacheFile::load(const QString& url, int wordCount, qulonglong fileSize)
 
         int position = 0;
         int j = 0;
-        for (int i = 0; i < wordCount; i++)
+        for (int i = 0; i < wordCount; ++i)
         {
             if (i % d->entriesPerPage == 0)
             {
@@ -272,14 +273,14 @@ OffsetCacheFile::load(const QString& url, int wordCount, qulonglong fileSize)
             position += qstrlen(byteArray.mid(position)) + 1 + 2 * sizeof(quint32);
         }
 
-        if (!saveCache(url))
+        if (!saveCache(completeFilePath))
             qDebug() << "Cache update failed";
     }
 
-    d->indexFile.setFileName(url);
+    d->indexFile.setFileName(completeFilePath);
     if (!d->indexFile.open(QIODevice::ReadOnly))
     {
-        qDebug() << "Failed to open file:" << url;
+        qDebug() << "Failed to open file:" << completeFilePath;
         d->wordOffset.resize(0);
         return false;
     }
