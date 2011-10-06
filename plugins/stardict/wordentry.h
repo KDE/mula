@@ -24,7 +24,7 @@
 
 namespace MulaPluginStarDict
 {
-    /** 
+    /**
     * \brief Collection of data which describes the word entry
     *
     * A word entry is an object containing a set of data.
@@ -55,11 +55,18 @@ namespace MulaPluginStarDict
     class WordEntry
     {
         public:
+            /**
+             * Constructor.
+             */
             WordEntry();
+
+            /**
+             * Destructor.
+             */
             virtual ~WordEntry();
 
             /**
-             * Set the data of the word entry representing the the utf-8 string
+             * Sets the data of the word entry representing the the utf-8 string
              * terminated by '\0' in the desired ".dict" file
              *
              * @param plugin The utf-8 string in a raw format
@@ -77,7 +84,7 @@ namespace MulaPluginStarDict
             QByteArray data() const;
 
             /**
-             * Set the offset of the word entry representing the offset of the
+             * Sets the offset of the word entry representing the offset of the
              * word data in the desired ".dict" file
              *
              * @param plugin The dataOffset of the word data
@@ -95,7 +102,7 @@ namespace MulaPluginStarDict
             quint32 dataOffset() const;
 
             /**
-             * Set the size of the word entry in this word entry representing
+             * Sets the size of the word entry in this word entry representing
              * the total size of the word data in the desired ".dict" file
              *
              * @param plugin The size of the word data
