@@ -52,7 +52,6 @@ class OffsetCacheFile::Private
         void fill(QByteArray data, int entryCount, long index);
 
         static const int entriesPerPage = 32;
-        QString cacheMagic;
 
         QVector<quint32> wordOffset;
         QFile indexFile;
