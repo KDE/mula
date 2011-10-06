@@ -49,6 +49,8 @@ class OffsetCacheFile::Private
         {
         }
 
+        void fill(QByteArray data, int entryCount, long index);
+
         static const int entriesPerPage = 32;
         QString cacheMagic;
 
@@ -64,36 +66,30 @@ class OffsetCacheFile::Private
         QPair<int, QByteArray> realLast;
 
         QByteArray pageData;
-        struct page_t
-        {
-            page_t()
-                :index(-1)
-            {
-            }
 
-            void fill(QByteArray data, int nent, long index_)
-            {
-                index = index_;
-                ulong position = 0;
-                for (int i = 0; i < nent; ++i)
-                {
-                    entries[i].setData(data.mid(position));
-                    position = qstrlen(data.mid(position)) + 1;
-                    entries[i].setDataOffset(ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data())));
-                    position += sizeof(quint32);
-                    entries[i].setDataSize(ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data())));
-                    position += sizeof(quint32);
-                }
-            }
-
-            long index;
-            QList<WordEntry> entries;
-        } page;
+        long entryIndex;
+        QList<WordEntry> entries;
 
         QByteArray cacheMagicString;
         QFile mapFile;
         uchar *mappedData;
 };
+
+void
+OffsetCacheFile::Private::fill(QByteArray data, int entryCount, long index)
+{
+    entryIndex = index;
+    ulong position = 0;
+    for (int i = 0; i < entryCount; ++i)
+    {
+        entries[i].setData(data.mid(position));
+        position = qstrlen(data.mid(position)) + 1;
+        entries[i].setDataOffset(ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data())));
+        position += sizeof(quint32);
+        entries[i].setDataSize(ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data())));
+        position += sizeof(quint32);
+    }
+}
 
 OffsetCacheFile::OffsetCacheFile()
     : d(new Private)
@@ -307,12 +303,12 @@ OffsetCacheFile::loadPage(long pageIndex)
         entryCount = d->entriesPerPage;
     }
 
-    if (pageIndex != d->page.index)
+    if (pageIndex != d->entryIndex)
     {
         d->indexFile.seek(d->wordOffset.at(pageIndex));
 
         d->pageData = d->indexFile.read(d->wordOffset[pageIndex + 1] - d->wordOffset[pageIndex]);
-        d->page.fill(d->pageData, entryCount, pageIndex);
+        d->fill(d->pageData, entryCount, pageIndex);
     }
 
     return entryCount;
@@ -323,10 +319,10 @@ OffsetCacheFile::key(long index)
 {
     loadPage(index / d->entriesPerPage);
     ulong indexInPage = index % d->entriesPerPage;
-    setWordEntryOffset(d->page.entries.at(indexInPage).dataOffset());
-    setWordEntrySize(d->page.entries.at(indexInPage).dataSize());
+    setWordEntryOffset(d->entries.at(indexInPage).dataOffset());
+    setWordEntrySize(d->entries.at(indexInPage).dataSize());
 
-    return d->page.entries.at(indexInPage).data();
+    return d->entries.at(indexInPage).data();
 }
 
 void
@@ -392,7 +388,7 @@ OffsetCacheFile::lookup(const QByteArray& word, long &index)
         while (indexFrom <= indexTo)
         {
             indexThisIndex = (indexFrom + indexTo) / 2;
-            cmpint = stardictStringCompare(word, d->page.entries.at(indexThisIndex).data());
+            cmpint = stardictStringCompare(word, d->entries.at(indexThisIndex).data());
             if (cmpint > 0)
                 indexFrom = indexThisIndex + 1;
             else if (cmpint < 0)
