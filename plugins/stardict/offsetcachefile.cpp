@@ -40,6 +40,7 @@ class OffsetCacheFile::Private
     public:
         Private()
             : wordCount(0)
+            , entryIndex(-1)
             , cacheMagicString("StarDict's Cache, Version: 0.1")
             , mappedData(0)
         {
