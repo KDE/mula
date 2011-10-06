@@ -325,18 +325,6 @@ OffsetCacheFile::key(long index)
     return d->entries.at(indexInPage).data();
 }
 
-void
-OffsetCacheFile::data(long index)
-{
-    key(index);
-}
-
-QByteArray
-OffsetCacheFile::keyAndData(long index)
-{
-    return key(index);
-}
-
 bool
 OffsetCacheFile::lookup(const QByteArray& word, long &index)
 {

@@ -35,8 +35,6 @@ namespace MulaPluginStarDict
             bool load(const QString& url, int wordCount, qulonglong fileSize);
             QByteArray key(long index);
 
-            void data(long index);
-            QByteArray keyAndData(long index);
             bool lookup(const QByteArray& string, long &index);
 
             virtual quint32 wordEntryOffset() const;
