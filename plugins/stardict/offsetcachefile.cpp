@@ -233,12 +233,12 @@ OffsetCacheFile::saveCache(const QString& url)
 }
 
 bool
-OffsetCacheFile::load(const QString& url, int wc, qulonglong fileSize)
+OffsetCacheFile::load(const QString& url, int wordCount, qulonglong fileSize)
 {
     Q_UNUSED(fileSize);
 
-    d->wordCount = wc;
-    qulonglong npages = (wc - 1) / d->entriesPerPage + 2;
+    d->wordCount = wordCount;
+    qulonglong npages = (wordCount - 1) / d->entriesPerPage + 2;
     d->wordOffset.resize(npages);
 
     if (!loadCache(url))
@@ -261,7 +261,7 @@ OffsetCacheFile::load(const QString& url, int wc, qulonglong fileSize)
 
         int position = 0;
         int j = 0;
-        for (int i = 0; i < wc; i++)
+        for (int i = 0; i < wordCount; i++)
         {
             if (i % d->entriesPerPage == 0)
             {
@@ -271,8 +271,6 @@ OffsetCacheFile::load(const QString& url, int wc, qulonglong fileSize)
 
             position += qstrlen(byteArray.mid(position)) + 1 + 2 * sizeof(quint32);
         }
-
-        d->wordOffset[j] = position;
 
         if (!saveCache(url))
             qDebug() << "Cache update failed";
@@ -289,7 +287,7 @@ OffsetCacheFile::load(const QString& url, int wc, qulonglong fileSize)
     d->first = qMakePair(0, readFirstOnPageKey(0));
     d->last = qMakePair(d->wordOffset.size() - 2, readFirstOnPageKey(d->wordOffset.size() - 2));
     d->middle = qMakePair((d->wordOffset.size() - 2) / 2, readFirstOnPageKey((d->wordOffset.size() - 2) / 2));
-    d->realLast = qMakePair(wc - 1, key(wc - 1));
+    d->realLast = qMakePair(wordCount - 1, key(wordCount - 1));
 
     return true;
 }
