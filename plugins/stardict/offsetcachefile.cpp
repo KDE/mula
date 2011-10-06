@@ -237,7 +237,7 @@ OffsetCacheFile::saveCache(const QString& url)
 }
 
 bool
-OffsetCacheFile::load(const QString& url, long wc, qulonglong fileSize)
+OffsetCacheFile::load(const QString& url, int wc, qulonglong fileSize)
 {
     Q_UNUSED(fileSize);
 

@@ -30,7 +30,7 @@ namespace MulaPluginStarDict
             IndexFile();
             virtual ~IndexFile();
 
-            bool load(const QString& url, long wc, qulonglong sffile);
+            bool load(const QString& url, int wc, qulonglong sffile);
             QByteArray key(long index);
             bool lookup(const QByteArray& word, long &index);
 

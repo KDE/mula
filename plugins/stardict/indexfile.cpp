@@ -54,7 +54,7 @@ IndexFile::~IndexFile()
 }
 
 bool
-IndexFile::load(const QString& filePath, long wc, qulonglong fileSize)
+IndexFile::load(const QString& filePath, int wordCount, qulonglong fileSize)
 {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
@@ -68,7 +68,7 @@ IndexFile::load(const QString& filePath, long wc, qulonglong fileSize)
     file.close();
 
     int position = 0;
-    for (int i = 0; i < wc; ++i)
+    for (int i = 0; i < wordCount; ++i)
     {
         WordEntry wordEntry;
         wordEntry.setData(indexDataBuffer.mid(position));

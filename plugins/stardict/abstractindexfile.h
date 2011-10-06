@@ -32,7 +32,7 @@ namespace MulaPluginStarDict
             AbstractIndexFile();
             virtual ~AbstractIndexFile();
 
-            virtual bool load(const QString& url, long wc, qulonglong sfile) = 0;
+            virtual bool load(const QString& url, int wc, qulonglong sfile) = 0;
             virtual QByteArray key(long index) = 0;
             virtual bool lookup(const QByteArray& string, long &index) = 0;
 
