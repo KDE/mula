@@ -239,8 +239,11 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
     Q_UNUSED(fileSize);
 
     d->wordCount = wordCount;
-    qulonglong npages = (wordCount - 1) / d->pageEntryNumber + 2;
-    d->pageOffsetList.resize(npages);
+
+    if (wordCount % d->pageEntryNumber == 0)
+        d->pageOffsetList.resize(wordCount / d->pageEntryNumber + 1);
+    else
+        d->pageOffsetList.resize(wordCount / d->pageEntryNumber + 2);
 
     if (!loadCache(completeFilePath))
     { //map file will close after finish of block
