@@ -156,13 +156,13 @@ StarDictDictionaryManager::recursiveTemplateHelper(const QString& directoryName,
     QDir dir(directoryName);
 
     // Going through the subfolders
-    foreach (QString entryName, dir.entryList(QDir::Dirs & QDir::NoDotAndDotDot))
+    foreach (const QString& entryName, dir.entryList(QDir::Dirs & QDir::NoDotAndDotDot))
     {
         QString absolutePath = dir.absoluteFilePath(entryName);
         recursiveTemplateHelper(absolutePath, orderList, disableList, method);
     }
 
-    foreach (QString entryName, dir.entryList(QDir::Files & QDir::Drives & QDir::NoDotAndDotDot))
+    foreach (const QString& entryName, dir.entryList(QDir::Files & QDir::Drives & QDir::NoDotAndDotDot))
     {
         QString absolutePath = dir.absoluteFilePath(entryName);
         if (absolutePath.endsWith(".ifo")
