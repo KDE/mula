@@ -30,7 +30,7 @@ class SettingsDialog: public QDialog, public Ui::SettingsDialog
 {
     Q_OBJECT
     public:
-        SettingsDialog(Web *plugin, QWidget *parent = 0);
+        explicit SettingsDialog(Web *plugin, QWidget *parent = 0);
 
         void accept();
 
