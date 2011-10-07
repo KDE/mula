@@ -134,10 +134,10 @@ OffsetCacheFile::firstOnPageKey(long pageIndex)
 }
 
 QStringList
-OffsetCacheFile::cacheLocations(const QString& url)
+OffsetCacheFile::cacheLocations(const QString& completeFilePath)
 {
     QStringList result;
-    result.append(url + ".oft");
+    result.append(completeFilePath + ".oft");
 
     QString cacheLocation = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
     QFileInfo cacheLocationFileInfo(cacheLocation);
@@ -149,16 +149,16 @@ OffsetCacheFile::cacheLocations(const QString& url)
     if (!cacheLocationFileInfo.isDir())
         return result;
 
-    result.append(cacheLocation + QDir::separator() + "sdcv" + QDir::separator() + QFileInfo(url).fileName() + ".oft");
+    result.append(cacheLocation + QDir::separator() + "sdcv" + QDir::separator() + QFileInfo(completeFilePath).fileName() + ".oft");
     return result;
 }
 
 bool
-OffsetCacheFile::loadCache(const QString& url)
+OffsetCacheFile::loadCache(const QString& completeFilePath)
 {
-    foreach (const QString& cacheLocation, cacheLocations(url))
+    foreach (const QString& cacheLocation, cacheLocations(completeFilePath))
     {
-        QFileInfo fileInfoIndex(url);
+        QFileInfo fileInfoIndex(completeFilePath);
         QFileInfo fileInfoCache(cacheLocation);
 
         if (fileInfoCache.lastModified() < fileInfoIndex.lastModified())
@@ -190,9 +190,9 @@ OffsetCacheFile::loadCache(const QString& url)
 }
 
 bool
-OffsetCacheFile::saveCache(const QString& url)
+OffsetCacheFile::saveCache(const QString& completeFilePath)
 {
-    foreach (const QString& cacheLocation, cacheLocations(url))
+    foreach (const QString& cacheLocation, cacheLocations(completeFilePath))
     {
         QFile file(cacheLocation);
         if( !file.open( QIODevice::WriteOnly ) )
@@ -225,7 +225,7 @@ OffsetCacheFile::saveCache(const QString& url)
 
         file.close();
 
-        qDebug() << "Save to cache" << url;
+        qDebug() << "Save to cache" << completeFilePath;
 
         return true;
     }
