@@ -165,7 +165,7 @@ StarDictDictionaryManager::recursiveTemplateHelper(const QString& directoryName,
     foreach (const QString& entryName, dir.entryList(QDir::Files & QDir::Drives & QDir::NoDotAndDotDot))
     {
         QString absolutePath = dir.absoluteFilePath(entryName);
-        if (absolutePath.endsWith(".ifo")
+        if (absolutePath.endsWith(QLatin1String(".ifo"))
                 && qFind(orderList.begin(), orderList.end(), absolutePath) == orderList.end()
                 && qFind(disableList.begin(), disableList.end(), absolutePath) == disableList.end())
         {
@@ -504,7 +504,7 @@ StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, long& iWordI
 
         if (!found && searchWordLength > 3)
         {
-            isUpperCase = (searchWord.endsWith("ES")
+            isUpperCase = (searchWord.endsWith(QLatin1String("ES"))
                         && (searchWord.at(searchWordLength - 3) == 'S'
                         || searchWord.at(searchWordLength - 3) == 'X'
                         || searchWord.at(searchWordLength - 3) == 'O'
@@ -513,7 +513,7 @@ StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, long& iWordI
                         || searchWord.at(searchWordLength - 4) == 'S'))));
 
             if (isUpperCase ||
-                    (searchWord.endsWith("es")
+                    (searchWord.endsWith(QLatin1String("es"))
                      && (searchWord.at(searchWordLength - 3) == 's'
                      || searchWord.at(searchWordLength - 3) == 'x'
                      || searchWord.at(searchWordLength - 3) == 'o'

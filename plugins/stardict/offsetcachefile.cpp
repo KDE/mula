@@ -105,10 +105,10 @@ OffsetCacheFile::~OffsetCacheFile()
 QByteArray
 OffsetCacheFile::readFirstWordDataOnPage(long pageIndex)
 {
-    d->indexFile.seek(d->pageOffsetList.at(pageIndex));
     int pageSize = d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex);
     int wordEntrySize = d->wordEntrySize;
 
+    d->indexFile.seek(d->pageOffsetList.at(pageIndex));
     return d->indexFile.read(qMin(wordEntrySize, pageSize)); //TODO: check returned values, deal with word entry that strlen>255.
 }
 

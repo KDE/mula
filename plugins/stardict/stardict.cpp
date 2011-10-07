@@ -160,7 +160,7 @@ StarDict::recursiveTemplateFind(const QString& directoryPath, Method method)
     foreach (const QString& entryName, dir.entryList(QDir::Files & QDir::Drives & QDir::NoDotAndDotDot))
     {
         QString absolutePath = dir.absoluteFilePath(entryName);
-        if (absolutePath.endsWith(".ifo"))
+        if (absolutePath.endsWith(QLatin1String(".ifo")))
             result.append((this->*method)(absolutePath));
     }
 
