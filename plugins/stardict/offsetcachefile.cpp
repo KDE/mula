@@ -54,7 +54,7 @@ class OffsetCacheFile::Private
 
         static const int pageEntryNumber = 32;
 
-        QVector<quint32> wordOffset;
+        QVector<quint32> pageOffsetList;
         QFile indexFile;
         ulong wordCount;
 
@@ -104,8 +104,8 @@ OffsetCacheFile::~OffsetCacheFile()
 QByteArray
 OffsetCacheFile::readFirstOnPageKey(long pageIndex)
 {
-    d->indexFile.seek(d->wordOffset.at(pageIndex));
-    int pageSize = d->wordOffset.at(pageIndex + 1) - d->wordOffset.at(pageIndex);
+    d->indexFile.seek(d->pageOffsetList.at(pageIndex));
+    int pageSize = d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex);
     d->wordEntryBuffer = d->indexFile.read(qMin(d->wordEntryBuffer.size(), pageSize)); //TODO: check returned values, deal with word entry that strlen>255.
     return d->wordEntryBuffer;
 }
@@ -182,7 +182,7 @@ OffsetCacheFile::loadCache(const QString& completeFilePath)
         if (d->cacheMagicString != d->mappedData)
             continue;
 
-        memcpy(d->wordOffset.data(), d->mappedData + d->cacheMagicString.size(), d->wordOffset.size()*sizeof(d->wordOffset.at(0)));
+        memcpy(d->pageOffsetList.data(), d->mappedData + d->cacheMagicString.size(), d->pageOffsetList.size()*sizeof(d->pageOffsetList.at(0)));
         return true;
     }
 
@@ -219,8 +219,8 @@ OffsetCacheFile::saveCache(const QString& completeFilePath)
         if (file.write(d->cacheMagicString) != d->cacheMagicString.size())
             continue;
 
-        if (file.write(reinterpret_cast<const char*>(d->wordOffset.data()), sizeof(d->wordOffset.at(0))*d->wordOffset.size())
-                != d->wordOffset.at(0)*d->wordOffset.size())
+        if (file.write(reinterpret_cast<const char*>(d->pageOffsetList.data()), sizeof(d->pageOffsetList.at(0))*d->pageOffsetList.size())
+                != d->pageOffsetList.at(0)*d->pageOffsetList.size())
             continue;
 
         file.close();
@@ -240,7 +240,7 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
 
     d->wordCount = wordCount;
     qulonglong npages = (wordCount - 1) / d->pageEntryNumber + 2;
-    d->wordOffset.resize(npages);
+    d->pageOffsetList.resize(npages);
 
     if (!loadCache(completeFilePath))
     { //map file will close after finish of block
@@ -266,7 +266,7 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
         {
             if (i % d->pageEntryNumber == 0)
             {
-                d->wordOffset[j] = position;
+                d->pageOffsetList[j] = position;
                 ++j;
             }
 
@@ -281,13 +281,13 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
     if (!d->indexFile.open(QIODevice::ReadOnly))
     {
         qDebug() << "Failed to open file:" << completeFilePath;
-        d->wordOffset.resize(0);
+        d->pageOffsetList.resize(0);
         return false;
     }
 
     d->first = qMakePair(0, readFirstOnPageKey(0));
-    d->last = qMakePair(d->wordOffset.size() - 2, readFirstOnPageKey(d->wordOffset.size() - 2));
-    d->middle = qMakePair((d->wordOffset.size() - 2) / 2, readFirstOnPageKey((d->wordOffset.size() - 2) / 2));
+    d->last = qMakePair(d->pageOffsetList.size() - 2, readFirstOnPageKey(d->pageOffsetList.size() - 2));
+    d->middle = qMakePair((d->pageOffsetList.size() - 2) / 2, readFirstOnPageKey((d->pageOffsetList.size() - 2) / 2));
     d->realLast = qMakePair(wordCount - 1, key(wordCount - 1));
 
     return true;
@@ -297,16 +297,16 @@ ulong
 OffsetCacheFile::loadPage(long pageIndex)
 {
     ulong entryCount = d->pageEntryNumber;
-    if (pageIndex == ulong(d->wordOffset.size() - 2) && (entryCount = d->wordCount % d->pageEntryNumber) == 0)
+    if (pageIndex == ulong(d->pageOffsetList.size() - 2) && (entryCount = d->wordCount % d->pageEntryNumber) == 0)
     {
         entryCount = d->pageEntryNumber;
     }
 
     if (pageIndex != d->entryIndex)
     {
-        d->indexFile.seek(d->wordOffset.at(pageIndex));
+        d->indexFile.seek(d->pageOffsetList.at(pageIndex));
 
-        d->pageData = d->indexFile.read(d->wordOffset[pageIndex + 1] - d->wordOffset[pageIndex]);
+        d->pageData = d->indexFile.read(d->pageOffsetList[pageIndex + 1] - d->pageOffsetList[pageIndex]);
         d->fill(d->pageData, entryCount, pageIndex);
     }
 
@@ -329,7 +329,7 @@ OffsetCacheFile::lookup(const QByteArray& word, long &index)
 {
     bool found = false;
     long indexFrom;
-    long indexTo = d->wordOffset.size() - 2;
+    long indexTo = d->pageOffsetList.size() - 2;
     int cmpint;
     long indexThisIndex;
     if (stardictStringCompare(word, d->first.second) < 0)
