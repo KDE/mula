@@ -25,6 +25,7 @@
 #include <QSettings>
 #include <QListWidgetItem>
 #include <QTextCodec>
+#include <QtCore/QPointer>
 #include "ui_adddictionarydialog.h"
 
 namespace
@@ -64,7 +65,7 @@ void SettingsDialog::on_editDictButton_clicked()
         return;
     QString dict = dictsList->currentItem()->text();
     Ui::AddDictionaryDialog ui;
-    QDialog dialog(this);
+    QPointer dialog = new QDialog(this);
     ui.setupUi(&dialog);
     dialog.setWindowTitle(tr("Edit dictionary"));
     ui.nameEdit->setText(dict);
@@ -73,32 +74,43 @@ void SettingsDialog::on_editDictButton_clicked()
     ui.queryEdit->setText(m_dicts[dict].query);
     ui.charsetEdit->addItems(supportedCharsets());
     ui.charsetEdit->setCurrentIndex(ui.charsetEdit->findText(m_dicts[dict].charset));
-    if (dialog.exec() != QDialog::Accepted)
+    if (dialog->exec() != QDialog::Accepted)
+    {
+        delete dialog;
         return;
+    }
+
     if (ui.nameEdit->text() != dict)
     {
         m_dicts.remove(dict);
         dict = ui.nameEdit->text();
     }
+
     m_dicts[dict].author = ui.authorEdit->text();
     m_dicts[dict].description = ui.descEdit->toPlainText();
     m_dicts[dict].query = ui.queryEdit->text();
     m_dicts[dict].charset = ui.charsetEdit->currentText().toAscii();
     refresh();
+    delete dialog;
 }
 
 void SettingsDialog::on_addDictButton_clicked()
 {
     Ui::AddDictionaryDialog ui;
-    QDialog dialog(this);
+    QPointer dialog = new QDialog(this);
     ui.setupUi(&dialog);
     ui.charsetEdit->addItems(supportedCharsets());
     ui.charsetEdit->setCurrentIndex(ui.charsetEdit->findText("UTF-8"));
     if (dialog.exec() != QDialog::Accepted)
+    {
+        delete dialog;
         return;
+    }
+
     m_dicts[ui.nameEdit->text()] =
         Dict(ui.authorEdit->text(), ui.descEdit->toPlainText(), ui.queryEdit->text());
     refresh();
+    delete dialog;
 }
 
 void SettingsDialog::on_removeDictButton_clicked()
