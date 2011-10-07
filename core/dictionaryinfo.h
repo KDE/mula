@@ -42,7 +42,7 @@ namespace MulaCore
              * @param plugin A plugin name
              * @param name A dictionary name
              * @param author A dictionary author
-             * @param desription A dictionary description
+             * @param description A dictionary description
              * @param wordsCount A count of words that available in dictionary
              */
             DictionaryInfo(const QString &plugin, const QString &name, const QString &author = QString(),

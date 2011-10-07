@@ -52,7 +52,7 @@
 
 // A utf-8 string which is marked up with the xdxf language.
 // See http://xdxf.sourceforge.net
-// StarDict have these extention:
+// StarDict has these extensions:
 // <rref> can have "type" attribute, it can be "image", "sound", "video" 
 // and "attach".
 // <kref> can have "k" attribute.

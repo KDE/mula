@@ -47,7 +47,7 @@ namespace MulaPluginStarDict
     *
     * Note: It is possible the different strings have the same offset and size
     * value. In other words, multiple word indices point to the same definition.
-    * This is not recommended, for mutiple words have the same definition,
+    * This is not recommended, for multiple words have the same definition,
     * you may create a ".syn" file for them.
     *
     * \see Indexfile
