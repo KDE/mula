@@ -198,7 +198,7 @@ OffsetCacheFile::saveCache(const QString& url)
         if( !file.open( QIODevice::WriteOnly ) )
         {
             qDebug() << "Failed to open file for writing:" << cacheLocation;
-            return -1;
+            return false;
         }
 
         d->mapFile.unmap(d->mappedData);
@@ -206,7 +206,7 @@ OffsetCacheFile::saveCache(const QString& url)
         if( !d->mapFile.open( QIODevice::ReadOnly ) )
         {
             qDebug() << "Failed to open file:" << cacheLocation;
-            return -1;
+            return false;
         }
 
         d->mappedData = d->mapFile.map(0, d->mapFile.size());
