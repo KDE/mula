@@ -240,6 +240,7 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
 
     d->wordCount = wordCount;
 
+    // Adding 1 is needed because the index file size is also stored
     if (wordCount % d->pageEntryNumber == 0)
         d->pageOffsetList.resize(wordCount / d->pageEntryNumber + 1);
     else
@@ -247,6 +248,7 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
 
     if (!loadCache(completeFilePath))
     { //map file will close after finish of block
+        d->mapFile.unmap(d->mappedData);
         d->mapFile.setFileName(completeFilePath);
         if (!d->mapFile.open(QIODevice::ReadOnly))
         {
