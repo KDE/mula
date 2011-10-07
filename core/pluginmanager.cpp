@@ -142,10 +142,10 @@ PluginManager::setLoadedPlugins(const QStringList &loadedPlugins)
         foreach( const QString& pluginDirectoryPath, pluginDirectoryPaths )
         {
             // Do not attempt to load non-libraries
-            if( !QLibrary::isLibrary( pluginDirectoryPath + "/" + pluginFileName ) )
+            if( !QLibrary::isLibrary( pluginDirectoryPath + '/' + pluginFileName ) )
                 continue;
 
-            QPluginLoader *pluginLoader = new QPluginLoader(pluginDirectoryPath + "/" + pluginFileName);
+            QPluginLoader *pluginLoader = new QPluginLoader(pluginDirectoryPath + '/' + pluginFileName);
             if (!pluginLoader->load())
             {
                 qWarning() << pluginLoader->errorString();

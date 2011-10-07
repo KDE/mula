@@ -489,7 +489,7 @@ StarDict::xdxf2html(QString &string)
     string.replace("<tr>", "<font class=\"transcription\">[");
     string.replace("</tr>", "]</font>");
     string.replace("<ex>", "<font class=\"example\">");
-    string.replace(QRegExp("<k>.*<\\/k>"), "");
+    string.remove(QRegExp("<k>.*<\\/k>"));
     string.replace(QRegExp("(<\\/abr>)|(<\\ex>)"), "</font");
 }
 

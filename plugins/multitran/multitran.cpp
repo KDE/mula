@@ -91,16 +91,16 @@ struct show
             std::sort(as.articles_.begin(),as.articles_.end(),compare_articles);
 
             int prev_lgk = -1;
-            std::string prev_subject = "x";
+            std::string prev_subject = 'x';
             for(size_t i=0;i<as.articles_.size();++i)
             {
                 const mt::article& a = as.articles_[i];
                 if (prev_lgk != a.lgk())
                 {
-                    r+="<tr><td><b>"+a.orig()+","+
+                    r+="<tr><td><b>"+a.orig()+ ',' +
                     spart.any_name(mt::to_string<int>(mt::speech_part(a.lgk())))+"</b></td></tr>";
                     prev_lgk = a.lgk();
-                    prev_subject = "x";//reset subject
+                    prev_subject = 'x';//reset subject
                 }
                 if (prev_subject != a.subject())
                 {

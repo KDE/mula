@@ -48,7 +48,7 @@ DirectoryProvider::DirectoryProvider( QObject* parent )
     , d(new Private)
 {
     d->userDataPath = QDesktopServices::storageLocation( QDesktopServices::DataLocation );
-    d->userDataPath.chop( QString(QCoreApplication::organizationName() + "/" + QCoreApplication::applicationName()).size() );
+    d->userDataPath.chop( QString(QCoreApplication::organizationName() + '/' + QCoreApplication::applicationName()).size() );
     d->userDataPath.append( "mula" );
 
     //Define standard dirs Mula recommends
@@ -81,12 +81,12 @@ QString DirectoryProvider::installPrefix() const
 
 QString DirectoryProvider::dataDirectory() const
 {
-    return installPrefix() + "/" + MULA_SHARE_INSTALL_DIR;
+    return installPrefix() + '/' + MULA_SHARE_INSTALL_DIR;
 }
 
 QString DirectoryProvider::libDirectory() const
 {
-    return installPrefix() + "/" + MULA_LIB_INSTALL_DIR;
+    return installPrefix() + '/' + MULA_LIB_INSTALL_DIR;
 }
 
 QString DirectoryProvider::userDirectory( const QString& name )

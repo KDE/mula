@@ -66,7 +66,7 @@ void Web::setLoadedDictionaries(const QStringList &dictionaries)
 {
     for (QStringList::const_iterator i = dictionaries.begin(); i != dictionaries.end(); ++i)
     {
-        QString filename = pluginDataPath() + "/" + *i + ".webdict";
+        QString filename = pluginDataPath() + '/' + *i + ".webdict";
         if (!QFile::exists(filename))
             continue;
 
@@ -82,7 +82,7 @@ void Web::setLoadedDictionaries(const QStringList &dictionaries)
 
 Web::DictionaryInfo Web::dictionaryInfo(const QString &dictionary)
 {
-    QString filename = pluginDataPath() + "/" + dict + ".webdict";
+    QString filename = pluginDataPath() + '/' + dict + ".webdict";
     if (!QFile::exists(filename))
         return DictionaryInfo();
 
@@ -112,7 +112,7 @@ Web::Translation Web::translate(const QString &dictionary, const QString &word)
     QEventLoop loop;
     QHttp http(url.host(), url.port(80), &loop);
     connect(&http, SIGNAL(done(bool)), &loop, SLOT(quit()));
-    http.get(url.path() + "?" + url.encodedQuery());
+    http.get(url.path() + '?' + url.encodedQuery());
     loop.exec();
 
     QTextCodec *codec = QTextCodec::codecForName(m_loadedDicts[dict].codec);

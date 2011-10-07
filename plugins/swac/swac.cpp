@@ -141,8 +141,8 @@ Swac::search(const QString &dictionary, const QString &word, const QString &fiel
 {
     QSqlQuery query(*d->db);
     query.prepare(
-        "SELECT " + fields + " "
-        + "FROM alphaidx" + " "
+        "SELECT " + fields + ' '
+        + "FROM alphaidx" + ' '
         + "INNER JOIN sounds ON alphaidx.sounds_idx = sounds.idx "
         + "INNER JOIN packages ON sounds.packages_idx = packages.idx "
         + "WHERE packages.packid = ?1 AND alphaidx.str = ?2 "
