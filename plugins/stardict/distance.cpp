@@ -144,15 +144,17 @@ int EditDistance::calEditDistance(QString s, QString t, const int limit)
             return (m + n);
     }
     // step 2, init matrix
-    for (k = 0;k < n;k++)
+    for (k = 0; k < n; ++k)
         d[k] = k;
-    for (k = 1;k < m;k++)
+
+    for (k = 1; k < m; ++k)
         d[k*n] = k;
+
     // step 3
-    for (i = 1;i < n;i++)
+    for (i = 1; i < n; ++i)
     {
         // first calculate column, d(i,j)
-        for ( j = 1;j < iLenDif + i;j++ )
+        for ( j = 1; j < iLenDif + i; ++j )
         {
             cost = s[i - 1] == t[j - 1] ? 0 : 1;
             d[j*n + i] = minimum(d[(j - 1) * n + i] + 1, d[j * n + i - 1] + 1, d[(j - 1) * n + i - 1] + cost);
@@ -166,7 +168,7 @@ int EditDistance::calEditDistance(QString s, QString t, const int limit)
         }
         // second calculate row, d(k,j)
         // now j==iLenDif+i;
-        for ( k = 1;k <= i;k++ )
+        for ( k = 1; k <= i; ++k )
         {
             cost = s[k - 1] == t[j - 1] ? 0 : 1;
             d[j*n + k] = minimum(d[(j - 1) * n + k] + 1, d[j * n + k - 1] + 1, d[(j - 1) * n + k - 1] + cost);
@@ -211,8 +213,8 @@ int EditDistance::CalEditDistance(const char *s, const char *t, const int limit)
         for (k = 0;k < m;k++)
             d[k*n] = k;
         //Step 3 and 4
-        for (i = 1;i < n;i++)
-            for (j = 1;j < m;j++)
+        for (i = 1; i < n; ++i)
+            for (j = 1; j < m; ++j)
             {
                 //Step 5
                 if (s[i - 1] == t[j - 1])
