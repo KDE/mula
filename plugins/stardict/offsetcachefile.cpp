@@ -58,7 +58,8 @@ class OffsetCacheFile::Private
         QFile indexFile;
         ulong wordCount;
 
-        QByteArray wordEntryBuffer; // 256 + sizeof(quint32)*2) - The length of "word_str" should be less than 256. See src/tools/DICTFILE_FORMAT.
+        // The length of "word_str" should be less than 256, and then offset, size
+        static const int wordEntrySize = 256 + sizeof(quint32)*2;
 
         // index/date based key and value pair
         QPair<int, QByteArray> first;
@@ -106,8 +107,9 @@ OffsetCacheFile::readFirstOnPageKey(long pageIndex)
 {
     d->indexFile.seek(d->pageOffsetList.at(pageIndex));
     int pageSize = d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex);
-    d->wordEntryBuffer = d->indexFile.read(qMin(d->wordEntryBuffer.size(), pageSize)); //TODO: check returned values, deal with word entry that strlen>255.
-    return d->wordEntryBuffer;
+    int wordEntrySize = d->wordEntrySize;
+
+    return d->indexFile.read(qMin(wordEntrySize, pageSize)); //TODO: check returned values, deal with word entry that strlen>255.
 }
 
 QByteArray
