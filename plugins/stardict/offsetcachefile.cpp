@@ -52,7 +52,7 @@ class OffsetCacheFile::Private
 
         void fill(QByteArray data, int entryCount, long index);
 
-        static const int entriesPerPage = 32;
+        static const int pageEntryNumber = 32;
 
         QVector<quint32> wordOffset;
         QFile indexFile;
@@ -239,7 +239,7 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
     Q_UNUSED(fileSize);
 
     d->wordCount = wordCount;
-    qulonglong npages = (wordCount - 1) / d->entriesPerPage + 2;
+    qulonglong npages = (wordCount - 1) / d->pageEntryNumber + 2;
     d->wordOffset.resize(npages);
 
     if (!loadCache(completeFilePath))
@@ -264,7 +264,7 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
         int j = 0;
         for (int i = 0; i < wordCount; ++i)
         {
-            if (i % d->entriesPerPage == 0)
+            if (i % d->pageEntryNumber == 0)
             {
                 d->wordOffset[j] = position;
                 ++j;
@@ -296,10 +296,10 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
 ulong
 OffsetCacheFile::loadPage(long pageIndex)
 {
-    ulong entryCount = d->entriesPerPage;
-    if (pageIndex == ulong(d->wordOffset.size() - 2) && (entryCount = d->wordCount % d->entriesPerPage) == 0)
+    ulong entryCount = d->pageEntryNumber;
+    if (pageIndex == ulong(d->wordOffset.size() - 2) && (entryCount = d->wordCount % d->pageEntryNumber) == 0)
     {
-        entryCount = d->entriesPerPage;
+        entryCount = d->pageEntryNumber;
     }
 
     if (pageIndex != d->entryIndex)
@@ -316,8 +316,8 @@ OffsetCacheFile::loadPage(long pageIndex)
 QByteArray
 OffsetCacheFile::key(long index)
 {
-    loadPage(index / d->entriesPerPage);
-    ulong indexInPage = index % d->entriesPerPage;
+    loadPage(index / d->pageEntryNumber);
+    ulong indexInPage = index % d->pageEntryNumber;
     setWordEntryOffset(d->entries.at(indexInPage).dataOffset());
     setWordEntrySize(d->entries.at(indexInPage).dataSize());
 
@@ -387,7 +387,7 @@ OffsetCacheFile::lookup(const QByteArray& word, long &index)
             }
         }
 
-        index *= d->entriesPerPage;
+        index *= d->pageEntryNumber;
         if (!found)
             index += indexFrom;    //next
         else
@@ -395,7 +395,7 @@ OffsetCacheFile::lookup(const QByteArray& word, long &index)
     }
     else
     {
-        index *= d->entriesPerPage;
+        index *= d->pageEntryNumber;
     }
 
     return found;
