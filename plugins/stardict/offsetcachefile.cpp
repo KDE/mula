@@ -103,7 +103,7 @@ OffsetCacheFile::~OffsetCacheFile()
 }
 
 QByteArray
-OffsetCacheFile::readFirstOnPageKey(long pageIndex)
+OffsetCacheFile::readFirstWordDataOnPage(long pageIndex)
 {
     d->indexFile.seek(d->pageOffsetList.at(pageIndex));
     int pageSize = d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex);
@@ -120,14 +120,14 @@ OffsetCacheFile::firstOnPageKey(long pageIndex)
         if (pageIndex == d->first.first)
             return d->first.second;
 
-        return readFirstOnPageKey(pageIndex);
+        return readFirstWordDataOnPage(pageIndex);
     }
     else if (pageIndex > d->middle.first)
     {
         if (pageIndex == d->last.first)
             return d->last.second;
 
-        return readFirstOnPageKey(pageIndex);
+        return readFirstWordDataOnPage(pageIndex);
     }
     else
     {
@@ -292,9 +292,9 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
         return false;
     }
 
-    d->first = qMakePair(0, readFirstOnPageKey(0));
-    d->last = qMakePair(d->pageOffsetList.size() - 2, readFirstOnPageKey(d->pageOffsetList.size() - 2));
-    d->middle = qMakePair((d->pageOffsetList.size() - 2) / 2, readFirstOnPageKey((d->pageOffsetList.size() - 2) / 2));
+    d->first = qMakePair(0, readFirstWordDataOnPage(0));
+    d->last = qMakePair(d->pageOffsetList.size() - 2, readFirstWordDataOnPage(d->pageOffsetList.size() - 2));
+    d->middle = qMakePair((d->pageOffsetList.size() - 2) / 2, readFirstWordDataOnPage((d->pageOffsetList.size() - 2) / 2));
     d->realLast = qMakePair(wordCount - 1, key(wordCount - 1));
 
     return true;

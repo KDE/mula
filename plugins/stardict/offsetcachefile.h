@@ -46,7 +46,7 @@ namespace MulaPluginStarDict
 
         private:
             ulong loadPage(long pageIndex);
-            QByteArray readFirstOnPageKey(long pageIndex);
+            QByteArray readFirstWordDataOnPage(long pageIndex);
             QByteArray firstOnPageKey(long pageIndex);
             static QStringList cacheLocations(const QString& completeFilePath);
             bool loadCache(const QString& completeFilePath);
