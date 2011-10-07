@@ -146,7 +146,7 @@ Swac::search(const QString &dictionary, const QString &word, const QString &fiel
         + "INNER JOIN sounds ON alphaidx.sounds_idx = sounds.idx "
         + "INNER JOIN packages ON sounds.packages_idx = packages.idx "
         + "WHERE packages.packid = ?1 AND alphaidx.str = ?2 "
-        + "LIMIT " + QString::number(limit) +";" 
+        + "LIMIT " + QString::number(limit) + ';' 
     );
 
     query.addBindValue(dict);
