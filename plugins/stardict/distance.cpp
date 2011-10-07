@@ -192,7 +192,7 @@ int EditDistance::calEditDistance(QString s, QString t, const int limit)
 #else
 int EditDistance::CalEditDistance(const char *s, const char *t, const int limit)
 {
-    //Step 1
+    // Step 1
     int k, i, j, n, m, cost;
     n = strlen(s);
     m = strlen(t);
@@ -207,21 +207,23 @@ int EditDistance::CalEditDistance(const char *s, const char *t, const int limit)
             if ( (int*)0 == d )
                 return (m + n);
         }
-        //Step 2
-        for (k = 0;k < n;k++)
+        // Step 2
+        for (k = 0; k < n; ++k)
             d[k] = k;
-        for (k = 0;k < m;k++)
+
+        for (k = 0; k < m; ++k)
             d[k*n] = k;
-        //Step 3 and 4
+
+        // Step 3 and 4
         for (i = 1; i < n; ++i)
             for (j = 1; j < m; ++j)
             {
-                //Step 5
+                // Step 5
                 if (s[i - 1] == t[j - 1])
                     cost = 0;
                 else
                     cost = 1;
-                //Step 6
+                // Step 6
                 d[j*n + i] = minimum(d[(j - 1) * n + i] + 1, d[j * n + i - 1] + 1, d[(j - 1) * n + i - 1] + cost);
 #ifdef COVER_TRANSPOSITION
 
@@ -234,6 +236,8 @@ int EditDistance::CalEditDistance(const char *s, const char *t, const int limit)
         return d[n*m - 1];
     }
     else
+    {
         return (n + m);
+    }
 }
 #endif
