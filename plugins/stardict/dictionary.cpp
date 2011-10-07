@@ -106,12 +106,12 @@ Dictionary::keyAndData(long index, QByteArray key, qint32 &offset, qint32 &size)
 }
 
 bool
-Dictionary::lookup(const QString string, long &index)
+Dictionary::lookup(const QString word, long &index)
 {
     if (d->indexFile.isNull())
         return false;
 
-    return d->indexFile->lookup(string.toUtf8(), index);
+    return d->indexFile->lookup(word.toUtf8(), index);
 }
 
 bool
