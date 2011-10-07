@@ -169,7 +169,7 @@ OffsetCacheFile::loadCache(const QString& completeFilePath)
         if( !d->mapFile.open( QIODevice::ReadOnly ) )
         {
             qDebug() << "Failed to open file:" << cacheLocation;
-            return -1;
+            return false;
         }
 
         d->mappedData = d->mapFile.map(0, d->mapFile.size());
