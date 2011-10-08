@@ -243,10 +243,10 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
     d->wordCount = wordCount;
 
     // Adding 1 is needed because the index file size is also stored
-    if (wordCount % d->pageEntryNumber == 0)
-        d->pageOffsetList.resize(wordCount / d->pageEntryNumber + 1);
-    else
-        d->pageOffsetList.resize(wordCount / d->pageEntryNumber + 2);
+    // if (wordCount % d->pageEntryNumber == 0)
+        // d->pageOffsetList.resize(wordCount / d->pageEntryNumber + 1);
+    // else
+        // d->pageOffsetList.resize(wordCount / d->pageEntryNumber + 2);
 
     if (!loadCache(completeFilePath))
     { //map file will close after finish of block
@@ -268,14 +268,11 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
         QByteArray byteArray = QByteArray::fromRawData(reinterpret_cast<const char*>(d->mappedData), d->mapFile.size());
 
         int position = 0;
-        int j = 0;
+        d->pageOffsetList.clear();
         for (int i = 0; i < wordCount; ++i)
         {
             if (i % d->pageEntryNumber == 0)
-            {
-                d->pageOffsetList[j] = position;
-                ++j;
-            }
+                d->pageOffsetList.append(position);
 
             position += qstrlen(byteArray.mid(position)) + 1 + 2 * sizeof(quint32);
         }
@@ -288,7 +285,7 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
     if (!d->indexFile.open(QIODevice::ReadOnly))
     {
         qDebug() << "Failed to open file:" << completeFilePath;
-        d->pageOffsetList.resize(0);
+        d->pageOffsetList.clear();
         return false;
     }
 
