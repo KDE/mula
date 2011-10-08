@@ -294,11 +294,11 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
     return true;
 }
 
-ulong
-OffsetCacheFile::loadPage(long pageIndex)
+int
+OffsetCacheFile::loadPage(int pageIndex)
 {
-    ulong wordEntryCount = d->pageEntryNumber;
-    if (pageIndex == ulong(d->pageOffsetList.size() - 2) && (wordEntryCount = d->wordCount % d->pageEntryNumber) == 0)
+    int wordEntryCount = d->pageEntryNumber;
+    if (pageIndex == (d->pageOffsetList.size() - 2) && (wordEntryCount = d->wordCount % d->pageEntryNumber) == 0)
     {
         wordEntryCount = d->pageEntryNumber;
     }

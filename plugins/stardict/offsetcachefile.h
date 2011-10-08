@@ -87,7 +87,7 @@ namespace MulaPluginStarDict
             virtual void setWordEntrySize(quint32 wordEntrySize);
 
         private:
-            ulong loadPage(long pageIndex);
+            int loadPage(int pageIndex);
             QByteArray readFirstWordDataOnPage(long pageIndex);
             QByteArray firstWordDataOnPage(long pageIndex);
             QStringList cacheLocations(const QString& completeFilePath);
