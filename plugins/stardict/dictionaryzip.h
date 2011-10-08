@@ -24,7 +24,6 @@
 
 namespace MulaPluginStarDict
 {
-{
     /** 
      * \brief The class can be used for compressing the .dict file
      *
@@ -39,8 +38,6 @@ namespace MulaPluginStarDict
      *
      * \see Indexfile
      */
-
-#define DICT_CACHE_SIZE 5
 
     class DictionaryZip
     {

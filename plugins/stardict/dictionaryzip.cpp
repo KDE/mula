@@ -184,6 +184,8 @@ class DictionaryZip::Private
         unsigned long compressedLength;
         QList<DictionaryCache> cache;
         QFile mapFile;
+
+        static const int dictionaryCacheSize = 5;
 };
 
 DictionaryZip::DictionaryZip()
@@ -503,7 +505,7 @@ DictionaryZip::open(const QString& fileName, int computeCRC)
     d->start = data;
     d->end = d->start + d->size;
 
-    for (int j = 0; j < DICT_CACHE_SIZE; ++j)
+    for (int j = 0; j < d->dictionaryCacheSize; ++j)
     {
         DictionaryCache dictionaryCache;
         dictionaryCache.setChunk(-1);
@@ -604,7 +606,7 @@ DictionaryZip::read(unsigned long start, unsigned long size)
             found = 0;
             target = 0;
             lastStamp = INT_MAX;
-            for (int j = 0; j < DICT_CACHE_SIZE; ++j)
+            for (int j = 0; j < d->dictionaryCacheSize; ++j)
             {
 #if USE_CACHE
                 if (d->cache.at(j).chunk() == i)
