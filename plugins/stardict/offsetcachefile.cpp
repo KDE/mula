@@ -232,6 +232,7 @@ OffsetCacheFile::loadPage(int pageIndex)
         QByteArray pageData = d->indexFile.read(d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex));
 
         ulong position = 0;
+        d->entries.clear();
         d->entries.reserve(wordEntryCountOnPage);
         for (int i = 0; i < wordEntryCountOnPage; ++i)
         {
