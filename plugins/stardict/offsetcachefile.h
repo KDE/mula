@@ -87,7 +87,20 @@ namespace MulaPluginStarDict
             virtual void setWordEntrySize(quint32 wordEntrySize);
 
         private:
+            /** 
+             * Loads the the word entries of relevant cache page into the
+             * internal data storage. It will return the number of the word
+             * entries loaded. This method is for internal usage only.
+             *
+             * \note It always loads the pageEntryNumber except the last page,
+             * if that is not completely reserved. The method will just load the
+             * last few entries then in that case.
+             *
+             * @param   index   The index of the desired page
+             * @return  The number of the word entries loaded
+             */
             int loadPage(int pageIndex);
+
             QByteArray readFirstWordDataOnPage(long pageIndex);
             QByteArray firstWordDataOnPage(long pageIndex);
             QStringList cacheLocations(const QString& completeFilePath);
