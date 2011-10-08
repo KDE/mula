@@ -66,7 +66,7 @@ class OffsetCacheFile::Private
         QPair<int, QByteArray> realLast;
 
         long pageIndex;
-        QList<WordEntry> entries;
+        QList<WordEntry> wordEntryList;
 
         QByteArray cacheMagicString;
         QFile mapFile;
@@ -232,8 +232,8 @@ OffsetCacheFile::loadPage(int pageIndex)
         QByteArray pageData = d->indexFile.read(d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex));
 
         ulong position = 0;
-        d->entries.clear();
-        d->entries.reserve(wordEntryCountOnPage);
+        d->wordEntryList.clear();
+        d->wordEntryList.reserve(wordEntryCountOnPage);
         for (int i = 0; i < wordEntryCountOnPage; ++i)
         {
             WordEntry wordEntry;
@@ -244,7 +244,7 @@ OffsetCacheFile::loadPage(int pageIndex)
             wordEntry.setDataSize(ntohl(*reinterpret_cast<quint32 *>(pageData.mid(position).data())));
             position += sizeof(quint32);
 
-            d->entries.append(wordEntry);
+            d->wordEntryList.append(wordEntry);
         }
     }
 
@@ -256,10 +256,10 @@ OffsetCacheFile::key(long index)
 {
     loadPage(index / d->pageEntryNumber);
     ulong indexInPage = index % d->pageEntryNumber;
-    setWordEntryOffset(d->entries.at(indexInPage).dataOffset());
-    setWordEntrySize(d->entries.at(indexInPage).dataSize());
+    setWordEntryOffset(d->wordEntryList.at(indexInPage).dataOffset());
+    setWordEntrySize(d->wordEntryList.at(indexInPage).dataSize());
 
-    return d->entries.at(indexInPage).data();
+    return d->wordEntryList.at(indexInPage).data();
 }
 
 bool
@@ -372,7 +372,7 @@ OffsetCacheFile::lookup(const QByteArray& word, long &index)
         while (indexFrom <= indexTo)
         {
             indexThisIndex = (indexFrom + indexTo) / 2;
-            cmpint = stardictStringCompare(word, d->entries.at(indexThisIndex).data());
+            cmpint = stardictStringCompare(word, d->wordEntryList.at(indexThisIndex).data());
             if (cmpint > 0)
                 indexFrom = indexThisIndex + 1;
             else if (cmpint < 0)
