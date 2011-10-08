@@ -26,10 +26,52 @@
 
 namespace MulaPluginStarDict
 {
+    /**
+     * \brief The class is used for dealing the cache file related operations.
+     *
+     * StarDict-2.4.8 started to support cache files. The cache file usage can
+     * speed up the loading and save memory by mapping the cache file. The
+     * cache file names are .idx.oft and .syn.oft.
+     * The cache file contains a utf-8 string terminated by '\0', and then
+     * 32-bits numbers. These numbers are the offset value of the cache pages.
+     * Each cache page contains "pageEntryNumber" word entries inside the index
+     * file. They are not stored in network byte order. The index file does not
+     * need to be parsed by going through every byte, thus it can provide better
+     * performance this way.
+     *
+     * The string must begin with:
+     * =====
+     * StarDict's oft file
+     * version=2.4.8
+     * =====
+     * The following line is something like this:
+     * url=/usr/share/stardict/dic/stardict-somedict-2.4.2/somedict.idx
+     * This line should end by '\n'.
+     *
+     * The class will try to create the .oft offset file, if failed, in the same
+     * directory where the .ifo file can be found. The class will try to create
+     * the cache file in the ${CACHE_LOCATION}/stardict/ folder where the cache
+     * path is provided by QDesktopService class using the CacheLocation
+     * argument.
+     *
+     * If two or more dictionaries have the same file name, StarDict will
+     * create somedict.idx.oft, somedict(2).idx.oft, somedict(3).idx.oft and the
+     * like, for them respectively. Each starts with different "url=" in the
+     * beginning string.
+     *
+     * \see Indexfile
+     */
     class OffsetCacheFile : public AbstractIndexFile
     {
         public:
+            /**
+             * Constructor.
+             */
             OffsetCacheFile();
+
+            /**
+             * Destructor.
+             */
             virtual ~OffsetCacheFile();
 
             // Loads the cache or creates if it does not exist
