@@ -22,7 +22,23 @@
 
 #include <QtCore/QString>
 
-namespace MulaPluginStarDict {
+namespace MulaPluginStarDict
+{
+{
+    /** 
+     * \brief The class can be used for compressing the .dict file
+     *
+     * "dictzip" uses the same compression algorithm and file format as gzip, 
+     * but provides a table that can be used to randomly access compressed blocks 
+     * in the file. The use of 50-64kB blocks for compression typically degrades 
+     * the compression by less than 10%, while maintaining acceptable random
+     * access capabilities for all the data in the file. In addition, the files 
+     * compressed by using dictzip can be decompressed by using gunzip.
+     * For more information about dictzip, refer to DICT project, please see:
+     * http://www.dict.org
+     *
+     * \see Indexfile
+     */
 
 #define DICT_CACHE_SIZE 5
 
