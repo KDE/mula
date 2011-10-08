@@ -277,6 +277,8 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
             position += qstrlen(byteArray.mid(position)) + 1 + 2 * sizeof(quint32);
         }
 
+        d->pageOffsetList.append(position);
+
         if (!saveCache(completeFilePath))
             qDebug() << "Cache update failed";
     }
