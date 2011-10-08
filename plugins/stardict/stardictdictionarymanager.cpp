@@ -504,7 +504,7 @@ StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, long& iWordI
 
         if (!found && searchWordLength > 3)
         {
-            isUpperCase = (searchWord.endsWith("ES")
+            isUpperCase = (searchWord.endsWith("ES") //krazy:exclude=strings
                         && (searchWord.at(searchWordLength - 3) == 'S'
                         || searchWord.at(searchWordLength - 3) == 'X'
                         || searchWord.at(searchWordLength - 3) == 'O'
@@ -513,7 +513,7 @@ StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, long& iWordI
                         || searchWord.at(searchWordLength - 4) == 'S'))));
 
             if (isUpperCase ||
-                    (searchWord.endsWith("es")
+                    (searchWord.endsWith("es") //krazy:exclude=strings
                      && (searchWord.at(searchWordLength - 3) == 's'
                      || searchWord.at(searchWordLength - 3) == 'x'
                      || searchWord.at(searchWordLength - 3) == 'o'
