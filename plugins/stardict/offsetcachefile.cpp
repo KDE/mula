@@ -242,12 +242,6 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
 
     d->wordCount = wordCount;
 
-    // Adding 1 is needed because the index file size is also stored
-    // if (wordCount % d->pageEntryNumber == 0)
-        // d->pageOffsetList.resize(wordCount / d->pageEntryNumber + 1);
-    // else
-        // d->pageOffsetList.resize(wordCount / d->pageEntryNumber + 2);
-
     if (!loadCache(completeFilePath))
     { //map file will close after finish of block
         d->mapFile.unmap(d->mappedData);
@@ -269,12 +263,13 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
 
         int position = 0;
         d->pageOffsetList.clear();
+        int wordTerminatorOffsetSizeLength = 1 + 2 * sizeof(quint32);
         for (int i = 0; i < wordCount; ++i)
         {
             if (i % d->pageEntryNumber == 0)
                 d->pageOffsetList.append(position);
 
-            position += qstrlen(byteArray.mid(position)) + 1 + 2 * sizeof(quint32);
+            position += qstrlen(byteArray.mid(position)) + wordTerminatorOffsetSizeLength;
         }
 
         d->pageOffsetList.append(position);
