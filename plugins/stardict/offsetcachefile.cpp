@@ -52,22 +52,20 @@ class OffsetCacheFile::Private
 
         void fill(QByteArray data, int wordEntryCount, long index);
 
+        // The length of "word_str" should be less than 256, and then offset, size
+        static const int wordEntrySize = 256 + sizeof(quint32)*2;
+
         static const int pageEntryNumber = 32;
 
         QVector<quint32> pageOffsetList;
         QFile indexFile;
         ulong wordCount;
 
-        // The length of "word_str" should be less than 256, and then offset, size
-        static const int wordEntrySize = 256 + sizeof(quint32)*2;
-
         // index/date based key and value pair
         QPair<int, QByteArray> first;
         QPair<int, QByteArray> last;
         QPair<int, QByteArray> middle;
         QPair<int, QByteArray> realLast;
-
-        QByteArray pageData;
 
         long entryIndex;
         QList<WordEntry> entries;
@@ -307,8 +305,8 @@ OffsetCacheFile::loadPage(int pageIndex)
     {
         d->indexFile.seek(d->pageOffsetList.at(pageIndex));
 
-        d->pageData = d->indexFile.read(d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex));
-        d->fill(d->pageData, wordEntryCount, pageIndex);
+        QByteArray pageData = d->indexFile.read(d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex));
+        d->fill(pageData, wordEntryCount, pageIndex);
     }
 
     return wordEntryCount;
