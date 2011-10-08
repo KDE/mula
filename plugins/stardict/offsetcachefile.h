@@ -92,15 +92,16 @@ namespace MulaPluginStarDict
 
         private:
             /** 
-             * Loads the the word entries of relevant cache page into the
-             * internal data storage. It will return the number of the word
-             * entries loaded. This method is for internal usage only.
+             * Loads the word entries of relevant cache page into the internal
+             * data storage. It will return the number of the word entries
+             * loaded.
              *
              * \note It always loads the pageEntryNumber except the last page,
              * if that is not completely reserved. The method will just load the
-             * last few entries then in that case.
+             * last few entries then in that case. This method is only for
+             * internal usage.
              *
-             * @param   index   The index of the desired page
+             * @param   pageIndex   The index of the desired page
              * @return  The number of the word entries loaded
              */
             int loadPage(int pageIndex);
@@ -108,7 +109,31 @@ namespace MulaPluginStarDict
             QByteArray readFirstWordDataOnPage(long pageIndex);
             QByteArray firstWordDataOnPage(long pageIndex);
             QStringList cacheLocations(const QString& completeFilePath);
+
+            /** 
+             * Loads the cache file according to the relevant index file path.
+             * Returns true if the cache file loading is successful, otherwise
+             * returns false.
+             *
+             * \note This method is only for internal usage.
+             *
+             * @param   completeFilePath The complete file path
+             * @return  Whether or not the cache file loading has been
+             * successful
+             */
             bool loadCache(const QString& completeFilePath);
+
+            /** 
+             * Saves the cache file according to the relevant index file path.
+             * Returns true if the cache file saving is successful, otherwise
+             * returns false.
+             *
+             * \note This method is only for internal usage.
+             *
+             * @param   completeFilePath The complete file path
+             * @return  Whether or not the cache file saving has been
+             * successful
+             */
             bool saveCache(const QString& completeFilePath);
 
             class Private;
