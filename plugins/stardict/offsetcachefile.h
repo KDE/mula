@@ -91,7 +91,7 @@ namespace MulaPluginStarDict
             virtual void setWordEntrySize(quint32 wordEntrySize);
 
         private:
-            /** 
+            /**
              * Loads the word entries of relevant cache page into the internal
              * data storage. It will return the number of the word entries
              * loaded.
@@ -106,11 +106,49 @@ namespace MulaPluginStarDict
              */
             int loadPage(int pageIndex);
 
+            /**
+             * Returns the first word data of the desired page from the index
+             * file. It is a bit slower since it starts seeking and reading
+             * from the index file directly without using any caching mechanism
+             *
+             * \note This method is only for internal usage.
+             *
+             * @param   pageIndex The index of the desired page
+             * @return  The desired word data from the index file
+             * @see firstWordDataOnPage
+             */
             QByteArray readFirstWordDataOnPage(long pageIndex);
+
+            /**
+             * Returns the first word data of the desired page from the index
+             * file by using a caching approach to make it faster to look the
+             * word up in certain cases. Hence it is faster to use this method
+             * for reading the first word data of the cache page.
+             *
+             * \note This method is only for internal usage.
+             *
+             * @param   pageIndex The index of the desired page
+             * @return  The desired word data from the index file
+             * @see readFirstWordDataOnPage
+             */
             QByteArray firstWordDataOnPage(long pageIndex);
+
+            /**
+             * Returns the string list of the cache locations.
+             * The method will return the location where the index file can be
+             * found and the location ${CACHE_LOCATION}/stardict/ folder where
+             * the cache path is provided by QDesktopService class using the
+             * CacheLocation argument.
+             *
+             * \note This method is only for internal usage.
+             *
+             * @param   completeFilePath The complete file path
+             * @return  The list of the cache locations
+             * @see saveCache, loadCache
+             */
             QStringList cacheLocations(const QString& completeFilePath);
 
-            /** 
+            /**
              * Loads the cache file according to the relevant index file path.
              * Returns true if the cache file loading is successful, otherwise
              * returns false.
@@ -120,10 +158,11 @@ namespace MulaPluginStarDict
              * @param   completeFilePath The complete file path
              * @return  Whether or not the cache file loading has been
              * successful
+             * @see cacheLocations, saveCache
              */
             bool loadCache(const QString& completeFilePath);
 
-            /** 
+            /**
              * Saves the cache file according to the relevant index file path.
              * Returns true if the cache file saving is successful, otherwise
              * returns false.
@@ -133,6 +172,7 @@ namespace MulaPluginStarDict
              * @param   completeFilePath The complete file path
              * @return  Whether or not the cache file saving has been
              * successful
+             * @see cacheLocations, loadCache
              */
             bool saveCache(const QString& completeFilePath);
 
