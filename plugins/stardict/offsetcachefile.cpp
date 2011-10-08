@@ -50,7 +50,7 @@ class OffsetCacheFile::Private
         {
         }
 
-        void fill(QByteArray data, int entryCount, long index);
+        void fill(QByteArray data, int wordEntryCount, long index);
 
         static const int pageEntryNumber = 32;
 
@@ -78,11 +78,11 @@ class OffsetCacheFile::Private
 };
 
 void
-OffsetCacheFile::Private::fill(QByteArray data, int entryCount, long index)
+OffsetCacheFile::Private::fill(QByteArray data, int wordEntryCount, long index)
 {
     entryIndex = index;
     ulong position = 0;
-    for (int i = 0; i < entryCount; ++i)
+    for (int i = 0; i < wordEntryCount; ++i)
     {
         entries[i].setData(data.mid(position));
         position = qstrlen(data.mid(position)) + 1;
@@ -303,10 +303,10 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
 ulong
 OffsetCacheFile::loadPage(long pageIndex)
 {
-    ulong entryCount = d->pageEntryNumber;
-    if (pageIndex == ulong(d->pageOffsetList.size() - 2) && (entryCount = d->wordCount % d->pageEntryNumber) == 0)
+    ulong wordEntryCount = d->pageEntryNumber;
+    if (pageIndex == ulong(d->pageOffsetList.size() - 2) && (wordEntryCount = d->wordCount % d->pageEntryNumber) == 0)
     {
-        entryCount = d->pageEntryNumber;
+        wordEntryCount = d->pageEntryNumber;
     }
 
     if (pageIndex != d->entryIndex)
@@ -314,10 +314,10 @@ OffsetCacheFile::loadPage(long pageIndex)
         d->indexFile.seek(d->pageOffsetList.at(pageIndex));
 
         d->pageData = d->indexFile.read(d->pageOffsetList[pageIndex + 1] - d->pageOffsetList[pageIndex]);
-        d->fill(d->pageData, entryCount, pageIndex);
+        d->fill(d->pageData, wordEntryCount, pageIndex);
     }
 
-    return entryCount;
+    return wordEntryCount;
 }
 
 QByteArray
