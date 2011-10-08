@@ -113,7 +113,7 @@ OffsetCacheFile::readFirstWordDataOnPage(long pageIndex)
 }
 
 QByteArray
-OffsetCacheFile::firstOnPageKey(long pageIndex)
+OffsetCacheFile::firstWordDataOnPage(long pageIndex)
 {
     if (pageIndex < d->middle.first)
     {
@@ -356,7 +356,7 @@ OffsetCacheFile::lookup(const QByteArray& word, long &index)
         while (indexFrom <= indexTo)
         {
             indexThisIndex = (indexFrom + indexTo) / 2;
-            cmpint = stardictStringCompare(word, firstOnPageKey(indexThisIndex));
+            cmpint = stardictStringCompare(word, firstWordDataOnPage(indexThisIndex));
             if (cmpint > 0)
                 indexFrom = indexThisIndex + 1;
             else if (cmpint < 0)
