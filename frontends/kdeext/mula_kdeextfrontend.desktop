@@ -2,12 +2,14 @@
 Name=Mula KDE Extended Frontend
 Name[nl]=Uitgebreide KDE-schil voor Mula
 Name[pt]=Interface Extendida do Mula para o KDE
+Name[pt_BR]=Interface estendida do Mula para o KDE
 Name[sv]=Mula utökat KDE-gränssnitt
 Name[uk]=Оболонка Mula для KDE з розширеними можливостями
 Name[x-test]=xxMula KDE Extended Frontendxx
 GenericName=Mula KDE Extended Frontend Launcher
 GenericName[nl]=Procestarter van uitgebreide KDE-schil voor Mula
 GenericName[pt]=Lançamento da Interface Extendida do Mula para o KDE
+GenericName[pt_BR]=Lançamento da interface estendida do Mula para o KDE
 GenericName[sv]=Startprogram för Mula utökat KDE-gränssnitt
 GenericName[uk]=Інструмент запуску оболонки Mula для KDE з розширеними можливостями
 GenericName[x-test]=xxMula KDE Extended Frontend Launcherxx

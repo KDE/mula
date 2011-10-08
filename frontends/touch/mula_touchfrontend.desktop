@@ -2,12 +2,14 @@
 Name=Mula Touch Player
 Name[nl]=Aanraakafspeler voor Mula
 Name[pt]=Leitor por Toque Mula
+Name[pt_BR]=Reprodutor sensível ao toque Mula
 Name[sv]=Mula pekspelare
 Name[uk]=Сенсорний програвач Mula
 Name[x-test]=xxMula Touch Playerxx
 GenericName=Mula Touch Player Launcher
 GenericName[nl]=Procestarter van aanraakafspeler voor Mula
 GenericName[pt]=Lançamento do Leitor por Toque Mula
+GenericName[pt_BR]=Lançamento do reprodutor sensível ao toque do Mula
 GenericName[sv]=Startprogram för Mula pekspelare
 GenericName[uk]=Інструмент запуску сенсорного програвача Mula
 GenericName[x-test]=xxMula Touch Player Launcherxx
