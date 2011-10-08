@@ -144,6 +144,8 @@ DictionaryManager::setLoadedDictionaryList(const QMultiHash<QString, QString> &l
 {
     QMultiHash<QString, QString> dictionaries = loadedDictionaryList;
 
+    // TODO: Setting the same values in all plugins. Cache it later since it is
+    // an expensive operation to call it all the time
     foreach (const QString& pluginName, dictionaries.keys())
     {
         MulaCore::DictionaryPlugin* dictionaryPlugin = MulaCore::PluginManager::instance()->plugin(pluginName);
