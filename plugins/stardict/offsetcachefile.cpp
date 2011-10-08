@@ -40,7 +40,7 @@ class OffsetCacheFile::Private
     public:
         Private()
             : wordCount(0)
-            , entryIndex(-1)
+            , pageIndex(-1)
             , cacheMagicString("StarDict's Cache, Version: 0.1")
             , mappedData(0)
         {
@@ -67,7 +67,7 @@ class OffsetCacheFile::Private
         QPair<int, QByteArray> middle;
         QPair<int, QByteArray> realLast;
 
-        long entryIndex;
+        long pageIndex;
         QList<WordEntry> entries;
 
         QByteArray cacheMagicString;
@@ -78,7 +78,7 @@ class OffsetCacheFile::Private
 void
 OffsetCacheFile::Private::fill(QByteArray data, int wordEntryCount, long index)
 {
-    entryIndex = index;
+    pageIndex = index;
     ulong position = 0;
     for (int i = 0; i < wordEntryCount; ++i)
     {
@@ -233,6 +233,42 @@ OffsetCacheFile::saveCache(const QString& completeFilePath)
     return false;
 }
 
+int
+OffsetCacheFile::loadPage(int pageIndex)
+{
+    // It is always the pageEntryNumber except the last page, if that is not
+    // "full".
+    int wordEntryCountOnPage;
+    if (pageIndex == (d->pageOffsetList.size() - 2) && (d->wordCount % d->pageEntryNumber) != 0)
+    {
+        wordEntryCountOnPage = d->wordCount % d->pageEntryNumber;
+    }
+    else
+    {
+        wordEntryCountOnPage = d->pageEntryNumber;
+    }
+
+    if (pageIndex != d->pageIndex)
+    {
+        d->indexFile.seek(d->pageOffsetList.at(pageIndex));
+        QByteArray pageData = d->indexFile.read(d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex));
+        d->fill(pageData, wordEntryCountOnPage, pageIndex);
+    }
+
+    return wordEntryCountOnPage;
+}
+
+QByteArray
+OffsetCacheFile::key(long index)
+{
+    loadPage(index / d->pageEntryNumber);
+    ulong indexInPage = index % d->pageEntryNumber;
+    setWordEntryOffset(d->entries.at(indexInPage).dataOffset());
+    setWordEntrySize(d->entries.at(indexInPage).dataSize());
+
+    return d->entries.at(indexInPage).data();
+}
+
 bool
 OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong fileSize)
 {
@@ -290,37 +326,6 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
     d->realLast = qMakePair(wordCount - 1, key(wordCount - 1));
 
     return true;
-}
-
-int
-OffsetCacheFile::loadPage(int pageIndex)
-{
-    int wordEntryCount = d->pageEntryNumber;
-    if (pageIndex == (d->pageOffsetList.size() - 2) && (wordEntryCount = d->wordCount % d->pageEntryNumber) == 0)
-    {
-        wordEntryCount = d->pageEntryNumber;
-    }
-
-    if (pageIndex != d->entryIndex)
-    {
-        d->indexFile.seek(d->pageOffsetList.at(pageIndex));
-
-        QByteArray pageData = d->indexFile.read(d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex));
-        d->fill(pageData, wordEntryCount, pageIndex);
-    }
-
-    return wordEntryCount;
-}
-
-QByteArray
-OffsetCacheFile::key(long index)
-{
-    loadPage(index / d->pageEntryNumber);
-    ulong indexInPage = index % d->pageEntryNumber;
-    setWordEntryOffset(d->entries.at(indexInPage).dataOffset());
-    setWordEntrySize(d->entries.at(indexInPage).dataSize());
-
-    return d->entries.at(indexInPage).data();
 }
 
 bool
