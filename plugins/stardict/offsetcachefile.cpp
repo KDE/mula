@@ -50,8 +50,6 @@ class OffsetCacheFile::Private
         {
         }
 
-        void fill(QByteArray data, int wordEntryCount, long index);
-
         // The length of "word_str" should be less than 256, and then offset, size
         static const int wordEntrySize = 256 + sizeof(quint32)*2;
 
@@ -74,22 +72,6 @@ class OffsetCacheFile::Private
         QFile mapFile;
         uchar *mappedData;
 };
-
-void
-OffsetCacheFile::Private::fill(QByteArray data, int wordEntryCount, long index)
-{
-    pageIndex = index;
-    ulong position = 0;
-    for (int i = 0; i < wordEntryCount; ++i)
-    {
-        entries[i].setData(data.mid(position));
-        position = qstrlen(data.mid(position)) + 1;
-        entries[i].setDataOffset(ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data())));
-        position += sizeof(quint32);
-        entries[i].setDataSize(ntohl(*reinterpret_cast<quint32 *>(data.mid(position).data())));
-        position += sizeof(quint32);
-    }
-}
 
 OffsetCacheFile::OffsetCacheFile()
     : d(new Private)
@@ -239,20 +221,28 @@ OffsetCacheFile::loadPage(int pageIndex)
     // It is always the pageEntryNumber except the last page, if that is not
     // "full".
     int wordEntryCountOnPage;
+
     if (pageIndex == (d->pageOffsetList.size() - 2) && (d->wordCount % d->pageEntryNumber) != 0)
-    {
         wordEntryCountOnPage = d->wordCount % d->pageEntryNumber;
-    }
     else
-    {
         wordEntryCountOnPage = d->pageEntryNumber;
-    }
 
     if (pageIndex != d->pageIndex)
     {
+        d->pageIndex = pageIndex;
         d->indexFile.seek(d->pageOffsetList.at(pageIndex));
         QByteArray pageData = d->indexFile.read(d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex));
-        d->fill(pageData, wordEntryCountOnPage, pageIndex);
+
+        ulong position = 0;
+        for (int i = 0; i < wordEntryCountOnPage; ++i)
+        {
+            d->entries[i].setData(pageData.mid(position));
+            position = qstrlen(pageData.mid(position)) + 1;
+            d->entries[i].setDataOffset(ntohl(*reinterpret_cast<quint32 *>(pageData.mid(position).data())));
+            position += sizeof(quint32);
+            d->entries[i].setDataSize(ntohl(*reinterpret_cast<quint32 *>(pageData.mid(position).data())));
+            position += sizeof(quint32);
+        }
     }
 
     return wordEntryCountOnPage;
