@@ -1,6 +1,6 @@
 /******************************************************************************
  * This file is part of the Mula project
- * Copyright (c) 2008 Alexander Rodin
+ * Copyright (c) 2008 Alexander Rodin <rodin.alexander@gmail.com>
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or

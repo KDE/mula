@@ -1,6 +1,6 @@
 /******************************************************************************
  * This file is part of the Mula project
- * Copyright (c) 2008 Nick Shaforostoff
+ * Copyright (c) 2008 Nick Shaforostoff <shaforostoff@kde.ru>
  * Copyright (c) 2011 Laszlo Papp <lpapp@kde.org>
  *
  * This library is free software; you can redistribute it and/or
