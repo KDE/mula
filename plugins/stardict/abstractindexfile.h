@@ -29,11 +29,30 @@ namespace MulaPluginStarDict
     class AbstractIndexFile
     {
         public:
+            /**
+             * Constructor.
+             */
             AbstractIndexFile();
+
+            /**
+             * Destructor.
+             */
             virtual ~AbstractIndexFile();
 
             virtual bool load(const QString& url, int wc, qulonglong sfile) = 0;
+
+            /**
+             * Returns the word data according to the relevant index
+             *
+             * \note Since it it an abstract base class, the real
+             * implementation is up to the successors whether to return the
+             * word directly, use some caching mechanism or something else.
+             *
+             * @param   index   The index of the desired word
+             * @return  The word data
+             */
             virtual QByteArray key(long index) = 0;
+
             virtual bool lookup(const QByteArray& string, long &index) = 0;
 
             virtual quint32 wordEntryOffset() const;

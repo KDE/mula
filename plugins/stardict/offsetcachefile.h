@@ -75,9 +75,13 @@ namespace MulaPluginStarDict
             virtual ~OffsetCacheFile();
 
             // Loads the cache or creates if it does not exist
+            /** Reimplemented from AbstractIndexFile::load() */
             bool load(const QString& completeFilePath, int wordCount, qulonglong fileSize);
+
+            /** Reimplemented from AbstractIndexFile::key() */
             QByteArray key(long index);
 
+            /** Reimplemented from AbstractIndexFile::lookup() */
             bool lookup(const QByteArray& string, long &index);
 
             virtual quint32 wordEntryOffset() const;

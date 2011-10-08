@@ -218,8 +218,6 @@ OffsetCacheFile::saveCache(const QString& completeFilePath)
 int
 OffsetCacheFile::loadPage(int pageIndex)
 {
-    // It is always the pageEntryNumber except the last page, if that is not
-    // "full". It just the last few entries then.
     int wordEntryCountOnPage;
 
     if (pageIndex == (d->pageOffsetList.size() - 2) && (d->wordCount % d->pageEntryNumber) != 0)
