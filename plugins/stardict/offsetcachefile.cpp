@@ -307,7 +307,7 @@ OffsetCacheFile::loadPage(int pageIndex)
     {
         d->indexFile.seek(d->pageOffsetList.at(pageIndex));
 
-        d->pageData = d->indexFile.read(d->pageOffsetList[pageIndex + 1] - d->pageOffsetList[pageIndex]);
+        d->pageData = d->indexFile.read(d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex));
         d->fill(d->pageData, wordEntryCount, pageIndex);
     }
 
