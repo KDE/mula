@@ -219,7 +219,7 @@ int
 OffsetCacheFile::loadPage(int pageIndex)
 {
     // It is always the pageEntryNumber except the last page, if that is not
-    // "full".
+    // "full". It just the last few entries then.
     int wordEntryCountOnPage;
 
     if (pageIndex == (d->pageOffsetList.size() - 2) && (d->wordCount % d->pageEntryNumber) != 0)
@@ -234,6 +234,7 @@ OffsetCacheFile::loadPage(int pageIndex)
         QByteArray pageData = d->indexFile.read(d->pageOffsetList.at(pageIndex + 1) - d->pageOffsetList.at(pageIndex));
 
         ulong position = 0;
+        d->entries.reserve(wordEntryCountOnPage);
         for (int i = 0; i < wordEntryCountOnPage; ++i)
         {
             d->entries[i].setData(pageData.mid(position));
