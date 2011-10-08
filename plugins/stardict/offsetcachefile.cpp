@@ -235,12 +235,15 @@ OffsetCacheFile::loadPage(int pageIndex)
         d->entries.reserve(wordEntryCountOnPage);
         for (int i = 0; i < wordEntryCountOnPage; ++i)
         {
-            d->entries[i].setData(pageData.mid(position));
+            WordEntry wordEntry;
+            wordEntry.setData(pageData.mid(position));
             position = qstrlen(pageData.mid(position)) + 1;
-            d->entries[i].setDataOffset(ntohl(*reinterpret_cast<quint32 *>(pageData.mid(position).data())));
+            wordEntry.setDataOffset(ntohl(*reinterpret_cast<quint32 *>(pageData.mid(position).data())));
             position += sizeof(quint32);
-            d->entries[i].setDataSize(ntohl(*reinterpret_cast<quint32 *>(pageData.mid(position).data())));
+            wordEntry.setDataSize(ntohl(*reinterpret_cast<quint32 *>(pageData.mid(position).data())));
             position += sizeof(quint32);
+
+            d->entries.append(wordEntry);
         }
     }
 
