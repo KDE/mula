@@ -25,9 +25,9 @@
 #include <QtCore/QMutex>
 #include <QtCore/QCoreApplication>
 
-#if defined __GNUC__ && __GNUC__ >= 4 && __GNUC_MINOR__ >= 4
+#if defined Q_CC_GNU && __GNUC__ >= 4 && __GNUC_MINOR__ >= 4
 #define __MEMBARRIER __sync_synchronize();
-#elif defined _MSC_VER && defined _WIN64
+#elif defined Q_CC_MSVC && defined Q_OS_WIN64
 #define __MEMBARRIER MemoryBarrier();
 #else
 #define __MEMBARRIER 
