@@ -265,8 +265,6 @@ OffsetCacheFile::key(long index)
 bool
 OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong fileSize)
 {
-    Q_UNUSED(fileSize);
-
     d->wordCount = wordCount;
 
     if (!loadCache(completeFilePath))
@@ -286,7 +284,7 @@ OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong
             return false;
         }
 
-        QByteArray byteArray = QByteArray::fromRawData(reinterpret_cast<const char*>(d->mappedData), d->mapFile.size());
+        QByteArray byteArray = QByteArray::fromRawData(reinterpret_cast<const char*>(d->mappedData), fileSize);
 
         int position = 0;
         d->pageOffsetList.clear();
