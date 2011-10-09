@@ -30,10 +30,6 @@
 
 #include <zlib.h>
 
-#ifdef Q_OS_WIN32
-#include <io.h>
-#endif
-
 #include <sys/stat.h>
 
 using namespace MulaPluginStarDict;
