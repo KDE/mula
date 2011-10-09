@@ -30,14 +30,9 @@
 
 #include <zlib.h>
 
-#ifdef Q_OS_UNIX
-#include <unistd.h>
-#endif
 #ifdef Q_OS_WIN32
 #include <io.h>
 #endif
-#include <limits.h>
-#include <fcntl.h>
 
 #include <sys/stat.h>
 
