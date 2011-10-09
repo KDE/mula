@@ -263,7 +263,7 @@ OffsetCacheFile::key(long index)
 }
 
 bool
-OffsetCacheFile::load(const QString& completeFilePath, int wordCount, qulonglong fileSize)
+OffsetCacheFile::load(const QString& completeFilePath, qulonglong fileSize, int wordCount)
 {
     d->wordCount = wordCount;
 

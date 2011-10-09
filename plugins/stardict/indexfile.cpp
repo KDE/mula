@@ -54,7 +54,7 @@ IndexFile::~IndexFile()
 }
 
 bool
-IndexFile::load(const QString& filePath, int wordCount, qulonglong fileSize)
+IndexFile::load(const QString& filePath, qulonglong fileSize, int wordCount)
 {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))

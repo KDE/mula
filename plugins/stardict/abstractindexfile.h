@@ -39,7 +39,7 @@ namespace MulaPluginStarDict
              */
             virtual ~AbstractIndexFile();
 
-            virtual bool load(const QString& url, int wc, qulonglong sfile) = 0;
+            virtual bool load(const QString& url, qulonglong fileSize, int wc) = 0;
 
             /**
              * Returns the word data according to the relevant index
