@@ -39,6 +39,17 @@ namespace MulaPluginStarDict
              */
             virtual ~AbstractIndexFile();
 
+            /**
+             * Loads the relevant index, cache file and so forth. Since it is
+             * just an abstract base class, it is up to the successor to decide
+             * what the method actually interprets to loading.
+             *
+             * @param   filePath   The complete file path of the index file
+             * @param   filesize    The file size of the index file coming from
+             * the ".ifo" file
+             * @param  wordCount   The number of the word entries
+             * @return Whether or not the loading was successful
+             */
             virtual bool load(const QString& filePath, qulonglong fileSize, int wordCount) = 0;
 
             /**
