@@ -32,12 +32,12 @@ class DirectoryProvider::Private
 {
     public:
         Private()
-        {   
-        }   
+        {
+        }
 
         ~Private()
-        {   
-        }   
+        {
+        }
 
         QString userDataPath;
         QHash<QString, QString> userDirs;

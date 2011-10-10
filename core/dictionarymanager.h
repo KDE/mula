@@ -34,42 +34,42 @@ namespace MulaCore
         MULA_SINGLETON( DictionaryManager )
 
         public:
-            /** 
+            /**
              * Returns true if word exists in dictionaries,
              * otherwise false.
              */
             bool isTranslatable(const QString &word);
 
-            /** 
+            /**
              * Returns translation for word. If word not found, returns
              * "Not found!"
              */
             QString translate(const QString &word);
 
-            /** 
+            /**
              * Returns a list of similar words contained in dictionaries.
              */
             QStringList findSimilarWords(const QString &word);
 
-            /** 
+            /**
              * Returns a list of available dictionaries.
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
              */
             QMultiHash<QString, QString> availableDictionaryList() const;
 
-            /** 
-             * Returns a list of loaded dictionaries. 
+            /**
+             * Returns a list of loaded dictionaries.
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
              */
             const QMultiHash<QString, QString> &loadedDictionaryList() const;
 
-            /** 
+            /**
              * Sets the list of the loaded dictionaries.
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
-             * If dictionary cannot be loaded it will not be added to 
+             * If dictionary cannot be loaded it will not be added to
              * availableDicts list.
              *
              * @param loadedDictionaryList The list of the loaded dictionaries

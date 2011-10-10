@@ -53,7 +53,7 @@
 // A utf-8 string which is marked up with the xdxf language.
 // See http://xdxf.sourceforge.net
 // StarDict has these extensions:
-// <rref> can have "type" attribute, it can be "image", "sound", "video" 
+// <rref> can have "type" attribute, it can be "image", "sound", "video"
 // and "attach".
 // <kref> can have "k" attribute.
 // case 'x':
@@ -67,7 +67,7 @@
 // The data begins with a network byte-ordered guint32 to identify the picture
 // file's size, immediately followed by the file's content.
 // case 'P':
-        
+
 using namespace MulaPluginStarDict;
 
 class DictionaryBase::Private
@@ -77,7 +77,7 @@ class DictionaryBase::Private
             : dictionaryFile(new QFile)
             , compressedDictionaryFile(0)
             , currentCacheItemIndex(0)
-        {   
+        {
         }
 
         ~Private()
@@ -122,17 +122,17 @@ DictionaryBase::wordData(quint32 indexItemOffset, qint32 indexItemSize)
     QByteArray originalData;
 
     if (!d->sameTypeSequence.isEmpty())
-    {    
+    {
         if (d->dictionaryFile->isOpen())
             originalData = d->dictionaryFile->read(indexItemSize);
-        else 
+        else
             originalData = d->compressedDictionaryFile->read(indexItemOffset, indexItemSize);
 
         int sameTypeSequenceLength = d->sameTypeSequence.length();
 
         int sectionSize = 0;
         int sectionPosition = 0;
-        
+
         //copy the head items.
         foreach (const QChar& ch, d->sameTypeSequence.left(sameTypeSequenceLength - 1))
         {
@@ -315,7 +315,7 @@ bool DictionaryBase::findData(const QStringList &searchWords, qint32 indexItemOf
             default:
                 if (QChar(originalData.at(sectionSize)).isUpper())
                 {
-                    originalData.fromRawData(reinterpret_cast<char*>(&sectionSize), 4); 
+                    originalData.fromRawData(reinterpret_cast<char*>(&sectionSize), 4);
                     sectionSize += sizeof(quint32);
                 }
                 else

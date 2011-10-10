@@ -30,7 +30,7 @@
 #elif defined Q_CC_MSVC && defined Q_OS_WIN64
 #define __MEMBARRIER MemoryBarrier();
 #else
-#define __MEMBARRIER 
+#define __MEMBARRIER
 #endif
 
 /**
@@ -131,7 +131,7 @@ namespace MulaCore
                 delete sm_mutex;
                 sm_mutex = 0;
             }
-            
+
         private:
 
             static QMutex* mutexInstance()

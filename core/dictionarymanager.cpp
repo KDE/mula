@@ -215,7 +215,7 @@ DictionaryManager::reloadDictionaryList()
 
     QMultiHash<QString, QString> oldDictionaryList = d->loadedDictionaryList;
     d->loadedDictionaryList.clear();
- 
+
     for (QMultiHash<QString, QString>::const_iterator i = oldDictionaryList.begin(); i != oldDictionaryList.end(); ++i)
     {
         if (loadedDictionaryList.contains(i.key(), i.value()))

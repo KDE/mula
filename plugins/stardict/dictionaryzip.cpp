@@ -41,7 +41,7 @@ using namespace MulaPluginStarDict;
 /*
  * Output buffer must be greater than or
  * equal to 110% of input buffer size, plus
- * 12 bytes. 
+ * 12 bytes.
 */
 #define OUT_BUFFER_SIZE 0xffffL
 
@@ -140,13 +140,13 @@ class DictionaryZip::Private
             , crc(0)
             , originalLength(0)
             , compressedLength(0)
-        {   
-        }   
+        {
+        }
 
         ~Private()
-        {   
-        }   
- 
+        {
+        }
+
         unsigned char *start;	    /* start of mmap'd area */
         unsigned char *end;	    /* end of mmap'd area */
         unsigned long size;		        /* size of mmap */
@@ -203,11 +203,11 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
     unsigned long offset;
 
     QFile file(fileName);
-    if( !file.open( QIODevice::ReadOnly ) ) 
-    {   
+    if( !file.open( QIODevice::ReadOnly ) )
+    {
         qDebug() << "Failed to open file:" << fileName;
         return -1;
-    }   
+    }
 
     if (file.read( &id1, 1 ) < 0)
         qWarning() << "Invalid ZIP file. Unexpected end of file.";
@@ -320,7 +320,7 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
                 }
             }
 
-            if (d->version != 1) 
+            if (d->version != 1)
             {
                 qDebug() << Q_FUNC_INFO << QString("dzip header version %1 not supported").arg(d->version);
             }
@@ -411,7 +411,7 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
 
     if (file.pos() != d->headerLength + 1)
     {
-        qDebug() << Q_FUNC_INFO << QString("File position (%1) != header length + 1 (%2)").arg(file.pos()).arg(d->headerLength + 1 ); 
+        qDebug() << Q_FUNC_INFO << QString("File position (%1) != header length + 1 (%2)").arg(file.pos()).arg(d->headerLength + 1 );
     }
 
     file.seek(file.size() - 8);
@@ -442,7 +442,7 @@ DictionaryZip::readHeader(const QString &fileName, int computeCRC)
 
     /* Compute offsets */
     d->offsets = (unsigned long *)malloc( sizeof( d->offsets[0] ) * d->chunkCount );
-    
+
     for (offset = d->headerLength + 1, i = 0; i < d->chunkCount; ++i)
     {
         d->offsets[i] = offset;
@@ -471,8 +471,8 @@ DictionaryZip::open(const QString& fileName, int computeCRC)
     }
 
     QFile file(fileName);
-    if( !file.open( QIODevice::ReadOnly ) ) 
-    {   
+    if( !file.open( QIODevice::ReadOnly ) )
+    {
         qDebug() << "Failed to open file:" << fileName;
         return -1;
     }
@@ -480,18 +480,18 @@ DictionaryZip::open(const QString& fileName, int computeCRC)
     d->size = file.size();
 
     d->mapFile.setFileName(fileName);
-    if( !d->mapFile.open( QIODevice::ReadOnly ) ) 
-    {   
+    if( !d->mapFile.open( QIODevice::ReadOnly ) )
+    {
         qDebug() << "Failed to open file:" << fileName;
-        return -1; 
-    }   
- 
+        return -1;
+    }
+
     uchar *data = d->mapFile.map(0, d->size);
     if (data == NULL)
-    {   
+    {
         qDebug() << Q_FUNC_INFO << QString("Mapping the file %1 failed!").arg(fileName);
         return false;
-    }   
+    }
 
     d->start = data;
     d->end = d->start + d->size;

@@ -30,13 +30,13 @@ class StarDictDictionaryInfo::Private
             : wordCount(0)
             , indexFileSize(0)
             , indexOffsetBits(0)
-        {   
+        {
         }
 
         ~Private()
         {
         }
- 
+
         QString ifoFilePath;
         quint32 wordCount;
         QString bookName;
@@ -86,7 +86,7 @@ StarDictDictionaryInfo::loadFromIfoFile(const QString& ifoFilePath,
     if (index == -1)
         return false;
 
-    index += sizeof("\nwordcount=") - 1; 
+    index += sizeof("\nwordcount=") - 1;
 
     bool ok;
     d->wordCount = byteArray.mid(index, byteArray.indexOf('\n', index) - index).toLong(&ok, 10);

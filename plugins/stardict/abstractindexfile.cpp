@@ -29,13 +29,13 @@ class AbstractIndexFile::Private
         Private()
             : wordEntryOffset(0)
             , wordEntrySize(0)
-        {   
+        {
         }
 
         ~Private()
         {
         }
- 
+
         quint32 wordEntryOffset;
         quint32 wordEntrySize;
 };

@@ -34,7 +34,7 @@ class IndexFile::Private
 {
     public:
         Private()
-        {   
+        {
         }
 
         ~Private()

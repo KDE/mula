@@ -29,7 +29,7 @@ class DictionaryCache::Private
             , byteArray(0)
             , stamp(0)
             , count(0)
-        {   
+        {
         }
 
         ~Private()

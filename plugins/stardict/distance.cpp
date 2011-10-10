@@ -21,29 +21,29 @@
 /*
 http://www.merriampark.com/ld.htm
 What is Levenshtein Distance?
- 
-Levenshtein distance (LD) is a measure of the similarity between two strings, 
-which we will refer to as the source string (s) and the target string (t). 
+
+Levenshtein distance (LD) is a measure of the similarity between two strings,
+which we will refer to as the source string (s) and the target string (t).
 The distance is the number of deletions, insertions, or substitutions required
  to transform s into t. For example,
- 
-    * If s is "test" and t is "test", then LD(s,t) = 0, because no transformations are needed. 
+
+    * If s is "test" and t is "test", then LD(s,t) = 0, because no transformations are needed.
     The strings are already identical.
     * If s is "test" and t is "tent", then LD(s,t) = 1, because one substitution
      (change "s" to "n") is sufficient to transform s into t.
- 
+
 The greater the Levenshtein distance, the more different the strings are.
- 
+
 Levenshtein distance is named after the Russian scientist Vladimir Levenshtein,
  who devised the algorithm in 1965. If you can't spell or pronounce Levenshtein,
  the metric is also sometimes called edit distance.
- 
+
 The Levenshtein distance algorithm has been used in:
- 
+
     * Spell checking
     * Speech recognition
     * DNA analysis
-    * Plagiarism detection 
+    * Plagiarism detection
 */
 
 
@@ -53,11 +53,11 @@ The Levenshtein distance algorithm has been used in:
 
 #include <QtCore/QString>
 
-#define OPTIMIZE_ED 
+#define OPTIMIZE_ED
 /*
 Cover transposition, in addition to deletion,
 insertion and substitution. This step is taken from:
-Berghel, Hal ; Roach, David : "An Extension of Ukkonen's 
+Berghel, Hal ; Roach, David : "An Extension of Ukkonen's
 Enhanced Dynamic Programming ASM Algorithm"
 (http://www.acm.org/~hlb/publications/asm/asm.html)
 */
@@ -93,7 +93,7 @@ int EditDistance::calEditDistance(QString s, QString t, const int limit)
     int cost;
 
     // Remove leftmost matching portion of strings
-    while ( !s.at(i).isNull() && (s.at(i) == t.at(i)) ) 
+    while ( !s.at(i).isNull() && (s.at(i) == t.at(i)) )
         ++i;
 
     s = s.mid(i);

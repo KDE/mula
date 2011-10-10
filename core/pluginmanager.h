@@ -74,7 +74,7 @@ namespace MulaCore
              */
             DictionaryPlugin *plugin(const QString &plugin);
 
-            /** 
+            /**
              * Save the plugin settings
              *
              * @see loadPluginSettings
@@ -84,7 +84,7 @@ namespace MulaCore
         private:
             ~PluginManager();
 
-            /** 
+            /**
              * Load the plugin settings
              *
              * @see savePluginSettings
