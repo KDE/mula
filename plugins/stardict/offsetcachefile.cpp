@@ -372,9 +372,7 @@ OffsetCacheFile::lookup(const QByteArray& word, int &index)
     int cmpint;
     int indexThisIndex;
 
-    int pageIndex;
-    
-    found = lookupPage(word, pageIndex);
+    found = lookupPage(word, index);
 
     if (!found)
     {
