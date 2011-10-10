@@ -101,6 +101,7 @@ lessThanCompare(const QString string1, const QString string2)
 bool
 IndexFile::lookup(const QByteArray &word, int &index)
 {
+    bool found = false;
     QStringList wordList;
     foreach (const WordEntry &wordEntry, d->wordEntryList)
         wordList.append(QString::fromUtf8(wordEntry.data()));
@@ -108,11 +109,16 @@ IndexFile::lookup(const QByteArray &word, int &index)
     QStringList::iterator i = qBinaryFind(wordList.begin(), wordList.end(), QString::fromUtf8(word), lessThanCompare);
 
     if (i == wordList.end())
+    {
         index = -1;
+    }
     else
+    {
         index = i - wordList.begin();
+        found = true;
+    }
 
-    return true;
+    return found;
 }
 
 quint32
