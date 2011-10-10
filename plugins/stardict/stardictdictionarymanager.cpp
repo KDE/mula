@@ -143,7 +143,7 @@ StarDictDictionaryManager::poWordData(long dataIndex, int libIndex)
 }
 
 bool
-StarDictDictionaryManager::lookupWord(const char* searchWord, long& iWordIndex, int libIndex)
+StarDictDictionaryManager::lookupWord(const char* searchWord, int& iWordIndex, int libIndex)
 {
     return d->dictionaries.at(libIndex)->lookup(searchWord, iWordIndex);
 }
@@ -240,7 +240,7 @@ StarDictDictionaryManager::reload(const QStringList& dictionaryDirectoryList,
 }
 
 QByteArray
-StarDictDictionaryManager::poCurrentWord(long *iCurrent)
+StarDictDictionaryManager::poCurrentWord(int *iCurrent)
 {
     const char *poCurrentWord = NULL;
     const char *word;
@@ -269,7 +269,7 @@ StarDictDictionaryManager::poCurrentWord(long *iCurrent)
 }
 
 QByteArray
-StarDictDictionaryManager::poNextWord(QByteArray searchWord, long *iCurrent)
+StarDictDictionaryManager::poNextWord(QByteArray searchWord, int* iCurrent)
 {
     // the input can be:
     // (word,iCurrent),read word,write iNext to iCurrent,and return next word. used by TopWin::NextCallback();
@@ -396,7 +396,7 @@ StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex
         if (!d->found && searchWordLength > wordLength)
         {
             QString caseString;
-            long index;
+            int index;
             bool isUpperCase = searchWord.endsWith(suffix.toUpper());
             if (isUpperCase || searchWord.endsWith(suffix.toLower()))
             {
@@ -471,9 +471,9 @@ StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex
 }
 
 bool
-StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, long& iWordIndex, int iLib)
+StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, int& iWordIndex, int iLib)
 {
-    long iIndex;
+    int iIndex;
     bool found = false;
 
     // Upper case lookup
@@ -560,7 +560,7 @@ StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, long& iWordI
 }
 
 bool
-StarDictDictionaryManager::simpleLookupWord(QByteArray searchWord, long &iWordIndex, int iLib)
+StarDictDictionaryManager::simpleLookupWord(QByteArray searchWord, int &iWordIndex, int iLib)
 {
     bool found = d->dictionaries.at(iLib)->lookup(searchWord, iWordIndex);
     if (!found)
@@ -785,11 +785,11 @@ StarDictDictionaryManager::lookupData(QByteArray search_word, QStringList result
         if (d->progressFunction)
             d->progressFunction();
 
-        long wordSize = articleCount(i);
+        int wordSize = articleCount(i);
         QByteArray key;
         qint32 offset;
         qint32 size;
-        for (long j = 0; j < wordSize; ++j)
+        for (int j = 0; j < wordSize; ++j)
         {
             d->dictionaries.at(i)->keyAndData(j, key, offset, size);
             if (size > maximumSize)

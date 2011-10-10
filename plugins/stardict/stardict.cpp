@@ -223,8 +223,8 @@ StarDict::isTranslatable(const QString &dictionary, const QString &word)
     if (!d->loadedDictionaries.contains(dictionary))
         return false;
 
-    long ind;
-    return d->sdLibs->simpleLookupWord(word.toUtf8().data(), ind, d->loadedDictionaries[dictionary]);
+    int index;
+    return d->sdLibs->simpleLookupWord(word.toUtf8().data(), index, d->loadedDictionaries[dictionary]);
 }
 
 MulaCore::Translation
@@ -234,7 +234,7 @@ StarDict::translate(const QString &dictionary, const QString &word)
         return MulaCore::Translation();
 
     int dictionaryIndex = d->loadedDictionaries[dictionary];
-    long index;
+    int index;
 
     if (!d->sdLibs->simpleLookupWord(word.toUtf8().data(), index, d->loadedDictionaries[dictionary]))
         return MulaCore::Translation();
@@ -331,7 +331,7 @@ StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces
         int position = 0;
         while ((position = regExp.indexIn(result, position)) != -1)
         {
-            long index;
+            int index;
             if (d->sdLibs->simpleLookupWord(result.mid(position, regExp.matchedLength()).toUtf8().data(), index, dictionaryIndex))
             {
                 QString expanded = "<font class=\"explanation\">";

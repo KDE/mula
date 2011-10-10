@@ -44,7 +44,7 @@ namespace MulaPluginStarDict
             QByteArray key(long index);
 
             /** Reimplemented from AbstractIndexFile::lookup() */
-            bool lookup(const QByteArray& word, long &index);
+            bool lookup(const QByteArray& word, int &index);
 
             virtual quint32 wordEntryOffset() const;
             virtual void setWordEntryOffset(quint32 offset);

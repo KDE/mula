@@ -82,7 +82,7 @@ namespace MulaPluginStarDict
             QByteArray key(long index);
 
             /** Reimplemented from AbstractIndexFile::lookup() */
-            bool lookup(const QByteArray& string, long &index);
+            bool lookup(const QByteArray& string, int &index);
 
             virtual quint32 wordEntryOffset() const;
             virtual void setWordEntryOffset(quint32 wordEntryOffset);

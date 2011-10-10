@@ -99,7 +99,7 @@ lessThanCompare(const QString string1, const QString string2)
 }
 
 bool
-IndexFile::lookup(const QByteArray &word, long &index)
+IndexFile::lookup(const QByteArray &word, int &index)
 {
     QStringList wordList;
     foreach (const WordEntry &wordEntry, d->wordEntryList)

@@ -57,7 +57,7 @@ namespace MulaPluginStarDict
 
             void keyAndData(long index, QByteArray key, qint32& offset, qint32 &size);
 
-            bool lookup(const QString string, long &index);
+            bool lookup(const QString word, int &index);
 
             bool lookupWithRule(const QString& pattern, long *aIndex, int iBuffLen);
 

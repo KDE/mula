@@ -365,12 +365,12 @@ OffsetCacheFile::lookupPage(const QByteArray& word, int& pageIndex)
 }
 
 bool
-OffsetCacheFile::lookup(const QByteArray& word, long &index)
+OffsetCacheFile::lookup(const QByteArray& word, int &index)
 {
     bool found = false;
-    long indexFrom;
+    int indexFrom;
     int cmpint;
-    long indexThisIndex;
+    int indexThisIndex;
 
     int pageIndex;
     
