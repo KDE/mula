@@ -364,42 +364,36 @@ OffsetCacheFile::lookupPage(const QByteArray& word, int& pageIndex)
     return found;
 }
 
+inline bool
+lessThanCompare(const QString string1, const QString string2)
+{
+    return stardictStringCompare(string1, string2) < 0;
+}
+
 bool
 OffsetCacheFile::lookup(const QByteArray& word, int &index)
 {
-    bool found = false;
-    int indexFrom;
-    int cmpint;
-    int indexThisIndex;
-
-    found = lookupPage(word, index);
+    bool found = lookupPage(word, index);
 
     if (!found)
     {
-        ulong netr = loadPage(index);
-        indexFrom = 1; // Needn't search the first word anymore.
-        int indexTo = netr - 1;
-        indexThisIndex = 0;
-        while (indexFrom <= indexTo)
-        {
-            indexThisIndex = (indexFrom + indexTo) / 2;
-            cmpint = stardictStringCompare(word, d->wordEntryList.at(indexThisIndex).data());
-            if (cmpint > 0)
-                indexFrom = indexThisIndex + 1;
-            else if (cmpint < 0)
-                indexTo = indexThisIndex - 1;
-            else
-            {
-                found = true;
-                break;
-            }
-        }
+        QStringList wordList;
+        foreach (const WordEntry &wordEntry, d->wordEntryList)
+            wordList.append(QString::fromUtf8(wordEntry.data()));
+
+        QStringList::iterator i = qBinaryFind(wordList.begin() + 1, wordList.end() - 1, QString::fromUtf8(word), lessThanCompare);
 
         index *= d->pageEntryNumber;
-        if (!found)
-            index += indexFrom;    //next
+
+        if (i == wordList.end())
+        {
+            index = -1;
+        }
         else
-            index += indexThisIndex;
+        {
+            index = i - wordList.begin();
+            found = true;
+        }
     }
     else
     {
