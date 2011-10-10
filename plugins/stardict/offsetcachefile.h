@@ -103,8 +103,11 @@ namespace MulaPluginStarDict
              *
              * @param   pageIndex   The index of the desired page
              * @return  The number of the word entries loaded
+             * @see load
              */
             int loadPage(int pageIndex);
+
+            bool lookupPage(const QByteArray& word, int& pageIndex);
 
             /**
              * Returns the first word data of the desired page from the index

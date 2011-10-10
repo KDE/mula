@@ -320,27 +320,26 @@ OffsetCacheFile::load(const QString& completeFilePath, qulonglong fileSize, int 
 }
 
 bool
-OffsetCacheFile::lookup(const QByteArray& word, long &index)
+OffsetCacheFile::lookupPage(const QByteArray& word, int& pageIndex)
 {
     bool found = false;
-    long indexFrom;
-    long indexTo = d->pageOffsetList.size() - 2;
-    int cmpint;
-    long indexThisIndex;
+
     if (stardictStringCompare(word, d->first.second) < 0)
     {
-        index = 0;
+        pageIndex = invalidIndex;
         return false;
     }
     else if (stardictStringCompare(word, d->realLast.second) > 0)
     {
-        index = invalidIndex;
+        pageIndex = invalidIndex;
         return false;
     }
     else
     {
-        indexFrom = 0;
-        indexThisIndex = 0;
+        int indexTo = d->pageOffsetList.size() - 2;
+        int indexFrom = 0;
+        int indexThisIndex = 0;
+        int cmpint;
         while (indexFrom <= indexTo)
         {
             indexThisIndex = (indexFrom + indexTo) / 2;
@@ -355,17 +354,33 @@ OffsetCacheFile::lookup(const QByteArray& word, long &index)
                 break;
             }
         }
+
         if (!found)
-            index = indexTo;    //prev
+            pageIndex = indexTo;    //prev
         else
-            index = indexThisIndex;
+            pageIndex = indexThisIndex;
     }
+
+    return found;
+}
+
+bool
+OffsetCacheFile::lookup(const QByteArray& word, long &index)
+{
+    bool found = false;
+    long indexFrom;
+    int cmpint;
+    long indexThisIndex;
+
+    int pageIndex;
+    
+    found = lookupPage(word, pageIndex);
 
     if (!found)
     {
         ulong netr = loadPage(index);
         indexFrom = 1; // Needn't search the first word anymore.
-        indexTo = netr - 1;
+        int indexTo = netr - 1;
         indexThisIndex = 0;
         while (indexFrom <= indexTo)
         {
