@@ -107,6 +107,21 @@ namespace MulaPluginStarDict
              */
             int loadPage(int pageIndex);
 
+            /**
+             * Looks up the word on the existing pages and then returns the
+             * relevant page index where the word can be found. The method also
+             * returns that whether or not the desired page can be found.
+             *
+             * \note This method does not return the index of the word. It will
+             * return the index of the page where the word occurs. This method
+             * is only for internal usage.
+             *
+             * @param   word        The desired word to look up
+             * @param   pageIndex   The index of the page where the word occurs
+             * @return  Whether or not the desired page can be found where the
+             * word occurs
+             * @see lookup
+             */
             bool lookupPage(const QByteArray& word, int& pageIndex);
 
             /**
