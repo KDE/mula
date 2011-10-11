@@ -139,7 +139,7 @@ namespace MulaPluginStarDict
              */
             virtual ~StarDictDictionaryInfo();
 
-            bool loadFromIfoFile(const QString& ifoFileName, bool isTreeDict);
+            bool loadFromIfoFile(const QString& ifoFileName, bool isTreeDict = false);
 
             /**
              * Sets the path of the ifo file

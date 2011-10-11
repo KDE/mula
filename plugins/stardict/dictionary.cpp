@@ -184,7 +184,7 @@ bool
 Dictionary::loadIfoFile(const QString& ifoFilePath)
 {
     StarDictDictionaryInfo dictionaryInfo;
-    if (!dictionaryInfo.loadFromIfoFile(ifoFilePath, false))
+    if (!dictionaryInfo.loadFromIfoFile(ifoFilePath))
         return false;
 
     if (dictionaryInfo.wordCount() == 0)
