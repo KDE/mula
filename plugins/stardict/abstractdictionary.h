@@ -31,18 +31,51 @@ namespace MulaPluginStarDict
     class AbstractDictionary
     {
         public:
+            /**
+             * Constructor.
+             */
             AbstractDictionary();
+
+            /**
+             * Destructor.
+             */
             virtual ~AbstractDictionary();
 
             const QByteArray wordData(quint32 indexItemOffset, qint32 indexItemSize);
             bool containFindData();
             bool findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize, QByteArray& originalData);
 
+            /** 
+             * Returns the compressed ".dict.dz" dictionary file
+             *
+             * @return The compressed dictionary file
+             * @see dictionaryFile
+             */
             DictionaryZip* compressedDictionaryFile() const;
+
+            /** 
+             * Returns the ".dict" dictionary file
+             *
+             * @return The dictionary file
+             * @see compressedDictionaryFile
+             */
             QFile* dictionaryFile() const;
 
-            QString& sameTypeSequence() const;
+            /**
+             * Sets the value of the same type sequence
+             *
+             * @param sameTypeSequence The same type sequence
+             * @see sameTypeSequence
+             */
             void setSameTypeSequence(const QString& sameTypeSequence);
+
+            /**
+             * Returns the value of the same type sequence
+             *
+             * @return The value of the same typesequence
+             * @see setSameTypeSequence
+             */
+            QString& sameTypeSequence() const;
 
         private:
             class Private;
