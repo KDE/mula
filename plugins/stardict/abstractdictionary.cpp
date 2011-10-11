@@ -25,49 +25,6 @@
 #include <QtCore/QFile>
 #include <QtCore/QVector>
 
-// Word's pure text meaning.
-// The data should be a utf-8 string ending with '\0'.
-// case 'm':
-
-// Word's pure text meaning.
-// The data is NOT a utf-8 string, but is instead a string in locale
-// encoding, ending with '\0'.  Sometimes using this type will save disk
-// space, but its use is discouraged.
-// case 'l':
-
-// English phonetic string.
-// The data should be a utf-8 string ending with '\0'.
-// case 't':
-
-// Chinese YinBiao or Japanese KANA.
-// The data should be a utf-8 string ending with '\0'.
-// case 'y':
-
-// A utf-8 string which is marked up with the Pango text markup language.
-// For more information about this markup language, See the "Pango
-// Reference Manual."
-// You might have it installed locally at:
-// file:///usr/share/gtk-doc/html/pango/PangoMarkupFormat.html
-// case 'g':
-
-// A utf-8 string which is marked up with the xdxf language.
-// See http://xdxf.sourceforge.net
-// StarDict has these extensions:
-// <rref> can have "type" attribute, it can be "image", "sound", "video"
-// and "attach".
-// <kref> can have "k" attribute.
-// case 'x':
-
-// wav file.
-// The data begins with a network byte-ordered guint32 to identify the wav
-// file's size, immediately followed by the file's content.
-// case 'W':
-
-// Picture file.
-// The data begins with a network byte-ordered guint32 to identify the picture
-// file's size, immediately followed by the file's content.
-// case 'P':
-
 using namespace MulaPluginStarDict;
 
 class AbstractDictionary::Private
@@ -308,7 +265,7 @@ bool AbstractDictionary::findData(const QStringList &searchWords, qint32 indexIt
                     }
                 }
 
-                // If everything has been found
+                // Everything has been found
                 if (foundCount == wordCount)
                     return true;
 
