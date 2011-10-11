@@ -64,6 +64,21 @@ namespace MulaPluginStarDict
              */
             virtual QByteArray key(long index) = 0;
 
+            /**
+             * Returns the index of the word data where it has been found. The
+             * method will also return the fact whether or not the desired word
+             * could be found in the index file.
+             *
+             * \note Since it it an abstract base class, the real
+             * implementation is up to the successors whether to return the
+             * index and the found informartion directly, use some caching
+             * mechanism or something else.
+             *
+             * @param   word    The word data to look up
+             * @param   index   The index where the desired word occurs among
+             * the word entries
+             * @return True if the desired word could be found, otherwise false.
+             */
             virtual bool lookup(const QByteArray& word, int &index) = 0;
 
             virtual quint32 wordEntryOffset() const;

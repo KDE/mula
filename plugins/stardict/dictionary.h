@@ -86,6 +86,16 @@ namespace MulaPluginStarDict
 
             void keyAndData(long index, QByteArray key, qint32& offset, qint32 &size);
 
+            /** 
+             * Returns the index of the word data where it has been found. The
+             * method will also return the fact whether or not the desired word
+             * could be found in the index file.
+             *
+             * @param   word    The word data to look up
+             * @param   index   The index where the desired word occurs among
+             * the word entries
+             * @return True if the desired word could be found, otherwise false.
+             */
             bool lookup(const QString word, int &index);
 
             bool lookupWithRule(const QString& pattern, long *aIndex, int iBuffLen);
