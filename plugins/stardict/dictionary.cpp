@@ -205,16 +205,22 @@ bool
 Dictionary::lookupWithRule(const QString& pattern, long *aIndex, int iBuffLen)
 {
     int indexCount = 0;
+    bool found = false;
 
     QRegExp rx(pattern);
     rx.setPatternSyntax(QRegExp::Wildcard);
 
     for (int i = 0; i < articleCount() && indexCount < iBuffLen - 1; ++i)
+    {
         if (rx.exactMatch(key(i)))
+        {
             aIndex[indexCount++] = i;
+            found = true;
+        }
+    }
 
     aIndex[indexCount] = -1; // -1 is the end.
 
-    return (indexCount > 0);
+    return found;
 }
 
