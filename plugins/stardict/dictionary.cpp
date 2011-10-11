@@ -215,26 +215,3 @@ Dictionary::lookupWithRule(const QString& pattern, long *aIndex, int iBuffLen)
     return (indexCount > 0);
 }
 
-DictionaryZip*
-Dictionary::compressedDictionaryFile() const
-{
-    return AbstractDictionary::compressedDictionaryFile();
-}
-
-QFile*
-Dictionary::dictionaryFile() const
-{
-    return AbstractDictionary::dictionaryFile();
-}
-
-QString
-Dictionary::sameTypeSequence() const
-{
-    return AbstractDictionary::sameTypeSequence();
-}
-
-void
-Dictionary::setSameTypeSequence(const QString& sameTypeSequence)
-{
-    AbstractDictionary::setSameTypeSequence(sameTypeSequence);
-}

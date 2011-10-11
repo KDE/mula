@@ -61,12 +61,6 @@ namespace MulaPluginStarDict
 
             bool lookupWithRule(const QString& pattern, long *aIndex, int iBuffLen);
 
-            DictionaryZip* compressedDictionaryFile() const;
-            QFile* dictionaryFile() const;
-
-            QString sameTypeSequence() const;
-            void setSameTypeSequence(const QString& sameTypeSequence);
-
         private:
             /**
              * Loads the ifo file. Only for internal use.
