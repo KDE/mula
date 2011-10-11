@@ -118,8 +118,8 @@ namespace MulaPluginStarDict
              *
              * @param   word        The desired word to look up
              * @param   pageIndex   The index of the page where the word occurs
-             * @return  Whether or not the desired page can be found where the
-             * word occurs
+             * @return True if the desired page can be found where the word
+             * occurs, otherwise false.
              * @see lookup
              */
             bool lookupPage(const QByteArray& word, int& pageIndex);
@@ -174,8 +174,8 @@ namespace MulaPluginStarDict
              * \note This method is only for internal usage.
              *
              * @param   completeFilePath The complete file path
-             * @return  Whether or not the cache file loading has been
-             * successful
+             * @return True if the cache loading was successful, otherwise
+             * false.
              * @see cacheLocations, saveCache
              */
             bool loadCache(const QString& completeFilePath);
@@ -188,8 +188,8 @@ namespace MulaPluginStarDict
              * \note This method is only for internal usage.
              *
              * @param   completeFilePath The complete file path
-             * @return  Whether or not the cache file saving has been
-             * successful
+             * @return True if the cache saving was successful, otherwise
+             * false.
              * @see cacheLocations, loadCache
              */
             bool saveCache(const QString& completeFilePath);

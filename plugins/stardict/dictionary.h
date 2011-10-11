@@ -29,7 +29,14 @@ namespace MulaPluginStarDict
     class Dictionary : public AbstractDictionary
     {
         public:
+            /**
+             * Constructor.
+             */
             Dictionary();
+
+            /**
+             * Destructor.
+             */
             virtual ~Dictionary();
 
             /**
@@ -47,10 +54,32 @@ namespace MulaPluginStarDict
              */
             int articleCount() const;
 
+            /**
+             * Returns the name of the dictionary
+             *
+             * @return The name of the dictionary
+             */
             const QString dictionaryName() const;
 
+            /**
+             * Returns the ifo file path
+             *
+             * @return The ifo file path
+             * @see loadIfoFile
+             */
             const QString ifoFilePath() const;
 
+            /**
+             * Returns the word data according to the relevant index
+             *
+             * \note Since it it an abstraction on the top of the index file,
+             * the method does not care about the fact whether or not the word
+             * is returned directly, use some caching mechanism or something
+             * else.
+             *
+             * @param   index   The index of the desired word
+             * @return  The word data
+             */
             const QString key(long index) const;
 
             QString data(long index);
@@ -63,10 +92,13 @@ namespace MulaPluginStarDict
 
         private:
             /**
-             * Loads the ifo file. Only for internal use.
+             * Loads the ifo file.
+             *
+             * \note This method is only for internal usage.
              *
              * @param ifoFilePath The path of the ifo file
-             * @return True if the loading went fine, otherwise false.
+             * @return True if the loading was successful, otherwise false.
+             * @see load, ifoFilePath
              */
             bool loadIfoFile(const QString& ifoFilePath);
 
