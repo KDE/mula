@@ -73,18 +73,20 @@ AbstractDictionary::wordData(quint32 indexItemOffset, qint32 indexItemSize)
             return cacheItem.data();
     }
 
-    if (d->dictionaryFile->isOpen())
-        d->dictionaryFile->seek(indexItemOffset);
-
     QByteArray resultData;
     QByteArray originalData;
 
     if (!d->sameTypeSequence.isEmpty())
     {
         if (d->dictionaryFile->isOpen())
+        {
+            d->dictionaryFile->seek(indexItemOffset);
             originalData = d->dictionaryFile->read(indexItemSize);
+        }
         else
+        {
             originalData = d->compressedDictionaryFile->read(indexItemOffset, indexItemSize);
+        }
 
         int sameTypeSequenceLength = d->sameTypeSequence.length();
 
@@ -165,12 +167,14 @@ bool AbstractDictionary::findData(const QStringList &searchWords, qint32 indexIt
     QVector<bool> wordFind(wordCount, false);
 
     if (d->dictionaryFile->isOpen())
+    {
         d->dictionaryFile->seek(indexItemOffset);
-
-    if (d->dictionaryFile->isOpen())
         originalData = d->dictionaryFile->read(indexItemSize);
+    }
     else
+    {
         originalData = d->compressedDictionaryFile->read(indexItemOffset, indexItemSize);
+    }
 
     int sectionSize = 0;
     int sectionPosition = 0;
