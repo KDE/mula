@@ -183,11 +183,11 @@ bool AbstractDictionary::findData(const QStringList &searchWords, qint32 indexIt
             switch (ch.toAscii())
             {
             case 'm':
-            case 't':
-            case 'y':
             case 'l':
             case 'g':
+            case 't':
             case 'x':
+            case 'y':
                 for (int j = 0; j < wordCount; ++j)
                 {
                     if (!wordFind.at(j) && originalData.indexOf(searchWords.at(j), sectionPosition) > -1)
@@ -223,11 +223,11 @@ bool AbstractDictionary::findData(const QStringList &searchWords, qint32 indexIt
         switch (d->sameTypeSequence.at(sameTypeSequenceLength - 1).toAscii())
         {
         case 'm':
-        case 't':
-        case 'y':
         case 'l':
         case 'g':
+        case 't':
         case 'x':
+        case 'y':
             sectionSize = indexItemSize - sectionSize;
             for (int j = 0; j < wordCount; ++j)
             {
@@ -251,11 +251,11 @@ bool AbstractDictionary::findData(const QStringList &searchWords, qint32 indexIt
             switch (originalData.at(sectionPosition))
             {
             case 'm':
-            case 't':
-            case 'y':
             case 'l':
             case 'g':
+            case 't':
             case 'x':
+            case 'y':
                 for (int j = 0; j < wordCount; ++j)
                 {
                     if (!wordFind.at(j) && originalData.indexOf(searchWords.at(j), sectionSize) > -1)
