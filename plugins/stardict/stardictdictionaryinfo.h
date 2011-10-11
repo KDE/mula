@@ -139,13 +139,23 @@ namespace MulaPluginStarDict
              */
             virtual ~StarDictDictionaryInfo();
 
+            /**
+             * Loads all the information from the relevant Ifo file considering
+             * the fact whether or not it is a tree dictionary.
+             *
+             * @param ifoFilePath The path of the ifo file
+             * @param isTreeDict Whether or not it is a tree dictionary
+             * @return True if the ifo file load was successful, otherwise
+             * false.
+             * @see setIfoFilePath, ifoFilePath
+             */
             bool loadFromIfoFile(const QString& ifoFileName, bool isTreeDict = false);
 
             /**
              * Sets the path of the ifo file
              *
              * @param ifoFilePath The path of the ifo file
-             * @see ifoFilePath
+             * @see ifoFilePath, loadFromIfoFile
              */
             void setIfoFilePath(const QString& ifoFilePath);
 
@@ -153,7 +163,7 @@ namespace MulaPluginStarDict
              * Returns the path of the ifo file
              *
              * @return The path of the ifo file
-             * @see setIfoFilePath
+             * @see setIfoFilePath, loadFromIfoFile
              */
             QString ifoFilePath() const;
 

@@ -92,7 +92,7 @@ namespace MulaPluginStarDict
 
         private:
             /**
-             * Loads the ifo file.
+             * Loads the ifo file while marking the dictionary non-tree one
              *
              * \note This method is only for internal usage.
              *
