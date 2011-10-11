@@ -84,12 +84,6 @@ namespace MulaPluginStarDict
             /** Reimplemented from AbstractIndexFile::lookup() */
             bool lookup(const QByteArray& string, int &index);
 
-            virtual quint32 wordEntryOffset() const;
-            virtual void setWordEntryOffset(quint32 wordEntryOffset);
-
-            virtual quint32 wordEntrySize() const;
-            virtual void setWordEntrySize(quint32 wordEntrySize);
-
         private:
             /**
              * Loads the word entries of relevant cache page into the internal

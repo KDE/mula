@@ -402,27 +402,3 @@ OffsetCacheFile::lookup(const QByteArray& word, int &index)
 
     return found;
 }
-
-quint32
-OffsetCacheFile::wordEntryOffset() const
-{
-    return AbstractIndexFile::wordEntryOffset();
-}
-
-void
-OffsetCacheFile::setWordEntryOffset(quint32 wordEntryOffset)
-{
-    AbstractIndexFile::setWordEntryOffset(wordEntryOffset);
-}
-
-quint32
-OffsetCacheFile::wordEntrySize() const
-{
-    return AbstractIndexFile::wordEntrySize();
-}
-
-void
-OffsetCacheFile::setWordEntrySize(quint32 wordEntrySize)
-{
-    AbstractIndexFile::setWordEntrySize(wordEntrySize);
-}

@@ -120,27 +120,3 @@ IndexFile::lookup(const QByteArray &word, int &index)
 
     return found;
 }
-
-quint32
-IndexFile::wordEntryOffset() const
-{
-    return AbstractIndexFile::wordEntryOffset();
-}
-
-void
-IndexFile::setWordEntryOffset(quint32 offset)
-{
-    AbstractIndexFile::setWordEntryOffset(offset);
-}
-
-quint32
-IndexFile::wordEntrySize() const
-{
-    return AbstractIndexFile::wordEntrySize();
-}
-
-void
-IndexFile::setWordEntrySize(quint32 size)
-{
-    AbstractIndexFile::setWordEntrySize(size);
-}
