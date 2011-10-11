@@ -230,7 +230,7 @@ bool DictionaryBase::findData(const QStringList &searchWords, qint32 indexItemOf
             case 'x':
                 for (int j = 0; j < wordCount; ++j)
                 {
-                    if (!wordFind.at(j) && originalData.indexOf(searchWords.at(j), sectionPosition) == -1)
+                    if (!wordFind.at(j) && originalData.indexOf(searchWords.at(j), sectionPosition) > -1)
                     {
                         wordFind[j] = true;
                         ++foundCount;
