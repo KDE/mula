@@ -20,13 +20,13 @@
 #ifndef MULA_PLUGIN_STARDICT_DICTIONARY_H
 #define MULA_PLUGIN_STARDICT_DICTIONARY_H
 
-#include "dictionarybase.h"
+#include "abstractdictionary.h"
 
 #include <QtCore/QString>
 
 namespace MulaPluginStarDict
 {
-    class Dictionary : public DictionaryBase
+    class Dictionary : public AbstractDictionary
     {
         public:
             Dictionary();

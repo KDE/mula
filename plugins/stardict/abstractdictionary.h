@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MULA_PLUGIN_STARDICT_DICTIONARYBASE_H
-#define MULA_PLUGIN_STARDICT_DICTIONARYBASE_H
+#ifndef MULA_PLUGIN_STARDICT_ABSTRACTDICTIONARY_H
+#define MULA_PLUGIN_STARDICT_ABSTRACTDICTIONARY_H
 
 #include <QtCore/QStringList>
 
@@ -28,11 +28,11 @@ namespace MulaPluginStarDict
 {
     class DictionaryZip;
 
-    class DictionaryBase
+    class AbstractDictionary
     {
         public:
-            DictionaryBase();
-            virtual ~DictionaryBase();
+            AbstractDictionary();
+            virtual ~AbstractDictionary();
 
             const QByteArray wordData(quint32 indexItemOffset, qint32 indexItemSize);
             bool containFindData();
@@ -50,4 +50,4 @@ namespace MulaPluginStarDict
     };
 }
 
-#endif // MULA_PLUGIN_STARDICT_DICTIONARYBASE_H
+#endif // MULA_PLUGIN_STARDICT_ABSTRACtDICTIONARY_H

@@ -11,9 +11,9 @@ include_directories(
 )
 
 set(stardict_SRCS
+    abstractdictionary.cpp
     abstractindexfile.cpp
     dictionary.cpp
-    dictionarybase.cpp
     dictionarycache.cpp
     dictionaryzip.cpp
     distance.cpp
@@ -27,9 +27,9 @@ set(stardict_SRCS
 )
 
 set(stardict_HEADERS
+    abstractdictionary.h
     abstractindexfile.h
     dictionary.h
-    dictionarybase.h
     dictionarycache.h
     dictionaryzip.h
     distance.h

@@ -94,7 +94,7 @@ Dictionary::data(long index)
     if (d->indexFile.isNull())
         return QString();
 
-    return DictionaryBase::wordData(d->indexFile->wordEntryOffset(), d->indexFile->wordEntrySize());
+    return AbstractDictionary::wordData(d->indexFile->wordEntryOffset(), d->indexFile->wordEntrySize());
 }
 
 void
@@ -218,23 +218,23 @@ Dictionary::lookupWithRule(const QString& pattern, long *aIndex, int iBuffLen)
 DictionaryZip*
 Dictionary::compressedDictionaryFile() const
 {
-    return DictionaryBase::compressedDictionaryFile();
+    return AbstractDictionary::compressedDictionaryFile();
 }
 
 QFile*
 Dictionary::dictionaryFile() const
 {
-    return DictionaryBase::dictionaryFile();
+    return AbstractDictionary::dictionaryFile();
 }
 
 QString
 Dictionary::sameTypeSequence() const
 {
-    return DictionaryBase::sameTypeSequence();
+    return AbstractDictionary::sameTypeSequence();
 }
 
 void
 Dictionary::setSameTypeSequence(const QString& sameTypeSequence)
 {
-    DictionaryBase::setSameTypeSequence(sameTypeSequence);
+    AbstractDictionary::setSameTypeSequence(sameTypeSequence);
 }

@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "dictionarybase.h"
+#include "abstractdictionary.h"
 
 #include "wordentry.h"
 #include "dictionaryzip.h"
@@ -70,7 +70,7 @@
 
 using namespace MulaPluginStarDict;
 
-class DictionaryBase::Private
+class AbstractDictionary::Private
 {
     public:
         Private()
@@ -93,13 +93,13 @@ class DictionaryBase::Private
         static const int wordDataCacheSize = 10;
 };
 
-DictionaryBase::DictionaryBase()
+AbstractDictionary::AbstractDictionary()
     : d(new Private)
 {
     d->cacheItemList.reserve(d->wordDataCacheSize);
 }
 
-DictionaryBase::~DictionaryBase()
+AbstractDictionary::~AbstractDictionary()
 {
     delete d->compressedDictionaryFile;
     delete d->dictionaryFile;
@@ -107,7 +107,7 @@ DictionaryBase::~DictionaryBase()
 }
 
 const QByteArray
-DictionaryBase::wordData(quint32 indexItemOffset, qint32 indexItemSize)
+AbstractDictionary::wordData(quint32 indexItemOffset, qint32 indexItemSize)
 {
     foreach(const WordEntry& cacheItem, d->cacheItemList)
     {
@@ -184,7 +184,7 @@ DictionaryBase::wordData(quint32 indexItemOffset, qint32 indexItemSize)
 }
 
 bool
-DictionaryBase::containFindData()
+AbstractDictionary::containFindData()
 {
     if (d->sameTypeSequence.isEmpty())
         return true;
@@ -198,7 +198,7 @@ DictionaryBase::containFindData()
     return false;
 }
 
-bool DictionaryBase::findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize, QByteArray& originalData)
+bool AbstractDictionary::findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize, QByteArray& originalData)
 {
     int wordCount = searchWords.size();
     QVector<bool> wordFind(wordCount, false);
@@ -330,25 +330,25 @@ bool DictionaryBase::findData(const QStringList &searchWords, qint32 indexItemOf
 }
 
 DictionaryZip*
-DictionaryBase::compressedDictionaryFile() const
+AbstractDictionary::compressedDictionaryFile() const
 {
     return d->compressedDictionaryFile;
 }
 
 QFile*
-DictionaryBase::dictionaryFile() const
+AbstractDictionary::dictionaryFile() const
 {
     return d->dictionaryFile;
 }
 
 QString&
-DictionaryBase::sameTypeSequence() const
+AbstractDictionary::sameTypeSequence() const
 {
     return d->sameTypeSequence;
 }
 
 void
-DictionaryBase::setSameTypeSequence(const QString& sameTypeSequence)
+AbstractDictionary::setSameTypeSequence(const QString& sameTypeSequence)
 {
     d->sameTypeSequence = sameTypeSequence;
 }
