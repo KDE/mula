@@ -109,6 +109,7 @@ AbstractDictionary::~AbstractDictionary()
 const QByteArray
 AbstractDictionary::wordData(quint32 indexItemOffset, qint32 indexItemSize)
 {
+    // Check first whether or not the data is already available in the cache
     foreach(const WordEntry& cacheItem, d->cacheItemList)
     {
         if (!cacheItem.data().isEmpty() && cacheItem.dataOffset() == indexItemOffset)
@@ -171,6 +172,8 @@ AbstractDictionary::wordData(quint32 indexItemOffset, qint32 indexItemSize)
             originalData = d->dictionaryFile->read(indexItemSize);
         else
             originalData = d->compressedDictionaryFile->read(indexItemOffset, indexItemSize);
+
+        resultData = originalData;
     }
 
     d->cacheItemList[d->currentCacheItemIndex].setData(resultData);
