@@ -111,10 +111,10 @@ AbstractDictionary::wordData(quint32 indexItemOffset, qint32 indexItemSize)
 
         // Calculate the last item's size.
         sectionSize = indexItemSize - sectionPosition;
+        resultData.append(d->sameTypeSequence.at(sameTypeSequenceLength - 1));
         if (d->sameTypeSequence.at(sameTypeSequenceLength - 1).isUpper())
         {
-            originalData.fromRawData(reinterpret_cast<char*>(&sectionSize), sizeof(quint32));
-            sectionSize += sizeof(quint32);
+            resultData.append(reinterpret_cast<char*>(&sectionSize), sizeof(quint32));
             resultData.append(originalData.mid(sectionPosition, sectionSize));
         }
         else
