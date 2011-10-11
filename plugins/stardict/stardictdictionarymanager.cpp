@@ -791,7 +791,7 @@ StarDictDictionaryManager::lookupData(QByteArray search_word, QStringList result
         qint32 size;
         for (int j = 0; j < wordSize; ++j)
         {
-            d->dictionaries.at(i)->keyAndData(j, key, offset, size);
+            d->dictionaries.at(i)->wordEntry(j, key, offset, size);
             if (size > maximumSize)
             {
                 maximumSize = size;

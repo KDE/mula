@@ -84,7 +84,7 @@ namespace MulaPluginStarDict
 
             QString data(long index);
 
-            void keyAndData(long index, QByteArray key, qint32& offset, qint32 &size);
+            void wordEntry(long index, QByteArray key, qint32& offset, qint32 &size);
 
             /** 
              * Returns the index of the word data where it has been found. The

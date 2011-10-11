@@ -98,7 +98,7 @@ Dictionary::data(long index)
 }
 
 void
-Dictionary::keyAndData(long index, QByteArray key, qint32 &offset, qint32 &size)
+Dictionary::wordEntry(long index, QByteArray key, qint32 &offset, qint32 &size)
 {
     if (d->indexFile.isNull())
         return;
