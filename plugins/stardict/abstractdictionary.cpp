@@ -251,7 +251,7 @@ bool AbstractDictionary::findData(const QStringList &searchWords, qint32 indexIt
     }
     else
     {
-        for (; sectionPosition < indexItemSize; sectionPosition += sectionSize)
+        while (sectionPosition < indexItemSize)
         {
             switch (originalData.at(sectionPosition))
             {
@@ -288,6 +288,8 @@ bool AbstractDictionary::findData(const QStringList &searchWords, qint32 indexIt
                     sectionSize = qstrlen(originalData.mid(sectionPosition)) + 1;
                 }
             }
+
+            sectionPosition += sectionSize;
         }
     }
 
