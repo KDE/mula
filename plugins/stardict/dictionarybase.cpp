@@ -241,7 +241,7 @@ bool DictionaryBase::findData(const QStringList &searchWords, qint32 indexItemOf
                 if (foundCount == wordCount)
                     return true;
 
-                sectionSize = originalData.indexOf(QChar('\0'), sectionPosition) + 1;
+                sectionSize = qstrlen(originalData.mid(sectionPosition)) + 1;
                 sectionPosition += sectionSize;
                 break;
 
@@ -253,7 +253,7 @@ bool DictionaryBase::findData(const QStringList &searchWords, qint32 indexItemOf
                 }
                 else
                 {
-                    sectionSize = originalData.indexOf(QChar('\0'), sectionPosition) + 1;
+                    sectionSize = qstrlen(originalData.mid(sectionPosition)) + 1;
                 }
 
                 sectionPosition += sectionSize;
@@ -309,7 +309,7 @@ bool DictionaryBase::findData(const QStringList &searchWords, qint32 indexItemOf
                 if (foundCount == wordCount)
                     return true;
 
-                sectionSize = originalData.indexOf(QChar('\0'), sectionPosition) + 1;
+                sectionSize = qstrlen(originalData.mid(sectionPosition)) + 1;
 
                 break;
             default:
@@ -320,7 +320,7 @@ bool DictionaryBase::findData(const QStringList &searchWords, qint32 indexItemOf
                 }
                 else
                 {
-                    sectionSize = originalData.indexOf(QChar('\0'), sectionPosition) + 1;
+                    sectionSize = qstrlen(originalData.mid(sectionPosition)) + 1;
                 }
             }
         }
