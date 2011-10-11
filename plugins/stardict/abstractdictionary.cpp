@@ -104,6 +104,7 @@ AbstractDictionary::wordData(quint32 indexItemOffset, qint32 indexItemSize)
                 sectionSize = qstrlen(originalData.mid(sectionPosition)) + 1;
             }
 
+            resultData.append(ch);
             resultData.append(originalData.mid(sectionPosition, sectionSize));
             sectionPosition += sectionSize;
         }
