@@ -42,10 +42,20 @@ namespace MulaPluginStarDict
             virtual ~AbstractDictionary();
 
             const QByteArray wordData(quint32 indexItemOffset, qint32 indexItemSize);
+
+            /**
+             * Returns whether the dictionary contains any of the given same
+             * type sequence characters
+             *
+             * @return True if the any of the given same same type sequence
+             * characters is contained by the dictionary, otherwise false.
+             * @see finData, wordData
+             */
             bool containFindData();
+
             bool findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize, QByteArray& originalData);
 
-            /** 
+            /**
              * Returns the compressed ".dict.dz" dictionary file
              *
              * @return The compressed dictionary file
@@ -53,7 +63,7 @@ namespace MulaPluginStarDict
              */
             DictionaryZip* compressedDictionaryFile() const;
 
-            /** 
+            /**
              * Returns the ".dict" dictionary file
              *
              * @return The dictionary file
