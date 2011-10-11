@@ -301,7 +301,7 @@ bool AbstractDictionary::findData(const QStringList &searchWords, qint32 indexIt
             case 'x':
                 for (int j = 0; j < wordCount; ++j)
                 {
-                    if (!wordFind.at(j) && originalData.indexOf(searchWords.at(j), sectionSize) == -1)
+                    if (!wordFind.at(j) && originalData.indexOf(searchWords.at(j), sectionSize) > -1)
                     {
                         wordFind[j] = true;
                         ++foundCount;
