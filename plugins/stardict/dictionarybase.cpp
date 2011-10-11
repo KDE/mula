@@ -152,7 +152,7 @@ DictionaryBase::wordData(quint32 indexItemOffset, qint32 indexItemSize)
 
         // Calculate the last item's size.
         sectionSize = indexItemSize - sectionPosition;
-        if (d->sameTypeSequence[sameTypeSequenceLength - 1].isUpper())
+        if (d->sameTypeSequence.at(sameTypeSequenceLength - 1).isUpper())
         {
             originalData.fromRawData(reinterpret_cast<char*>(&sectionSize), 4);
             sectionSize += sizeof(quint32);
