@@ -176,6 +176,18 @@ namespace MulaPluginStarDict
              */
             virtual ~AbstractDictionary();
 
+            /**
+             * Returns the desired word data of the dictionary with all its
+             * fields
+             *
+             * \note The method takes care about the low-level the details of
+             * the same type sequence settings in the index file.
+             *
+             * @param indexItemOffset   The offset value in the dictionary file
+             * @param indexItemSize     The size of the desired word data
+             * @return The desired word data with all its fields
+             * @see findData, wordData
+             */
             const QByteArray wordData(quint32 indexItemOffset, qint32 indexItemSize);
 
             /**
@@ -184,7 +196,7 @@ namespace MulaPluginStarDict
              *
              * @return True if the any of the given same same type sequence
              * characters is contained by the dictionary, otherwise false.
-             * @see finData, wordData
+             * @see findData, wordData
              */
             bool containFindData();
 
