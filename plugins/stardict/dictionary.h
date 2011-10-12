@@ -22,6 +22,8 @@
 
 #include "abstractdictionary.h"
 
+#include "wordentry.h"
+
 #include <QtCore/QString>
 
 namespace MulaPluginStarDict
@@ -84,7 +86,7 @@ namespace MulaPluginStarDict
 
             QString data(long index);
 
-            void wordEntry(long index, QByteArray key, qint32& offset, qint32 &size);
+            const WordEntry wordEntry(long index);
 
             /** 
              * Returns the index of the word data where it has been found. The

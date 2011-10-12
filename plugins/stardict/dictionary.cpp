@@ -97,15 +97,18 @@ Dictionary::data(long index)
     return AbstractDictionary::wordData(d->indexFile->wordEntryOffset(), d->indexFile->wordEntrySize());
 }
 
-void
-Dictionary::wordEntry(long index, QByteArray key, qint32 &offset, qint32 &size)
+const WordEntry
+Dictionary::wordEntry(long index)
 {
     if (d->indexFile.isNull())
-        return;
+        return WordEntry();
 
-    key = d->indexFile->key(index);
-    offset = d->indexFile->wordEntryOffset();
-    size = d->indexFile->wordEntrySize();
+    WordEntry wordEntry;
+    wordEntry.setData(d->indexFile->key(index));
+    wordEntry.setDataOffset(d->indexFile->wordEntryOffset());
+    wordEntry.setDataSize(d->indexFile->wordEntrySize());
+
+    return wordEntry;
 }
 
 bool

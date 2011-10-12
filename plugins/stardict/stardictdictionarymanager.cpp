@@ -773,7 +773,7 @@ StarDictDictionaryManager::lookupData(QByteArray search_word, QStringList result
     if (searchWords.isEmpty())
         return false;
 
-    int maximumSize = 0;
+    quint32 maximumSize = 0;
     for (QVector<Dictionary *>::size_type i = 0; i < d->dictionaries.size(); ++i)
     {
         if (!d->dictionaries.at(i)->containFindData())
@@ -783,19 +783,16 @@ StarDictDictionaryManager::lookupData(QByteArray search_word, QStringList result
             d->progressFunction();
 
         int wordSize = articleCount(i);
-        QByteArray key;
-        qint32 offset;
-        qint32 size;
         for (int j = 0; j < wordSize; ++j)
         {
-            d->dictionaries.at(i)->wordEntry(j, key, offset, size);
-            if (size > maximumSize)
+            WordEntry wordEntry = d->dictionaries.at(i)->wordEntry(j);
+            if (wordEntry.dataSize() > maximumSize)
             {
-                maximumSize = size;
+                maximumSize = wordEntry.dataSize();
             }
 
-            if (d->dictionaries.at(i)->findData(searchWords, offset, size))
-                resultList[i].append(key);
+            if (d->dictionaries.at(i)->findData(searchWords, wordEntry.dataOffset(), wordEntry.dataSize()))
+                resultList[i].append(wordEntry.data());
         }
     }
 
