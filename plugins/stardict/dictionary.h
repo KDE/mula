@@ -84,6 +84,18 @@ namespace MulaPluginStarDict
              */
             const QString key(long index) const;
 
+            /**
+             * Returns the desired word data of the dictionary with all its
+             * fields
+             *
+             * \note The method takes care about the low-level the details of
+             * the same type sequence settings in the index file and so forth.
+             * If the indexfile is not loaded properly yet, the method returns
+             * an empty string.
+             *
+             * @return The desired word data with all its fields
+             * @see key, wordEntry
+             */
             QString data(long index);
 
             const WordEntry wordEntry(long index);
