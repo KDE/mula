@@ -39,31 +39,68 @@ namespace MulaPluginStarDict
         Q_INTERFACES(MulaCore::DictionaryPlugin)
 
         public:
+            /**
+             * Constructor.
+             */
             StarDict(QObject *parent = 0);
+
+            /**
+             * Destructor.
+             */
             virtual ~StarDict();
 
+            /** Reimplemented from DictionaryPlugin::name() */
             QString name() const;
+
+            /** Reimplemented from DictionaryPlugin::version() */
             QString version() const;
+
+            /** Reimplemented from DictionaryPlugin::description() */
             QString description() const;
+
+            /** Reimplemented from DictionaryPlugin::authors() */
             QStringList authors() const;
+
+            /** Reimplemented from DictionaryPlugin::features() */
             MulaCore::DictionaryPlugin::Features features() const;
 
+            /** Reimplemented from DictionaryPlugin::availableDictionaryList() */
+            QStringList availableDictionaryList();
+
+            /** Reimplemented from DictionaryPlugin::loadedDictionaryList() */
+            QStringList loadedDictionaryList() const;
+
+            /** Reimplemented from DictionaryPlugin::setLoadedDictionaryList() */
+            void setLoadedDictionaryList(const QStringList &loadedDictionaryList);
+
+            /** Reimplemented from DictionaryPlugin::isTranslatable() */
+            bool isTranslatable(const QString &dict, const QString &word);
+
+            /** Reimplemented from DictionaryPlugin::translate() */
+            MulaCore::Translation translate(const QString &dict, const QString &word);
+
+            /** Reimplemented from DictionaryPlugin::findSimilarWords() */
+            virtual QStringList findSimilarWords(const QString &dict, const QString &word);
+
+            /** Reimplemented from DictionaryPlugin::dictionaryInfo() */
+            MulaCore::DictionaryInfo dictionaryInfo(const QString &dictionaryUrl);
+
+            // int execSettingsDialog(QWidget *parent);
+
+            /**
+             * Finds the available dictionary from the desired ifo file path
+             * and then return the relevant book name
+             *
+             * @param absolutePath The complete path of the ".ifo" ifo file
+             * @return The book name of the dictionary
+             * @see findIfoFile, availableDictionaryList, loadedDictionaryList,
+             * setLoadedDictionaryList
+             */
             QString findAvailableDictionary(const QString& absolutePath);
+
             QString findIfoFile(const QString& absolutePath);
 
             template <typename Method> QStringList recursiveTemplateFind(const QString& directoryPath, Method method);
-            QStringList availableDictionaryList();
-
-            QStringList loadedDictionaryList() const;
-            void setLoadedDictionaryList(const QStringList &loadedDictionaryList);
-            MulaCore::DictionaryInfo dictionaryInfo(const QString &dictionaryUrl);
-
-            bool isTranslatable(const QString &dict, const QString &word);
-            MulaCore::Translation translate(const QString &dict, const QString &word);
-
-            virtual QStringList findSimilarWords(const QString &dict, const QString &word);
-
-            // int execSettingsDialog(QWidget *parent);
 
             friend class SettingsDialog;
 
