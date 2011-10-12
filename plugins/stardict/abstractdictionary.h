@@ -194,12 +194,24 @@ namespace MulaPluginStarDict
              * Returns whether the dictionary contains any of the given same
              * type sequence characters
              *
-             * @return True if the any of the given same same type sequence
+             * @return True if the any of the given same type sequence
              * characters is contained by the dictionary, otherwise false.
              * @see findData, wordData
              */
             bool containFindData();
 
+            /**
+             * Returns true if the dictionary contains all the desired words
+             * according to the relevant offset and index item size, otherwise
+             * false.
+             *
+             * @param searchWords       The desired words to look up
+             * @param indexItemOffset   The index item offset
+             * @param indexItemSize     The index item size
+             * @return True if the all the desired words can be found in the
+             * dictionary, otherwise false.
+             * @see containData, wordData
+             */
             bool findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize);
 
             /**
