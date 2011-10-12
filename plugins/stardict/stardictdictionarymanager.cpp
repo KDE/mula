@@ -130,18 +130,18 @@ StarDictDictionaryManager::dictionaryCount() const
 }
 
 const QByteArray
-StarDictDictionaryManager::poWord(long keyIndex, int libIndex) const
+StarDictDictionaryManager::poWord(long keyIndex, int dictionaryIndex) const
 {
-    return d->dictionaryList.at(libIndex)->key(keyIndex).toUtf8();
+    return d->dictionaryList.at(dictionaryIndex)->key(keyIndex).toUtf8();
 }
 
 QString
-StarDictDictionaryManager::poWordData(long dataIndex, int libIndex)
+StarDictDictionaryManager::poWordData(long dataIndex, int dictionaryIndex)
 {
-    if (libIndex == invalidIndex)
+    if (dictionaryIndex == invalidIndex)
         return NULL;
 
-    return d->dictionaryList.at(libIndex)->data(dataIndex);
+    return d->dictionaryList.at(dictionaryIndex)->data(dataIndex);
 }
 
 bool
@@ -153,7 +153,7 @@ StarDictDictionaryManager::lookupWord(const char* searchWord, int& iWordIndex, i
 template <typename Method>
 void
 StarDictDictionaryManager::recursiveTemplateHelper(const QString& directoryName, const QStringList& orderList, const QStringList& disableList,
-                        Method method)
+                                                    Method method)
 {
     QDir dir(directoryName);
 
@@ -192,12 +192,12 @@ StarDictDictionaryManager::load(const QStringList& dictionaryDirectoryList,
 }
 
 Dictionary*
-StarDictDictionaryManager::reloaderFind(const QString& url)
+StarDictDictionaryManager::reloaderFind(const QString& completeFilePath)
 {
     QList<Dictionary *>::iterator it;
     for (it = d->previous.begin(); it != d->previous.end(); ++it)
     {
-        if ((*it)->ifoFilePath() == url)
+        if ((*it)->ifoFilePath() == completeFilePath)
             break;
     }
 
@@ -223,8 +223,8 @@ StarDictDictionaryManager::reloaderHelper(const QString &absolutePath)
 
 void
 StarDictDictionaryManager::reload(const QStringList& dictionaryDirectoryList,
-                  const QStringList& orderList,
-                  const QStringList& disableList)
+                                  const QStringList& orderList,
+                                  const QStringList& disableList)
 {
     d->previous = d->dictionaryList;
     d->dictionaryList.clear();
@@ -392,7 +392,9 @@ StarDictDictionaryManager::poPreviousWord(long *iCurrent)
 }
 
 bool
-StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int wordLength, int truncateLength, QString addition, bool check)
+StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex,
+                                         QString suffix, int wordLength, int truncateLength,
+                                         QString addition, bool check)
 {
         int searchWordLength = searchWord.length();
         if (!d->found && searchWordLength > wordLength)
@@ -469,6 +471,7 @@ StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex
                 }
             }
         }
+
         return d->found;
 }
 
