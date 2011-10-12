@@ -54,10 +54,10 @@ namespace MulaPluginStarDict
              * Loads the dictionary according to the ifo file path
              *
              * @param filePath The path of the relevant ifo file
-             * @return True if the loading went fine, otherwise false.
+             * @return True if the loading was successful, otherwise false.
              * @see load, reload
              */
-            void loadDictionary(const QString& completeFilePath);
+            bool loadDictionary(const QString& completeFilePath);
 
             void load(const QStringList& dictionaryDirs,
                       const QStringList& orderList,
