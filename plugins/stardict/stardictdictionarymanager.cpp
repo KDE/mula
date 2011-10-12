@@ -38,8 +38,8 @@ using namespace MulaPluginStarDict;
 static bool
 isVowel(QChar inputChar)
 {
-    QChar ch = inputChar.toUpper();
-    return ( ch == 'A' || ch == 'E' || ch == 'I' || ch == 'O' || ch == 'U' );
+    QChar ch = inputChar.toLower();
+    return ( ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' );
 }
 
 static bool
