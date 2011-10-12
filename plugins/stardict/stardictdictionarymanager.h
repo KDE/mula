@@ -96,7 +96,16 @@ namespace MulaPluginStarDict
              */
             int dictionaryCount() const;
 
-            const QByteArray poWord(long iIndex, int iLib) const;
+            /**
+             * Returns the word data from the desired dictionary according to
+             * the proper entry index
+             *
+             * @param   keyIndex        The index of the desired word
+             * @param   dictionaryIndex The index of the desired dictionary
+             * @return  The word data
+             * @see poWordData, poCurrentWord, poNextWord, poPreviousWord
+             */
+            const QByteArray poWord(long keyIndex, int dictionaryIndex) const;
 
             QString poWordData(long iIndex, int iLib);
 
