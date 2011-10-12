@@ -289,15 +289,6 @@ StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces
                 break;
             }
 
-            case 'x':
-            {
-                QString string = QString::fromUtf8(data);
-                position += data.length() + 1;
-                xdxf2html(string);
-                result.append(string);
-                break;
-            }
-
             case 't':
             {
                 QString string = QString::fromUtf8(data);
@@ -305,6 +296,15 @@ StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces
                 result.append("<font class=\"example\">");
                 result.append(string);
                 result.append("</font>");
+                break;
+            }
+
+            case 'x':
+            {
+                QString string = QString::fromUtf8(data);
+                position += data.length() + 1;
+                xdxf2html(string);
+                result.append(string);
                 break;
             }
 
