@@ -192,14 +192,14 @@ Dictionary::loadIfoFile(const QString& ifoFilePath)
 }
 
 QVector<int>
-Dictionary::lookupPattern(const QString& pattern, int iBuffLen)
+Dictionary::lookupPattern(const QString& pattern, int maximumIndexListSize)
 {
     QVector<int> indexList;
 
     QRegExp rx(pattern);
     rx.setPatternSyntax(QRegExp::Wildcard);
 
-    for (int i = 0; i < articleCount() && indexList.size() < iBuffLen - 1; ++i)
+    for (int i = 0; i < articleCount() && indexList.size() < maximumIndexListSize - 1; ++i)
     {
         if (rx.exactMatch(key(i)))
             indexList.append(i);
