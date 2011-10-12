@@ -61,8 +61,7 @@ class StarDictDictionaryManager::Private
 {
     public:
         Private()
-            : maximumFuzzyDistance(maxFuzzyDistance) // need to read from cfg
-           , found(false)
+           : found(false)
         {
         }
 
@@ -71,7 +70,6 @@ class StarDictDictionaryManager::Private
         }
 
         QVector<Dictionary *> dictionaries;
-        int maximumFuzzyDistance;
         progress_func_t progressFunction;
 
         QVector<Dictionary *> previous;
@@ -79,7 +77,7 @@ class StarDictDictionaryManager::Private
 
         bool found;
         static const int maxMatchItemPerLib = 100;
-        static const int maxFuzzyDistance = 3; // at most MAX_FUZZY_DISTANCE-1 differences allowed when find similar words
+        static const int maximumFuzzyDistance = 3; // at most MAX_FUZZY_DISTANCE-1 differences allowed when find similar words
 
 };
 
