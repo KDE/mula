@@ -141,9 +141,9 @@ StarDictDictionaryManager::poWordData(long dataIndex, int libIndex)
 }
 
 bool
-StarDictDictionaryManager::lookupWord(const char* searchWord, int& iWordIndex, int libIndex)
+StarDictDictionaryManager::lookupWord(const char* searchWord, int& iWordIndex, int dictionaryIndex)
 {
-    return d->dictionaries.at(libIndex)->lookup(searchWord, iWordIndex);
+    return d->dictionaries.at(dictionaryIndex)->lookup(searchWord, iWordIndex);
 }
 
 template <typename Method>
@@ -174,8 +174,8 @@ StarDictDictionaryManager::recursiveTemplateHelper(const QString& directoryName,
 
 void
 StarDictDictionaryManager::load(const QStringList& dictionaryDirectoryList,
-                const QStringList& orderList,
-                const QStringList& disableList)
+                                const QStringList& orderList,
+                                const QStringList& disableList)
 {
     foreach (const QString& string, orderList)
     {
