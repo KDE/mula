@@ -166,6 +166,7 @@ AbstractDictionary::findData(const QStringList &searchWords, qint32 indexItemOff
 {
     int wordCount = searchWords.size();
     QVector<bool> wordFind(wordCount, false);
+    QByteArray tmpOriginalData;
 
     if (d->dictionaryFile->isOpen())
     {
@@ -194,9 +195,11 @@ AbstractDictionary::findData(const QStringList &searchWords, qint32 indexItemOff
             case 't':
             case 'x':
             case 'y':
+                sectionSize = qstrlen(originalData.mid(sectionPosition)) + 1;
+                tmpOriginalData = originalData.mid(sectionPosition, sectionSize);
                 for (int j = 0; j < wordCount; ++j)
                 {
-                    if (!wordFind.at(j) && originalData.indexOf(searchWords.at(j), sectionPosition) > -1)
+                    if (!wordFind.at(j) && tmpOriginalData.indexOf(searchWords.at(j)) > -1)
                     {
                         wordFind[j] = true;
                         ++foundCount;
@@ -207,7 +210,6 @@ AbstractDictionary::findData(const QStringList &searchWords, qint32 indexItemOff
                 if (foundCount == wordCount)
                     return true;
 
-                sectionSize = qstrlen(originalData.mid(sectionPosition)) + 1;
                 sectionPosition += sectionSize;
                 break;
 
@@ -262,9 +264,11 @@ AbstractDictionary::findData(const QStringList &searchWords, qint32 indexItemOff
             case 't':
             case 'x':
             case 'y':
+                sectionSize = qstrlen(originalData.mid(sectionPosition)) + 1;
+                tmpOriginalData = originalData.mid(sectionPosition, sectionSize);
                 for (int j = 0; j < wordCount; ++j)
                 {
-                    if (!wordFind.at(j) && originalData.indexOf(searchWords.at(j), sectionSize) > -1)
+                    if (!wordFind.at(j) && tmpOriginalData.indexOf(searchWords.at(j)) > -1)
                     {
                         wordFind[j] = true;
                         ++foundCount;
@@ -274,8 +278,6 @@ AbstractDictionary::findData(const QStringList &searchWords, qint32 indexItemOff
                 // Everything has been found
                 if (foundCount == wordCount)
                     return true;
-
-                sectionSize = qstrlen(originalData.mid(sectionPosition)) + 1;
 
                 break;
             default:
