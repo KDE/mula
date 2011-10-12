@@ -88,7 +88,7 @@ namespace MulaPluginStarDict
 
             const WordEntry wordEntry(long index);
 
-            /** 
+            /**
              * Returns the index of the word data where it has been found. The
              * method will also return the fact whether or not the desired word
              * could be found in the index file.
@@ -100,6 +100,18 @@ namespace MulaPluginStarDict
              */
             bool lookup(const QString word, int &index);
 
+            /**
+             * Returns the list of indices matched against the desired word data
+             * pattern in the dictionary. Note, this method will return maximum
+             * that many elements that is passed as an arguement. Alternatively,
+             * if that is a big enough value, it will return all the words.
+             *
+             * @param   pattern                 The pattern to look up
+             * @param   maximumIndexListSize    The maximum index list count for
+             * returning
+             * @return The indices where the pattern matches against the word
+             * data
+             */
             QVector<int> lookupPattern(const QString& pattern, int maximumIndexListSize);
 
         private:
