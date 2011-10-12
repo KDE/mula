@@ -185,17 +185,17 @@ StarDict::loadedDictionaryList() const
 }
 
 void
-StarDict::setLoadedDictionaryList(const QStringList &loadedDictionaries)
+StarDict::setLoadedDictionaryList(const QStringList &loadedDictionaryList)
 {
-    QStringList available = availableDictionaryList();
-    QStringList disabled;
-    foreach (const QString& dictionary, available)
+    QStringList availableDictionaries = availableDictionaryList();
+    QStringList disabledDictionaries;
+    foreach (const QString& dictionary, availableDictionaries)
     {
-        if (!loadedDictionaries.contains(dictionary))
-            disabled.append(dictionary);
+        if (!loadedDictionaryList.contains(dictionary))
+            disabledDictionaryies.append(dictionary);
     }
 
-    d->sdLibs->reload(d->dictionaryDirectoryList, loadedDictionaries, disabled);
+    d->sdLibs->reload(d->dictionaryDirectoryList, loadedDictionaryList, disabledDictionaries);
 
     d->loadedDictionaries.clear();
     for (int i = 0; i < d->sdLibs->dictionaryCount(); ++i)
