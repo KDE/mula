@@ -237,7 +237,7 @@ AbstractDictionary::findData(const QStringList &searchWords, qint32 indexItemOff
             sectionSize = indexItemSize - sectionSize;
             for (int j = 0; j < wordCount; ++j)
             {
-                if (!wordFind[j] && originalData.contains(searchWords.at(j).mid(sectionSize).toUtf8()))
+                if (!wordFind[j] && originalData.indexOf(searchWords.at(j), sectionPosition) > -1)
                 {
                     wordFind[j] = true;
                     ++foundCount;
