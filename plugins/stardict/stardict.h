@@ -100,8 +100,6 @@ namespace MulaPluginStarDict
 
             QString findIfoFile(const QString& absolutePath);
 
-            template <typename Method> QStringList recursiveTemplateFind(const QString& directoryPath, Method method);
-
             friend class SettingsDialog;
 
         private:
@@ -110,6 +108,8 @@ namespace MulaPluginStarDict
 
             QString findDictionary(const QString &name, const QStringList &dictDirs);
             static void xdxf2html(QString &str);
+
+            template <typename Method> QStringList recursiveTemplateFind(const QString& directoryPath, Method method);
 
             class Private;
             Private *const d;
