@@ -774,7 +774,6 @@ StarDictDictionaryManager::lookupData(QByteArray search_word, QStringList result
         return false;
 
     int maximumSize = 0;
-    QByteArray originalData = NULL;
     for (QVector<Dictionary *>::size_type i = 0; i < d->dictionaries.size(); ++i)
     {
         if (!d->dictionaries.at(i)->containFindData())
@@ -795,7 +794,7 @@ StarDictDictionaryManager::lookupData(QByteArray search_word, QStringList result
                 maximumSize = size;
             }
 
-            if (d->dictionaries.at(i)->findData(searchWords, offset, size, originalData))
+            if (d->dictionaries.at(i)->findData(searchWords, offset, size))
                 resultList[i].append(key);
         }
     }

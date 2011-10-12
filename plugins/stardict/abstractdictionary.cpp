@@ -162,11 +162,12 @@ AbstractDictionary::containFindData()
 }
 
 bool
-AbstractDictionary::findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize, QByteArray& originalData)
+AbstractDictionary::findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize)
 {
     int wordCount = searchWords.size();
     QVector<bool> wordFind(wordCount, false);
     QByteArray tmpOriginalData;
+    QByteArray originalData;
 
     if (d->dictionaryFile->isOpen())
     {

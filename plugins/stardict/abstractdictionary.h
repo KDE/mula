@@ -200,7 +200,7 @@ namespace MulaPluginStarDict
              */
             bool containFindData();
 
-            bool findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize, QByteArray& originalData);
+            bool findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize);
 
             /**
              * Returns the compressed ".dict.dz" dictionary file
