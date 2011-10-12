@@ -692,7 +692,7 @@ lessForCompare(QString lh, QString rh)
 }
 
 int
-StarDictDictionaryManager::lookupWithRule(QByteArray patternWord, QStringList patternMatchWords)
+StarDictDictionaryManager::lookupPattern(QByteArray patternWord, QStringList patternMatchWords)
 {
     long aiIndex[d->maxMatchItemPerLib + 1];
     int matchCount = 0;
@@ -702,7 +702,7 @@ StarDictDictionaryManager::lookupWithRule(QByteArray patternWord, QStringList pa
         //if(oStarDictDictionaryManager.LookdupWordsWithRule(pspec,aiIndex,MAX_MATCH_ITEM_PER_LIB+1-iMatchCount,iLib))
         // -iMatchCount,so save time,but may got less result and the word may repeat.
 
-        if (d->dictionaries.at(iLib)->lookupWithRule(patternWord, aiIndex, d->maxMatchItemPerLib + 1))
+        if (d->dictionaries.at(iLib)->lookupPattern(patternWord, aiIndex, d->maxMatchItemPerLib + 1))
         {
             if (d->progressFunction)
                 d->progressFunction();

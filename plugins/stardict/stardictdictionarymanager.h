@@ -40,19 +40,42 @@ namespace MulaPluginStarDict
 
             typedef void (*progress_func_t)(void);
 
+            /**
+             * Constructor.
+             */
             StarDictDictionaryManager(progress_func_t f = NULL);
+
+            /**
+             * Destructor.
+             */
             virtual ~StarDictDictionaryManager();
 
             void loadDictionary(const QString& url);
+
             void load(const QStringList& dictionaryDirs,
                       const QStringList& orderList,
                       const QStringList& disableList);
+
             void reload(const QStringList& dictionaryDirs,
                         const QStringList& orderList,
                         const QStringList& disableList);
 
+            /**
+             * Returns the count of the word entries in the .idx file at the
+             * given index of the dictionary list
+             *
+             * @param index The desired index in the list
+             * @return The count of the word entries
+             */
             long articleCount(int index) const;
 
+            /**
+             * Returns the name of the dictionary at the given index of the
+             * dictionary list
+             *
+             * @param index The desired index in the list
+             * @return The name of the dictionary
+             */
             const QString dictionaryName(int index) const;
 
             int dictionaryCount() const;
@@ -76,7 +99,7 @@ namespace MulaPluginStarDict
             bool simpleLookupWord(QByteArray searchWord, int& iWordIndex, int iLib);
 
             bool lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int resultListSize, int iLib);
-            int lookupWithRule(QByteArray searchWord, QStringList resultList);
+            int lookupPattern(QByteArray searchWord, QStringList resultList);
             bool lookupData(QByteArray searchWord, QStringList resultList);
 
             QueryType analyzeQuery(QString string, QString& result);

@@ -192,7 +192,7 @@ Dictionary::loadIfoFile(const QString& ifoFilePath)
 }
 
 bool
-Dictionary::lookupWithRule(const QString& pattern, long *aIndex, int iBuffLen)
+Dictionary::lookupPattern(const QString& pattern, long *aIndex, int iBuffLen)
 {
     int indexCount = 0;
     bool found = false;
