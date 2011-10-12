@@ -34,8 +34,6 @@ class Dictionary::Private
 {
     public:
         Private()
-            : wordCount(0)
-            , indexFileSize(0)
         {
         }
 
@@ -43,12 +41,8 @@ class Dictionary::Private
         {
         }
 
-        QString ifoFilePath;
-        long wordCount;
-        QString bookName;
-
+        StarDictDictionaryInfo dictionaryInfo;
         QScopedPointer<AbstractIndexFile> indexFile;
-        int indexFileSize;
 };
 
 Dictionary::Dictionary()
@@ -63,19 +57,19 @@ Dictionary::~Dictionary()
 int
 Dictionary::articleCount() const
 {
-    return d->wordCount;
+    return d->dictionaryInfo.wordCount();
 }
 
 const QString
 Dictionary::dictionaryName() const
 {
-    return d->bookName;
+    return d->dictionaryInfo.bookName();
 }
 
 const QString
 Dictionary::ifoFilePath() const
 {
-    return d->ifoFilePath;
+    return d->dictionaryInfo.ifoFilePath();
 }
 
 const QString
@@ -177,7 +171,7 @@ Dictionary::load(const QString& ifoFilePath)
         d->indexFile.reset(new OffsetCacheFile);
     }
 
-    if (!d->indexFile->load(completeFilePath, d->wordCount, d->indexFileSize))
+    if (!d->indexFile->load(completeFilePath, d->dictionaryInfo.wordCount(), d->dictionaryInfo.indexFileSize()))
         return false;
 
     return true;
@@ -186,20 +180,13 @@ Dictionary::load(const QString& ifoFilePath)
 bool
 Dictionary::loadIfoFile(const QString& ifoFilePath)
 {
-    StarDictDictionaryInfo dictionaryInfo;
-    if (!dictionaryInfo.loadFromIfoFile(ifoFilePath))
+    if (!d->dictionaryInfo.loadFromIfoFile(ifoFilePath))
         return false;
 
-    if (dictionaryInfo.wordCount() == 0)
+    if (d->dictionaryInfo.wordCount() == 0)
         return false;
 
-    d->ifoFilePath = dictionaryInfo.ifoFilePath();
-    d->wordCount = dictionaryInfo.wordCount();
-    d->bookName = dictionaryInfo.bookName();
-
-    d->indexFileSize = dictionaryInfo.indexFileSize();
-
-    setSameTypeSequence(dictionaryInfo.sameTypeSequence());
+    setSameTypeSequence(d->dictionaryInfo.sameTypeSequence());
 
     return true;
 }
