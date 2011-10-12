@@ -50,7 +50,14 @@ namespace MulaPluginStarDict
              */
             virtual ~StarDictDictionaryManager();
 
-            void loadDictionary(const QString& directoryFilePath);
+            /**
+             * Loads the dictionary according to the ifo file path
+             *
+             * @param filePath The path of the relevant ifo file
+             * @return True if the loading went fine, otherwise false.
+             * @see load, reload
+             */
+            void loadDictionary(const QString& completeFilePath);
 
             void load(const QStringList& dictionaryDirs,
                       const QStringList& orderList,
