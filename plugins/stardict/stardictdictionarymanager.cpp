@@ -69,11 +69,11 @@ class StarDictDictionaryManager::Private
         {
         }
 
-        QVector<Dictionary *> dictionaryList;
+        QList<Dictionary *> dictionaryList;
         progress_func_t progressFunction;
 
-        QVector<Dictionary *> previous;
-        QVector<Dictionary *> future;
+        QList<Dictionary *> previous;
+        QList<Dictionary *> future;
 
         bool found;
         static const int maxMatchItemPerLib = 100;
@@ -190,7 +190,7 @@ StarDictDictionaryManager::load(const QStringList& dictionaryDirectoryList,
 Dictionary*
 StarDictDictionaryManager::reloaderFind(const QString& url)
 {
-    QVector<Dictionary *>::iterator it;
+    QList<Dictionary *>::iterator it;
     for (it = d->previous.begin(); it != d->previous.end(); ++it)
     {
         if ((*it)->ifoFilePath() == url)
