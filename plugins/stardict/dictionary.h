@@ -81,6 +81,7 @@ namespace MulaPluginStarDict
              *
              * @param   index   The index of the desired word
              * @return  The word data
+             * @see data, wordEntry
              */
             const QString key(long index) const;
 
@@ -98,6 +99,16 @@ namespace MulaPluginStarDict
              */
             QString data(long index);
 
+            /**
+             * Returns the word entry according to the desired index value
+             *
+             * \note If the indexfile is not loaded properly yet, the method
+             * returns an empty string.
+             *
+             * @param index The desired index
+             * @return The word entry according to the given index
+             * @see key, data
+             */
             const WordEntry wordEntry(long index);
 
             /**
