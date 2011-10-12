@@ -144,7 +144,7 @@ Dictionary::load(const QString& ifoFilePath)
     }
     else
     {
-        completeFilePath.remove(completeFilePath.length() - sizeof(".dz") + 1, sizeof(".dz") - 1);
+        completeFilePath.chop(sizeof(".dz"));
 
         QFile *uncompressedDictionaryFile = dictionaryFile();
         if (uncompressedDictionaryFile)
@@ -170,7 +170,7 @@ Dictionary::load(const QString& ifoFilePath)
     }
     else
     {
-        completeFilePath.remove(completeFilePath.length() - sizeof(".gz") + 1, sizeof(".gz") - 1);
+        completeFilePath.chop(sizeof(".gz"));
         d->indexFile.reset(new OffsetCacheFile);
     }
 
