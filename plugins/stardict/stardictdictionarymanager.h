@@ -50,7 +50,7 @@ namespace MulaPluginStarDict
              */
             virtual ~StarDictDictionaryManager();
 
-            void loadDictionary(const QString& url);
+            void loadDictionary(const QString& directoryFilePath);
 
             void load(const QStringList& dictionaryDirs,
                       const QStringList& orderList,
