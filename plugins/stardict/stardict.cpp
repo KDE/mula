@@ -42,7 +42,7 @@ class StarDict::Private
 {
     public:
         Private()
-            : sdLibs(new StarDictDictionaryManager)
+            : dictionaryManager(new StarDictDictionaryManager)
             , reformatLists(false)
             , expandAbbreviations(false)
         {
@@ -52,7 +52,7 @@ class StarDict::Private
         {
         }
 
-        StarDictDictionaryManager *sdLibs;
+        StarDictDictionaryManager *dictionaryManager;
         QStringList dictionaryDirectoryList;
         QHash<QString, int> loadedDictionaries;
         bool reformatLists;
@@ -90,7 +90,7 @@ StarDict::~StarDict()
     settings.setValue("StarDict/reformatLists", d->reformatLists);
     settings.setValue("StarDict/expandAbbreviations", d->expandAbbreviations);
 
-    delete d->sdLibs;
+    delete d->dictionaryManager;
 }
 
 QString
@@ -192,14 +192,14 @@ StarDict::setLoadedDictionaryList(const QStringList &loadedDictionaryList)
     foreach (const QString& dictionary, availableDictionaries)
     {
         if (!loadedDictionaryList.contains(dictionary))
-            disabledDictionaryies.append(dictionary);
+            disabledDictionaries.append(dictionary);
     }
 
-    d->sdLibs->reload(d->dictionaryDirectoryList, loadedDictionaryList, disabledDictionaries);
+    d->dictionaryManager->reload(d->dictionaryDirectoryList, loadedDictionaryList, disabledDictionaries);
 
     d->loadedDictionaries.clear();
-    for (int i = 0; i < d->sdLibs->dictionaryCount(); ++i)
-        d->loadedDictionaries[d->sdLibs->dictionaryName(i)] = i;
+    for (int i = 0; i < d->dictionaryManager->dictionaryCount(); ++i)
+        d->loadedDictionaries[d->dictionaryManager->dictionaryName(i)] = i;
 }
 
 MulaCore::DictionaryInfo
@@ -224,7 +224,7 @@ StarDict::isTranslatable(const QString &dictionary, const QString &word)
         return false;
 
     int index;
-    return d->sdLibs->simpleLookupWord(word.toUtf8().data(), index, d->loadedDictionaries[dictionary]);
+    return d->dictionaryManager->simpleLookupWord(word.toUtf8().data(), index, d->loadedDictionaries[dictionary]);
 }
 
 MulaCore::Translation
@@ -236,12 +236,12 @@ StarDict::translate(const QString &dictionary, const QString &word)
     int dictionaryIndex = d->loadedDictionaries[dictionary];
     int index;
 
-    if (!d->sdLibs->simpleLookupWord(word.toUtf8().data(), index, d->loadedDictionaries[dictionary]))
+    if (!d->dictionaryManager->simpleLookupWord(word.toUtf8().data(), index, d->loadedDictionaries[dictionary]))
         return MulaCore::Translation();
 
-    return MulaCore::Translation(QString::fromUtf8(d->sdLibs->poWord(index, dictionaryIndex)),
-            d->sdLibs->dictionaryName(dictionaryIndex),
-            parseData(d->sdLibs->poWordData(index, dictionaryIndex).toUtf8(), dictionaryIndex, true,
+    return MulaCore::Translation(QString::fromUtf8(d->dictionaryManager->poWord(index, dictionaryIndex)),
+            d->dictionaryManager->dictionaryName(dictionaryIndex),
+            parseData(d->dictionaryManager->poWordData(index, dictionaryIndex).toUtf8(), dictionaryIndex, true,
                 d->reformatLists, d->expandAbbreviations));
 }
 
@@ -252,7 +252,7 @@ StarDict::findSimilarWords(const QString &dictionary, const QString &word)
         return QStringList();
 
     QStringList fuzzyList;
-    if (!d->sdLibs->lookupWithFuzzy(word.toUtf8(), fuzzyList, MaxFuzzy, d->loadedDictionaries[dictionary]))
+    if (!d->dictionaryManager->lookupWithFuzzy(word.toUtf8(), fuzzyList, MaxFuzzy, d->loadedDictionaries[dictionary]))
         return QStringList();
 
     fuzzyList.reserve(MaxFuzzy);
@@ -332,10 +332,10 @@ StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces
         while ((position = regExp.indexIn(result, position)) != -1)
         {
             int index;
-            if (d->sdLibs->simpleLookupWord(result.mid(position, regExp.matchedLength()).toUtf8().data(), index, dictionaryIndex))
+            if (d->dictionaryManager->simpleLookupWord(result.mid(position, regExp.matchedLength()).toUtf8().data(), index, dictionaryIndex))
             {
                 QString expanded = "<font class=\"explanation\">";
-                expanded += parseData(d->sdLibs->poWordData(index, dictionaryIndex).toUtf8());
+                expanded += parseData(d->dictionaryManager->poWordData(index, dictionaryIndex).toUtf8());
                 if (result[position + regExp.matchedLength() - 1] == ':')
                     expanded += ':';
 
