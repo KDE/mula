@@ -87,6 +87,15 @@ namespace MulaPluginStarDict
 
             // int execSettingsDialog(QWidget *parent);
 
+            friend class SettingsDialog;
+
+        private:
+            QString parseData(const QByteArray &data, int dictIndex = -1,
+                    bool htmlSpaces = false, bool reformatLists = false, bool expandAbbreviations = false);
+
+            QString findDictionary(const QString &name, const QStringList &dictDirs);
+            static void xdxf2html(QString &str);
+
             /**
              * Finds the available dictionary from the desired ifo file path
              * and then return the relevant book name
@@ -98,18 +107,9 @@ namespace MulaPluginStarDict
              */
             QString findAvailableDictionary(const QString& absolutePath);
 
-            friend class SettingsDialog;
-
-        private:
-            QString parseData(const QByteArray &data, int dictIndex = -1,
-                    bool htmlSpaces = false, bool reformatLists = false, bool expandAbbreviations = false);
-
-            QString findDictionary(const QString &name, const QStringList &dictDirs);
-            static void xdxf2html(QString &str);
+            QString findIfoFile(const QString& absolutePath);
 
             template <typename Method> QStringList recursiveTemplateFind(const QString& directoryPath, Method method);
-
-            QString findIfoFile(const QString& absolutePath);
 
             class Private;
             Private *const d;
