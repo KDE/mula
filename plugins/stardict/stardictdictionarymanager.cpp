@@ -93,16 +93,16 @@ StarDictDictionaryManager::~StarDictDictionaryManager()
     delete d;
 }
 
-void StarDictDictionaryManager::loadDictionary(const QString& dictionaryFilePath)
+void StarDictDictionaryManager::loadDictionary(const QString& completeFilePath)
 {
     Dictionary *dictionary = new Dictionary;
-    if (dictionary->load(dictionaryFilePath))
+    if (dictionary->load(completeFilePath))
     {
         d->dictionaryList.append(dictionary);
     }
     else
     {
-        qDebug() << "Could not load the dictionary:" << dictionaryFilePath;
+        qDebug() << "Could not load the dictionary:" << completeFilePath;
         delete dictionary;
     }
 }
