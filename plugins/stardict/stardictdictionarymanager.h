@@ -73,6 +73,7 @@ namespace MulaPluginStarDict
              *
              * @param index The desired index in the list
              * @return The count of the word entries
+             * @see dictionaryName, dictionaryCount
              */
             long articleCount(int index) const;
 
@@ -82,9 +83,17 @@ namespace MulaPluginStarDict
              *
              * @param index The desired index in the list
              * @return The name of the dictionary
+             * @see articleCount, dictionaryCount
              */
             const QString dictionaryName(int index) const;
 
+            /**
+             * Returns the size of the dictionary list stored in this manager
+             * class
+             *
+             * @return The size of the dictionary list
+             * @see articleCount, dictionaryName
+             */
             int dictionaryCount() const;
 
             const QByteArray poWord(long iIndex, int iLib) const;
