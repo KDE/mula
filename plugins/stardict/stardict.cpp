@@ -36,8 +36,6 @@
 
 using namespace MulaPluginStarDict;
 
-const int MaxFuzzy = 24;
-
 class StarDict::Private
 {
     public:
@@ -60,6 +58,8 @@ class StarDict::Private
 
         QString ifoBookName;
         QString ifoFileName;
+
+        const static int maximumFuzzy = 24;
 };
 
 StarDict::StarDict(QObject *parent)
@@ -252,10 +252,10 @@ StarDict::findSimilarWords(const QString &dictionary, const QString &word)
         return QStringList();
 
     QStringList fuzzyList;
-    if (!d->dictionaryManager->lookupWithFuzzy(word.toUtf8(), fuzzyList, MaxFuzzy, d->loadedDictionaries[dictionary]))
+    if (!d->dictionaryManager->lookupWithFuzzy(word.toUtf8(), fuzzyList, d->maximumFuzzy, d->loadedDictionaries[dictionary]))
         return QStringList();
 
-    fuzzyList.reserve(MaxFuzzy);
+    fuzzyList.reserve(d->maximumFuzzy);
 
     return fuzzyList;
 }
