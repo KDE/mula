@@ -694,22 +694,25 @@ lessForCompare(QString lh, QString rh)
 int
 StarDictDictionaryManager::lookupPattern(QByteArray patternWord, QStringList patternMatchWords)
 {
-    long aiIndex[d->maxMatchItemPerLib + 1];
+    QVector<int> indexList;
+    indexList.reserve(d->maxMatchItemPerLib + 1);
     int matchCount = 0;
 
     for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaries.size(); ++iLib)
     {
-        //if(oStarDictDictionaryManager.LookdupWordsWithRule(pspec,aiIndex,MAX_MATCH_ITEM_PER_LIB+1-iMatchCount,iLib))
+        //if(oStarDictDictionaryManager.LookdupWordsWithRule(pspec,indexList,MAX_MATCH_ITEM_PER_LIB+1-iMatchCount,iLib))
         // -iMatchCount,so save time,but may got less result and the word may repeat.
 
-        if (d->dictionaries.at(iLib)->lookupPattern(patternWord, aiIndex, d->maxMatchItemPerLib + 1))
+        indexList = d->dictionaries.at(iLib)->lookupPattern(patternWord, d->maxMatchItemPerLib + 1);
+        if (!indexList.isEmpty())
         {
             if (d->progressFunction)
                 d->progressFunction();
 
-            for (int i = 0; aiIndex[i] != -1; ++i)
+            int indexListSize = indexList.size();
+            for (int i = 0; i < indexListSize; ++i)
             {
-                QByteArray searchMatchWord = poWord(aiIndex[i], iLib);
+                QByteArray searchMatchWord = poWord(indexList.at(i), iLib);
 
                 if (!patternMatchWords.contains(searchMatchWord))
                     patternMatchWords.append(searchMatchWord);

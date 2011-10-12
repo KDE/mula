@@ -100,7 +100,7 @@ namespace MulaPluginStarDict
              */
             bool lookup(const QString word, int &index);
 
-            bool lookupPattern(const QString& pattern, long *aIndex, int iBuffLen);
+            QVector<int> lookupPattern(const QString& pattern, int iBuffLen);
 
         private:
             /**

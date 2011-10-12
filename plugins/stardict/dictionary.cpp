@@ -191,26 +191,20 @@ Dictionary::loadIfoFile(const QString& ifoFilePath)
     return true;
 }
 
-bool
-Dictionary::lookupPattern(const QString& pattern, long *aIndex, int iBuffLen)
+QVector<int>
+Dictionary::lookupPattern(const QString& pattern, int iBuffLen)
 {
-    int indexCount = 0;
-    bool found = false;
+    QVector<int> indexList;
 
     QRegExp rx(pattern);
     rx.setPatternSyntax(QRegExp::Wildcard);
 
-    for (int i = 0; i < articleCount() && indexCount < iBuffLen - 1; ++i)
+    for (int i = 0; i < articleCount() && indexList.size() < iBuffLen - 1; ++i)
     {
         if (rx.exactMatch(key(i)))
-        {
-            aIndex[indexCount++] = i;
-            found = true;
-        }
+            indexList.append(i);
     }
 
-    aIndex[indexCount] = -1; // -1 is the end.
-
-    return found;
+    return indexList;
 }
 
