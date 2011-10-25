@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Mula Qt Frontend
 Name[nl]=Qt-schil voor Mula
+Name[pl]=Nakładka Qt Mula
 Name[pt]=Interface Qt do Mula
 Name[pt_BR]=Interface do Mula para o Qt
 Name[sv]=Mula Qt-gränssnitt
@@ -8,6 +9,7 @@ Name[uk]=Оболонка Mula на основі Qt
 Name[x-test]=xxMula Qt Frontendxx
 GenericName=Mula Qt Frontend Launcher
 GenericName[nl]=Procestarter van Qt-schil voor Mula
+GenericName[pl]=Uruchamianie nakładki Qt Mula
 GenericName[pt]=Lançamento da Interface Qt do Mula
 GenericName[pt_BR]=Lançamento da interface do Mula para o Qt
 GenericName[sv]=Startprogram för Mula Qt-gränssnitt
