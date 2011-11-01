@@ -310,8 +310,7 @@ StarDictDictionaryManager::poNextWord(QByteArray searchWord, int* iCurrent)
 
     if (!currentWord.isEmpty())
     {
-        iCurrent[iCurrentLib]
-        ++;
+        iCurrent[iCurrentLib]++;
         for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaryList.size(); ++iLib)
         {
             if (iLib == iCurrentLib)
