@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Mula KDE Frontend
+Name[es]=Interfaz de Mula para KDE
 Name[nds]=KDE-Böversiet för Mula
 Name[nl]=KDE-schil voor Mula
 Name[pl]=Nakładka KDE Mula
@@ -9,6 +10,7 @@ Name[sv]=Mula KDE-gränssnitt
 Name[uk]=Оболонка Mula для KDE
 Name[x-test]=xxMula KDE Frontendxx
 GenericName=Mula KDE Frontend Launcher
+GenericName[es]=Lanzador del interfaz de Mula para KDE
 GenericName[nl]=Procestarter van KDE-schil voor Mula
 GenericName[pl]=Uruchamianie nakładki KDE Mula
 GenericName[pt]=Lançamento da Interface para KDE do Mula

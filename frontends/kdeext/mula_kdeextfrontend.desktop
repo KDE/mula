@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Mula KDE Extended Frontend
+Name[es]=Interfaz extendido de Mula para KDE
 Name[nl]=Uitgebreide KDE-schil voor Mula
 Name[pl]=Rozszerzona nakładka KDE Mula
 Name[pt]=Interface Extendida do Mula para o KDE
@@ -8,6 +9,7 @@ Name[sv]=Mula utökat KDE-gränssnitt
 Name[uk]=Оболонка Mula для KDE з розширеними можливостями
 Name[x-test]=xxMula KDE Extended Frontendxx
 GenericName=Mula KDE Extended Frontend Launcher
+GenericName[es]=Lanzador del interfaz extendido de Mula para KDE
 GenericName[nl]=Procestarter van uitgebreide KDE-schil voor Mula
 GenericName[pl]=Uruchamianie rozszerzonej nakładki KDE Mula
 GenericName[pt]=Lançamento da Interface Extendida do Mula para o KDE

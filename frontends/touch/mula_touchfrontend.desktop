@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Mula Touch Player
+Name[es]=Reproductor Mula Touch
 Name[nl]=Aanraakafspeler voor Mula
 Name[pl]=Odtwarzacz dotykowy Mula
 Name[pt]=Leitor por Toque Mula
@@ -8,6 +9,7 @@ Name[sv]=Mula pekspelare
 Name[uk]=Сенсорний програвач Mula
 Name[x-test]=xxMula Touch Playerxx
 GenericName=Mula Touch Player Launcher
+GenericName[es]=Lanzador del reproductor Mula Touch
 GenericName[nl]=Procestarter van aanraakafspeler voor Mula
 GenericName[pl]=Uruchamianie odtwarzacza dotykowego Mula
 GenericName[pt]=Lançamento do Leitor por Toque Mula
