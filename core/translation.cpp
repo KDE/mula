@@ -19,6 +19,8 @@
 
 #include "translation.h"
 
+#include <QtCore/QString>
+
 using namespace MulaCore;
 
 class Translation::Private

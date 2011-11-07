@@ -22,7 +22,7 @@
 
 #include "mula_core_export.h"
 
-#include <QtCore/QString>
+class QString;
 
 namespace MulaCore
 {
