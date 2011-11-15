@@ -66,10 +66,8 @@ add_subdirectory(core)
 ####### Plugins #######
 add_subdirectory(plugins)
 
-####### MULA Plasma #######
-# if(BUILD_MULA_PLASMA)
-    # add_subdirectory(plasma)
-# endif()
+###### Frontends ######
+add_subdirectory(frontends)
 
 message(STATUS)
 message(STATUS "========== MULA Build Information ==========")
