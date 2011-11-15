@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Mula Touch Player
+Name=Mula
 Name[es]=Reproductor Mula Touch
 Name[nl]=Aanraakafspeler voor Mula
 Name[pl]=Odtwarzacz dotykowy Mula
@@ -8,7 +8,7 @@ Name[pt_BR]=Reprodutor sensível ao toque Mula
 Name[sv]=Mula pekspelare
 Name[uk]=Сенсорний програвач Mula
 Name[x-test]=xxMula Touch Playerxx
-GenericName=Mula Touch Player Launcher
+GenericName=Mula Launcher
 GenericName[es]=Lanzador del reproductor Mula Touch
 GenericName[nl]=Procestarter van aanraakafspeler voor Mula
 GenericName[pl]=Uruchamianie odtwarzacza dotykowego Mula
@@ -17,8 +17,8 @@ GenericName[pt_BR]=Lançamento do reprodutor sensível ao toque do Mula
 GenericName[sv]=Startprogram för Mula pekspelare
 GenericName[uk]=Інструмент запуску сенсорного програвача Mula
 GenericName[x-test]=xxMula Touch Player Launcherxx
-Exec=mula_touchplayer
-Icon=mula-touchplayer
+Exec=mula-harmattan
+Icon=mula-harmattan
 Type=Application
-Categories=Qt;KDE;Game;
+Categories=Qt;KDE;Edu;
 Terminal=false
