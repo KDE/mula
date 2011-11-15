@@ -23,8 +23,10 @@ project(MULA)
 #Project options, to provide a selective build process
 #Note that some of these are mutually exclusive or just
 #do not make a whole lot of sense combined.
-option(BUILD_MULA_KDE "Build with KDE Development Platform Support" ON)
-option(BUILD_MULA_PLASMA "Build Mula Plasma" OFF)
+option(BUILD_MULA_PLASMA_ACTIVE "Build Mula for Plasma Active" OFF)
+option(BUILD_MULA_DESKTOP "Build Mula for Desktop" ON)
+option(BUILD_MULA_HARMATTAN "Build Mula for Harmattan" ON)
+option(BUILD_MULA_PLASMA "Build Mula for Plasma Desktop" OFF)
 option(BUILD_MULA_PLUGINS "Build Mula Plugins" ON)
 
 if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
