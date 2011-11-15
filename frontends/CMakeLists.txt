@@ -28,7 +28,7 @@ endif()
 
 if(BUILD_MULA_DESKTOP)
     if(QT_QTDECLARATIVE_FOUND)
-        add_subdirectory(harmattan)
+        add_subdirectory(desktop)
     else(QT_QTDECLARATIVE_FOUND)
         message(WARNING "Qt installation lacks Qt Declarative - disabling the Desktop Frontend")
     endif(QT_QTDECLARATIVE_FOUND)
