@@ -24,8 +24,8 @@ project(MULA)
 #Note that some of these are mutually exclusive or just
 #do not make a whole lot of sense combined.
 option(BUILD_MULA_KDE "Build with KDE Development Platform Support" ON)
-option(BUILD_MULA_PLASMA "Build KStarDict Plasma" OFF)
-option(BUILD_MULA_PLUGINS "Build KStarDict Plugins" ON)
+option(BUILD_MULA_PLASMA "Build Mula Plasma" OFF)
+option(BUILD_MULA_PLUGINS "Build Mula Plugins" ON)
 
 if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
     option(INSTALL_CMAKE_FILES "Install the *.cmake files into the CMake root" ON)
