@@ -42,8 +42,8 @@ if(NOT APPLE)
         COMPONENT muladesktop
     )
 
-    if(NOT PLAYER_ICONS_INSTALLED)
-        add_subdirectory(../icons icons)
-        set(PLAYER_ICONS_INSTALLED TRUE)
-    endif()
+    # if(NOT PLAYER_ICONS_INSTALLED)
+        # add_subdirectory(../icons icons)
+        # set(PLAYER_ICONS_INSTALLED TRUE)
+    # endif()
 endif()
