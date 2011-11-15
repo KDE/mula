@@ -6,59 +6,55 @@ include_directories(
     ${MULA_CORE_INCLUDES}
 )
 
-set(touchfrontend_SRCS
+set(mula-harmattan_SRCS
     main.cpp
 )
 
-SET(MULA_TOUCHFRONTEND_RCCS
-    mula_touchfrontend.qrc
+SET(MULA-HARMATTAN_RCCS
+    mula-harmattan.qrc
 )
 
 # generate rules for building source files from the resources
-QT4_ADD_RESOURCES(MULA_TOUCHFRONTEND_RCC_SRCS
-    mula_touchfrontend.qrc
+QT4_ADD_RESOURCES(MULA-HARMATTAN_RCC_SRCS
+    mula-harmattan.qrc
 )
 
-qt4_automoc(${touchfrontend_SRCS})
+qt4_automoc(${mula-harmattan_SRCS})
 
 if(APPLE)
-    add_executable(mula_touchfrontend MACOSX_BUNDLE ${touchfrontend_SRCS})
-    #MACOSX_BUNDLE_INFO_STRING
-    #MACOSX_BUNDLE_ICON_FILE
-    #MACOSX_BUNDLE_GUI_IDENTIFIER
+    add_executable(mula-harmattan MACOSX_BUNDLE ${mula-harmattan_SRCS})
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MULA_VERSION_STRING})
-    set(MACOSX_BUNDLE_BUNDLE_NAME MulaTouchFrontend)
+    set(MACOSX_BUNDLE_BUNDLE_NAME MulaHarmattan)
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MULA_VERSION_STRING})
     set(MACOSX_BUNDLE_BUNDLE_VERSION ${MULA_VERSION_STRING})
-    #MACOSX_BUNDLE_COPYRIGHT
 
-    add_custom_command(TARGET mula_touchfrontend
-        COMMAND mkdir ARGS -p ${CMAKE_CURRENT_BINARY_DIR}/$(CONFIGURATION)/MulaTouchFrontend.app/Contents/Frameworks/
-        COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp ARGS -exclude .DS_Store -exclude CVS -exclude .svn -exclude 'CMakeLists.txt' -resolve-src-symlinks ${CMAKE_BINARY_DIR}/core/$(CONFIGURATION)/MulaCore.framework ${CMAKE_CURRENT_BINARY_DIR}/$(CONFIGURATION)/MulaTouchFrontend.app/Contents/Frameworks/
+    add_custom_command(TARGET mula-harmattan
+        COMMAND mkdir ARGS -p ${CMAKE_CURRENT_BINARY_DIR}/$(CONFIGURATION)/MulaHarmattan.app/Contents/Frameworks/
+        COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp ARGS -exclude .DS_Store -exclude CVS -exclude .svn -exclude 'CMakeLists.txt' -resolve-src-symlinks ${CMAKE_BINARY_DIR}/core/$(CONFIGURATION)/MulaCore.framework ${CMAKE_CURRENT_BINARY_DIR}/$(CONFIGURATION)/MulaHarmattan.app/Contents/Frameworks/
     )
 
-set_target_properties(mula_touchfrontend PROPERTIES OUTPUT_NAME MulaTouchfrontend)
+set_target_properties(mula-harmattan PROPERTIES OUTPUT_NAME MulaHarmattan)
 
 else()
-    add_executable(mula_touchfrontend ${touchfrontend_SRCS} ${MULA_TOUCHFRONTEND_RCC_SRCS})
+    add_executable(mula-harmattan ${mula-harmattan_SRCS} ${MULA-HARMATTAN_RCC_SRCS})
 endif()
-target_link_libraries(mula_touchfrontend ${MULA_CORE_LIBS})
+target_link_libraries(mula-harmattan ${MULA_CORE_LIBS})
 
 set(MULA_DECLARATIVE_LIBS
-    MulaTouchFrontend
+    MulaHarmattan
     ${MULA_CORE_LIBS}
     ${QT_QTDECLARATIVE_LIBRARY}
-    CACHE PATHS "Libraries required for Mula Touch Frontend"
+    CACHE PATHS "Libraries required for Mula Harmattan"
 )
 
 if(NOT APPLE)
-    install(TARGETS mula_touchfrontend
+    install(TARGETS mula-harmattan
             DESTINATION ${BIN_INSTALL_DIR}
-            COMPONENT mulatouchfrontend)
+            COMPONENT mulaharmattan)
 
-    install(FILES mula_touchfrontend.desktop
+    install(FILES mula-harmattan.desktop
             DESTINATION ${SHARE_INSTALL_DIR}/applications
-            COMPONENT mulatouchfrontend)
+            COMPONENT mulaharmattan)
 
     if(NOT PLAYER_ICONS_INSTALLED)
         set(PLAYER_ICONS_INSTALLED TRUE)
