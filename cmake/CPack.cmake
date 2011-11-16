@@ -63,54 +63,54 @@ set(CPACK_COMPONENT_GROUP_MULAPLUGINS_DESCRIPTION
     provide functionality for users to listen to the pronunciation as well."
 )
 
-# Qt frontend
-set(CPACK_COMPONENT_MULAQTFRONTEND_DISPLAY_NAME "Mula Qt Frontend application")
-set(CPACK_COMPONENT_MULAQTFRONTEND_DESCRIPTION
-    "Mula Qt Frontend Application mostly meant for easy to use purposes without
-    too much complication and featureset"
+# Desktop frontend
+set(CPACK_COMPONENT_MULADESKTOP_DISPLAY_NAME "Mula Desktop Frontend application")
+set(CPACK_COMPONENT_MULADESKTOP_DESCRIPTION
+    "Mula Desktop Frontend Application mostly meant for easy to Desktop usage"
 )
-set(CPACK_COMPONENT_MULAQTFRONTEND_DEPENDS mulacore)
-set(CPACK_COMPONENT_MULAQTFRONTEND_GROUP "MULAFRONTENDS")
-set(CPACK_COMPONENT_MULAQTFRONTEND_INSTALL_TYPES Full)
+set(CPACK_COMPONENT_MULADESKTOP_DEPENDS mulacore)
+set(CPACK_COMPONENT_MULADESKTOP_GROUP "MULAFRONTENDS")
+set(CPACK_COMPONENT_MULADESKTOP_INSTALL_TYPES Full)
 
-# Touch Frontend
-set(CPACK_COMPONENT_MULATOUCHFRONTEND_DISPLAY_NAME "Mula Touch Frontend Application")
-set(CPACK_COMPONENT_MULATOUCHFRONTEND_DESCRIPTION
-    "Mula Touch Frontend Application mostly meant for Maemo, Meego, handset,
-    tablet, mobile platforms by using plain Qt/QML solution and later Qt components"
+# Fremantle Frontend
+set(CPACK_COMPONENT_MULAFREMANTLE_DISPLAY_NAME "Mula Fremantle Frontend Application")
+set(CPACK_COMPONENT_MULAFREMANTLE_DESCRIPTION
+    "Mula Fremantle Frontend Application mostly meant for Maemo5, Fremantle handsets,
+    by using the relevant Qt Quick technology"
 )
-set(CPACK_COMPONENT_MULATOUCHFRONTEND_DEPENDS mulacore)
-set(CPACK_COMPONENT_MULATOUCHFRONTEND_GROUP "MULAFRONTENDS")
-set(CPACK_COMPONENT_MULATOUCHFRONTEND_INSTALL_TYPES Full)
+set(CPACK_COMPONENT_MULAFREMANTLE_DEPENDS mulacore)
+set(CPACK_COMPONENT_MULAFREMANTLE_GROUP "MULAFRONTENDS")
+set(CPACK_COMPONENT_MULAFREMANTLE_INSTALL_TYPES Full)
 
-# KDE Frontend
-set(CPACK_COMPONENT_MULAKDEFRONTEND_DISPLAY_NAME "Mula KDE Frontend Application")
-set(CPACK_COMPONENT_MULAKDEFRONTEND_DESCRIPTION
-    "Mula KDE Frontend Application mostly meant for easy to use purpose without
-    too much complication and featureset with relevant elements for KDE
-    enthusiastic users and developers"
+# Harmattan Frontend
+set(CPACK_COMPONENT_MULAHARMATTAN_DISPLAY_NAME "Mula Harmattan Frontend Application")
+set(CPACK_COMPONENT_MULAHARMATTAN_DESCRIPTION
+    "Mula Harmattan Frontend Application mostly meant for Maemo6, Harmattan handsets,
+    by using the relevant Qt Quick technology"
 )
-set(CPACK_COMPONENT_MULAKDEFRONTEND_DEPENDS mulacore)
-set(CPACK_COMPONENT_MULAKDEFRONTEND_GROUP "MULAFROTNENDS")
-set(CPACK_COMPONENT_MULAKDEFRONTEND_INSTALL_TYPES Full)
+set(CPACK_COMPONENT_MULAHARMATTAN_DEPENDS mulacore)
+set(CPACK_COMPONENT_MULAHARMATTAN_GROUP "MULAFRONTENDS")
+set(CPACK_COMPONENT_MULAHARMATTAN_INSTALL_TYPES Full)
 
-# KDE Extended Frontend
-set(CPACK_COMPONENT_MULAKDEEXTFRONTEND_DISPLAY_NAME "Mula KDE Extended Frontend Application")
-set(CPACK_COMPONENT_MULAKDEEXTFRONTEND_DESCRIPTION
-    "Mula KDE Extended Frontend Application is a full-fledged and powerful KDE Desktop Frontend"
+# Plasma Active Frontend
+set(CPACK_COMPONENT_MULAPLASMAACTIVE_DISPLAY_NAME "Mula Plasma Active Frontend Application")
+set(CPACK_COMPONENT_MULAPLASMAACTIVE_DESCRIPTION
+    "Mula Plasma Active Frontend Application is a full-fledged and powerful
+    application for Plasma Active devices"
 )
-set(CPACK_COMPONENT_MULAKDEEXTFRONTEND_DEPENDS mulacore)
-set(CPACK_COMPONENT_MULAKDEEXTFRONTEND_GROUP "MULAFRONTENDS")
-set(CPACK_COMPONENT_MULAKDEEXTFRONTEND_INSTALL_TYPES Full)
+set(CPACK_COMPONENT_MULAPLASMAACTIVE_DEPENDS mulacore)
+set(CPACK_COMPONENT_MULAPLASMAACTIVE_GROUP "MULAFRONTENDS")
+set(CPACK_COMPONENT_MULAPLASMAACTIVE_INSTALL_TYPES Full)
 
 # Plasmoid Frontend
-set(CPACK_COMPONENT_MULAPLASMOIDFRONTEND_DISPLAY_NAME "Mula Plasmoid Frontend Application")
-set(CPACK_COMPONENT_MULAPLASMOIDFRONTEND_DESCRIPTION
-    "Mula Plasmoid Frontend Application is a full-fledged and powerful Plasmoid applet "
+set(CPACK_COMPONENT_MULAPLASMOID_DISPLAY_NAME "Mula Plasmoid Frontend Application")
+set(CPACK_COMPONENT_MULAPLASMOID_DESCRIPTION
+    "Mula Plasmoid Frontend Application is a full-fledged and powerful Plasmoid
+    applet on Desktop"
 )
-set(CPACK_COMPONENT_MULAPLASMOIDFRONTEND_DEPENDS mulacore)
-set(CPACK_COMPONENT_MULAPLASMOIDFRONTEND_GROUP "MULAFRONTENDS")
-set(CPACK_COMPONENT_MULAPLASMOIDFRONTEND_INSTALL_TYPES Full)
+set(CPACK_COMPONENT_MULAPLASMOID_DEPENDS mulacore)
+set(CPACK_COMPONENT_MULAPLASMOID_GROUP "MULAFRONTENDS")
+set(CPACK_COMPONENT_MULAPLASMOID_INSTALL_TYPES Full)
 
 # Frontends
 set(CPACK_COMPONENT_GROUP_MULAFRONTENDS_DISPLAY_NAME "Mula Frontend Applications")
