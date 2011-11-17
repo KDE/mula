@@ -1,6 +1,16 @@
 [Desktop Entry]
 Name=Mula
+Name[pt]=Mula
+Name[pt_BR]=Mula
+Name[sv]=Mula
+Name[uk]=Mula
+Name[x-test]=xxMulaxx
 GenericName=Mula Launcher
+GenericName[pt]=Lançamento do Mula
+GenericName[pt_BR]=Lançador do Mula
+GenericName[sv]=Startprogram för Mula
+GenericName[uk]=Інструмент запуску Mula
+GenericName[x-test]=xxMula Launcherxx
 Exec=mula-fremantle
 Icon=mula-fremantle
 Type=Application
