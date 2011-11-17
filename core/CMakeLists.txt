@@ -37,9 +37,11 @@ endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/mula_global.h.in ${CMAKE_CURRENT_BINARY_DIR}/mula_global.h)
 
-include_directories(${QT_INCLUDES})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(
+    ${QT_INCLUDES}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
 set(MULA_CORE_INCLUDES
     ${QT_INCLUDES}
