@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 
+if(NOT MULA_BUILD_ALL)
+    project(MulaCore)
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 find_package(Qt4 4.7 REQUIRED)

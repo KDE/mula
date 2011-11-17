@@ -7,7 +7,9 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-find_package(MulaCore REQUIRED)
+if(NOT MULA_BUILD_ALL)
+    find_package(MulaCore REQUIRED)
+endif(NOT MULA_BUILD_ALL)
 
 find_package(Qt4)
 if(BUILD_MULA_FREMANTLE)
