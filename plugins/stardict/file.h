@@ -27,11 +27,7 @@ const int invalidIndex = -100;
 static inline int stardictStringCompare(QString string1, QString string2)
 {
     int retval = string1.compare(string2, Qt::CaseInsensitive);
-
-    if (retval == 0)
-        return string1.compare(string2);
-    else
-        return retval;
+    return retval ? retval : string1.compare(string2);
 }
 
 #endif // MULA_PLUGIN_STARDICT_FILE
