@@ -39,7 +39,8 @@ namespace MulaCore
             Translation();
 
             /**
-             * Construct a translation from data.
+             * Construct a translation from data
+             *
              * @param title A translation title
              * @param dictionaryName A full dictionary name
              * @param translation A translation
@@ -50,32 +51,50 @@ namespace MulaCore
             virtual ~Translation();
 
             /**
-             * Return the translation title.
+             * Return the translation title
+             *
+             * @return The translation title
+             * @see setTitle
              */
             const QString &title() const;
 
             /**
-             * Return the dictionary name.
+             * Return the dictionary name
+             *
+             * @return The dictionary name
+             * @see setDictionaryName
              */
             const QString &dictionaryName() const;
 
             /**
-             * Return the translation.
+             * Return the translation string
+             *
+             * @return The translation string
+             * @see setTranslation
              */
             const QString &translation() const;
 
             /**
-             * Set a translation title.
+             * Set the translation title
+             *
+             * @param title The translation title
+             * @see title
              */
             void setTitle(const QString &title);
 
             /**
-             * Set a dictionary name.
+             * Set the dictionary name
+             *
+             * @param dictionaryName The dictionary name
+             * @see dictionaryName
              */
             void setDictionaryName(const QString &dictionaryName);
 
             /**
-             * Set a translation.
+             * Set the translation string
+             *
+             * @param translation The translation string
+             * @see translation
              */
             void setTranslation(const QString &translation);
 
