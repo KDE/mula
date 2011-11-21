@@ -22,7 +22,6 @@
 
 #include "dictionaryzip.h"
 
-#include <QtCore/QList>
 #include <QtCore/QStringList>
 
 namespace MulaPluginStarDict
