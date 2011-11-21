@@ -56,7 +56,7 @@ namespace MulaCore
              * @return The translation title
              * @see setTitle
              */
-            const QString &title() const;
+            QString title() const;
 
             /**
              * Return the dictionary name
@@ -64,7 +64,7 @@ namespace MulaCore
              * @return The dictionary name
              * @see setDictionaryName
              */
-            const QString &dictionaryName() const;
+            QString dictionaryName() const;
 
             /**
              * Return the translation string
@@ -72,7 +72,7 @@ namespace MulaCore
              * @return The translation string
              * @see setTranslation
              */
-            const QString &translation() const;
+            QString translation() const;
 
             /**
              * Set the translation title

@@ -244,7 +244,7 @@ namespace MulaPluginStarDict
              * @return The value of the same typesequence
              * @see setSameTypeSequence
              */
-            QString& sameTypeSequence() const;
+            QString sameTypeSequence() const;
 
         private:
             class Private;

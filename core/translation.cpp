@@ -57,19 +57,19 @@ Translation::~Translation()
 {
 }
 
-const QString&
+QString
 Translation::title() const
 {
     return d->title;
 }
 
-const QString&
+QString
 Translation::dictionaryName() const
 {
     return d->dictionaryName;
 }
 
-const QString&
+QString
 Translation::translation() const
 {
     return d->translation;

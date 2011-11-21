@@ -60,25 +60,25 @@ DictionaryInfo::~DictionaryInfo()
 {
 }
 
-const QString&
+QString
 DictionaryInfo::plugin() const
 {
     return d->plugin;
 }
 
-const QString&
+QString
 DictionaryInfo::name() const
 {
     return d->name;
 }
 
-const QString&
+QString
 DictionaryInfo::author() const
 {
     return d->author;
 }
 
-const QString&
+QString
 DictionaryInfo::description() const
 {
     return d->description;

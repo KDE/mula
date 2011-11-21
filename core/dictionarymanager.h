@@ -37,12 +37,16 @@ namespace MulaCore
             /**
              * Returns true if word exists in dictionaries,
              * otherwise false.
+             *
+             * @see translate
              */
             bool isTranslatable(const QString &word);
 
             /**
              * Returns translation for word. If word not found, returns
              * "Not found!"
+             *
+             * @see isTranslatable
              */
             QString translate(const QString &word);
 
@@ -62,8 +66,11 @@ namespace MulaCore
              * Returns a list of loaded dictionaries.
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
+             *
+             * @return
+             * @see setLoadedDictionaryList
              */
-            const QMultiHash<QString, QString> &loadedDictionaryList() const;
+            QMultiHash<QString, QString> loadedDictionaryList() const;
 
             /**
              * Sets the list of the loaded dictionaries.
@@ -73,6 +80,7 @@ namespace MulaCore
              * availableDicts list.
              *
              * @param loadedDictionaryList The list of the loaded dictionaries
+             * @see loadedDictionaryList
              */
             void setLoadedDictionaryList(const QMultiHash<QString, QString> &loadedDictionaryList);
 

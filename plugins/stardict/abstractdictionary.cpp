@@ -312,7 +312,7 @@ AbstractDictionary::dictionaryFile() const
     return d->dictionaryFile;
 }
 
-QString&
+QString
 AbstractDictionary::sameTypeSequence() const
 {
     return d->sameTypeSequence;

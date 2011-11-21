@@ -57,7 +57,7 @@ namespace MulaCore
              * @return The plugin name of the Dictionary
              * @see setPlugin
              */
-            const QString &plugin() const;
+            QString plugin() const;
 
             /**
              * Returns the name of the Dictionary
@@ -65,7 +65,7 @@ namespace MulaCore
              * @return The name of the Dictionary
              * @see setName
              */
-            const QString &name() const;
+            QString name() const;
 
             /**
              * Returns the author of the Dictionary
@@ -73,7 +73,7 @@ namespace MulaCore
              * @return The author of the Dictionary
              * @see setAuthor
              */
-            const QString &author() const;
+            QString author() const;
 
             /**
              * Returns the description of the Dictionary
@@ -81,7 +81,7 @@ namespace MulaCore
              * @return The description of the Dictionary
              * @see setDescription
              */
-            const QString &description() const;
+            QString description() const;
 
             /**
              * Returns the word count of the Dictionary
