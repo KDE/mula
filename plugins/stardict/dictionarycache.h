@@ -21,6 +21,7 @@
 #define MULA_PLUGIN_STARDICT_DICTIONARYCACHE_H
 
 #include <QtCore/QByteArray>
+#include <QtCore/QSharedPointer>
 
 namespace MulaPluginStarDict
 {
@@ -29,13 +30,16 @@ namespace MulaPluginStarDict
         public:
             DictionaryCache();
             DictionaryCache(int chunk, QByteArray byteArray, int stamp, int count);
+            DictionaryCache(const DictionaryCache &other);
             virtual ~DictionaryCache();
+
+            DictionaryCache& operator=(const DictionaryCache &other);
 
             void setChunk(int chunk);
             int chunk() const;
 
             void setByteArray(QByteArray inByteArray);
-            QByteArray& byteArray() const;
+            QByteArray byteArray() const;
 
             void setStamp(int stamp);
             int stamp() const;
@@ -45,7 +49,7 @@ namespace MulaPluginStarDict
 
         private:
             class Private;
-            Private *const d;
+            QSharedDataPointer<Private> d;
     };
 }
 

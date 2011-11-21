@@ -21,6 +21,7 @@
 #define MULA_PLUGIN_STARDICT_WORDENTRY_H
 
 #include <QtCore/QByteArray>
+#include <QtCore/QSharedPointer>
 
 namespace MulaPluginStarDict
 {
@@ -61,9 +62,19 @@ namespace MulaPluginStarDict
             WordEntry();
 
             /**
+             * Copy Constructor.
+             */
+            WordEntry(const WordEntry &other);
+
+            /**
              * Destructor.
              */
             virtual ~WordEntry();
+
+            /**
+             * Assignment operator.
+             */
+            WordEntry& operator=(const WordEntry &other);
 
             /**
              * Sets the data of the word entry representing the the utf-8 string
@@ -121,7 +132,7 @@ namespace MulaPluginStarDict
 
         private:
             class Private;
-            Private *const d;
+            QSharedDataPointer<Private> d;
     };
 }
 

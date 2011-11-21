@@ -21,7 +21,7 @@
 
 using namespace MulaPluginStarDict;
 
-class WordEntry::Private
+class WordEntry::Private : public QSharedData
 {
     public:
         Private()
@@ -44,8 +44,20 @@ WordEntry::WordEntry()
 {
 }
 
+WordEntry::WordEntry(const WordEntry &other):
+    d(other.d)
+{
+}
+
 WordEntry::~WordEntry()
 {
+}
+
+WordEntry&
+WordEntry::operator=(const WordEntry &other)
+{
+    d = other.d;
+    return *this;
 }
 
 void

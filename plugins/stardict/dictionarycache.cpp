@@ -21,7 +21,7 @@
 
 using namespace MulaPluginStarDict;
 
-class DictionaryCache::Private
+class DictionaryCache::Private : public QSharedData
 {
     public:
         Private()
@@ -56,8 +56,20 @@ DictionaryCache::DictionaryCache(int chunk, QByteArray byteArray, int stamp, int
     d->count = count;
 }
 
+DictionaryCache::DictionaryCache(const DictionaryCache &other)
+    : d(other.d)
+{
+}
+
 DictionaryCache::~DictionaryCache()
 {
+}
+
+DictionaryCache&
+DictionaryCache::operator=(const DictionaryCache &other)
+{
+    d = other.d;
+    return *this;
 }
 
 void
@@ -78,7 +90,7 @@ DictionaryCache::setByteArray(QByteArray byteArray)
     d->byteArray = byteArray;
 }
 
-QByteArray&
+QByteArray
 DictionaryCache::byteArray() const
 {
     return d->byteArray;
