@@ -28,23 +28,108 @@ namespace MulaPluginStarDict
     class DictionaryCache
     {
         public:
+
+            /**
+             * Constructor
+             */
             DictionaryCache();
+
+
+            /**
+             * Constructor
+             *
+             * @param chunk
+             * @param byteArray
+             * @param stamp
+             * @param count
+             */
             DictionaryCache(int chunk, QByteArray byteArray, int stamp, int count);
+
+            /**
+             * Copy Constructor
+             */
             DictionaryCache(const DictionaryCache &other);
+
+            /**
+             * Destructor
+             */
             virtual ~DictionaryCache();
 
+            /**
+             * Assignment operator
+             */
             DictionaryCache& operator=(const DictionaryCache &other);
 
+            /** 
+             * Sets the chuck value
+             *
+             * @param chunk The chunk value
+             *
+             * @see chunk
+             */
             void setChunk(int chunk);
+
+            /**
+             * Returns the chunk value
+             *
+             * @return The chunk value
+             *
+             * @see setChunk
+             */
             int chunk() const;
 
-            void setByteArray(QByteArray inByteArray);
+            /** 
+             * Sets the cache data
+             *
+             * @param data The input cache data
+             *
+             * @see byteArray
+             */
+            void setByteArray(QByteArray data);
+
+            /**
+             * Returns the cache data
+             *
+             * @return The cache data
+             *
+             * @see setByteArray
+             */
             QByteArray byteArray() const;
 
+            /** 
+             * Sets the stamp value
+             *
+             * @param stamp The stamp value
+             *
+             * @see stamp
+             */
             void setStamp(int stamp);
+
+            /**
+             * Returns the stamp value
+             *
+             * @return The stamp value
+             *
+             * @see setStamp
+             */
             int stamp() const;
 
+            /** 
+             * Sets the cache count
+             *
+             * @param count The cache count
+             *
+             * @see count
+             */
             void setCount(int count);
+
+            /**
+             * Returns the cache count
+             *
+             * @return The cache count
+             *
+             * @see setCount
+             */
             int count() const;
 
         private:
