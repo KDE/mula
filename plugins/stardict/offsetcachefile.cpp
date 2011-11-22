@@ -29,9 +29,8 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
 #include <QtCore/QPair>
+#include <QtCore/QtEndian>
 #include <QtGui/QDesktopServices>
-
-#include <arpa/inet.h>
 
 using namespace MulaPluginStarDict;
 
@@ -239,9 +238,9 @@ OffsetCacheFile::loadPage(int pageIndex)
             WordEntry wordEntry;
             wordEntry.setData(pageData.mid(position));
             position = qstrlen(pageData.mid(position)) + 1;
-            wordEntry.setDataOffset(ntohl(*reinterpret_cast<quint32 *>(pageData.mid(position).data())));
+            wordEntry.setDataOffset(qFromBigEndian(*reinterpret_cast<quint32 *>(pageData.mid(position).data())));
             position += sizeof(quint32);
-            wordEntry.setDataSize(ntohl(*reinterpret_cast<quint32 *>(pageData.mid(position).data())));
+            wordEntry.setDataSize(qFromBigEndian(*reinterpret_cast<quint32 *>(pageData.mid(position).data())));
             position += sizeof(quint32);
 
             d->wordEntryList.append(wordEntry);

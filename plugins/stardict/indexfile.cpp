@@ -25,8 +25,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
 #include <QtCore/QFile>
-
-#include <arpa/inet.h>
+#include <QtCore/QtEndian>
 
 using namespace MulaPluginStarDict;
 
@@ -75,9 +74,9 @@ IndexFile::load(const QString& filePath, qulonglong fileSize, int wordCount)
         WordEntry wordEntry;
         wordEntry.setData(indexDataBuffer.mid(position));
         ++position;
-        wordEntry.setDataOffset(ntohl(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
+        wordEntry.setDataOffset(qFromBigEndian(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
         position += sizeof(quint32);
-        wordEntry.setDataSize(ntohl(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
+        wordEntry.setDataSize(qFromBigEndian(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
         position += sizeof(quint32);
 
         d->wordEntryList.append(wordEntry);
