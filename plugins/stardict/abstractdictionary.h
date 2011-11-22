@@ -167,12 +167,12 @@ namespace MulaPluginStarDict
     {
         public:
             /**
-             * Constructor.
+             * Constructor
              */
             AbstractDictionary();
 
             /**
-             * Destructor.
+             * Destructor
              */
             virtual ~AbstractDictionary();
 
@@ -185,7 +185,9 @@ namespace MulaPluginStarDict
              *
              * @param indexItemOffset   The offset value in the dictionary file
              * @param indexItemSize     The size of the desired word data
+             *
              * @return The desired word data with all its fields
+             *
              * @see findData, wordData
              */
             const QByteArray wordData(quint32 indexItemOffset, qint32 indexItemSize);
@@ -196,6 +198,7 @@ namespace MulaPluginStarDict
              *
              * @return True if the any of the given same type sequence
              * characters is contained by the dictionary, otherwise false.
+             *
              * @see findData, wordData
              */
             bool containFindData();
@@ -208,8 +211,10 @@ namespace MulaPluginStarDict
              * @param searchWords       The desired words to look up
              * @param indexItemOffset   The index item offset
              * @param indexItemSize     The index item size
+             *
              * @return True if the all the desired words can be found in the
              * dictionary, otherwise false.
+             *
              * @see containData, wordData
              */
             bool findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize);
@@ -218,6 +223,7 @@ namespace MulaPluginStarDict
              * Returns the compressed ".dict.dz" dictionary file
              *
              * @return The compressed dictionary file
+             *
              * @see dictionaryFile
              */
             DictionaryZip* compressedDictionaryFile() const;
@@ -226,6 +232,7 @@ namespace MulaPluginStarDict
              * Returns the ".dict" dictionary file
              *
              * @return The dictionary file
+             *
              * @see compressedDictionaryFile
              */
             QFile* dictionaryFile() const;
@@ -234,6 +241,7 @@ namespace MulaPluginStarDict
              * Sets the value of the same type sequence
              *
              * @param sameTypeSequence The same type sequence
+             *
              * @see sameTypeSequence
              */
             void setSameTypeSequence(const QString& sameTypeSequence);
@@ -242,6 +250,7 @@ namespace MulaPluginStarDict
              * Returns the value of the same type sequence
              *
              * @return The value of the same typesequence
+             *
              * @see setSameTypeSequence
              */
             QString sameTypeSequence() const;

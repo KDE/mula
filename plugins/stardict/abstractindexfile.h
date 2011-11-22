@@ -30,12 +30,12 @@ namespace MulaPluginStarDict
     {
         public:
             /**
-             * Constructor.
+             * Constructor
              */
             AbstractIndexFile();
 
             /**
-             * Destructor.
+             * Destructor
              */
             virtual ~AbstractIndexFile();
 
@@ -48,6 +48,7 @@ namespace MulaPluginStarDict
              * @param   filesize    The file size of the index file coming from
              * the ".ifo" file
              * @param  wordCount   The number of the word entries
+             *
              * @return Whether or not the loading was successful
              */
             virtual bool load(const QString& filePath, qulonglong fileSize, int wordCount) = 0;
@@ -60,6 +61,7 @@ namespace MulaPluginStarDict
              * word directly, use some caching mechanism or something else.
              *
              * @param   index   The index of the desired word
+             *
              * @return  The word data
              */
             virtual QByteArray key(long index) = 0;
@@ -77,6 +79,7 @@ namespace MulaPluginStarDict
              * @param   word    The word data to look up
              * @param   index   The index where the desired word occurs among
              * the word entries
+             *
              * @return True if the desired word could be found, otherwise false.
              */
             virtual bool lookup(const QByteArray& word, int &index) = 0;

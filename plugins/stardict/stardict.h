@@ -40,12 +40,12 @@ namespace MulaPluginStarDict
 
         public:
             /**
-             * Constructor.
+             * Constructor
              */
             StarDict(QObject *parent = 0);
 
             /**
-             * Destructor.
+             * Destructor
              */
             virtual ~StarDict();
 
@@ -101,7 +101,9 @@ namespace MulaPluginStarDict
              * and then return the relevant book name
              *
              * @param absolutePath The complete path of the ".ifo" ifo file
+             *
              * @return The book name of the dictionary
+             *
              * @see findIfoFile, availableDictionaryList, loadedDictionaryList,
              * setLoadedDictionaryList
              */

@@ -28,12 +28,12 @@ namespace MulaPluginStarDict
     {
         public:
             /**
-             * Constructor.
+             * Constructor
              */
             IndexFile();
 
             /**
-             * Destructor.
+             * Destructor
              */
             virtual ~IndexFile();
 

@@ -57,22 +57,22 @@ namespace MulaPluginStarDict
     {
         public:
             /**
-             * Constructor.
+             * Constructor
              */
             WordEntry();
 
             /**
-             * Copy Constructor.
+             * Copy Constructor
              */
             WordEntry(const WordEntry &other);
 
             /**
-             * Destructor.
+             * Destructor
              */
             virtual ~WordEntry();
 
             /**
-             * Assignment operator.
+             * Assignment operator
              */
             WordEntry& operator=(const WordEntry &other);
 
@@ -81,6 +81,7 @@ namespace MulaPluginStarDict
              * terminated by '\0' in the desired ".dict" file
              *
              * @param plugin The utf-8 string in a raw format
+             *
              * @see data
              */
             void setData(QByteArray data);
@@ -90,6 +91,7 @@ namespace MulaPluginStarDict
              * terminated by '\0' in the desired ".dict" file
              *
              * @return The utf-8 string of the word entry in a raw format
+             *
              * @see setData
              */
             QByteArray data() const;
@@ -99,6 +101,7 @@ namespace MulaPluginStarDict
              * word data in the desired ".dict" file
              *
              * @param plugin The dataOffset of the word data
+             *
              * @see offset
              */
             void setDataOffset(quint32 dataOffset);
@@ -108,6 +111,7 @@ namespace MulaPluginStarDict
              * the word data in the desired ".dict" file
              *
              * @return The offset of the word data
+             *
              * @see setOffset
              */
             quint32 dataOffset() const;
@@ -117,6 +121,7 @@ namespace MulaPluginStarDict
              * the total size of the word data in the desired ".dict" file
              *
              * @param plugin The size of the word data
+             *
              * @see dataSize
              */
             void setDataSize(quint32 dataSize);
@@ -126,6 +131,7 @@ namespace MulaPluginStarDict
              * of the word data in the desired ".dict" file
              *
              * @return The size of the word data
+             *
              * @see setDataSize
              */
             quint32 dataSize() const;

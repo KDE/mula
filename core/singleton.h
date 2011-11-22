@@ -114,7 +114,7 @@ namespace MulaCore
 
         protected:
             /**
-             * Constructor.
+             * Constructor
              *
              * Makes it possible to use the QObject hierarchy for
              * deletion of this object.
@@ -122,7 +122,7 @@ namespace MulaCore
             explicit Singleton( QObject* parent = 0 ) : QObject( parent ) { }
 
             /**
-             * Destructor.
+             * Destructor
              *
              * Cleans up the mutex so we do not accidentally leak it.
              */

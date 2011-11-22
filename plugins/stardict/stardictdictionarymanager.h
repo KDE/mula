@@ -40,12 +40,12 @@ namespace MulaPluginStarDict
             typedef void (*progress_func_t)(void);
 
             /**
-             * Constructor.
+             * Constructor
              */
             StarDictDictionaryManager(progress_func_t f = NULL);
 
             /**
-             * Destructor.
+             * Destructor
              */
             virtual ~StarDictDictionaryManager();
 
@@ -53,7 +53,9 @@ namespace MulaPluginStarDict
              * Loads the dictionary according to the ifo file path
              *
              * @param filePath The path of the relevant ifo file
+             *
              * @return True if the loading was successful, otherwise false.
+             *
              * @see load, reload
              */
             bool loadDictionary(const QString& completeFilePath);
@@ -71,7 +73,9 @@ namespace MulaPluginStarDict
              * given index of the dictionary list
              *
              * @param index The desired index in the list
+             *
              * @return The count of the word entries
+             *
              * @see dictionaryName, dictionaryCount
              */
             long articleCount(int index) const;
@@ -81,7 +85,9 @@ namespace MulaPluginStarDict
              * dictionary list
              *
              * @param index The desired index in the list
+             *
              * @return The name of the dictionary
+             *
              * @see articleCount, dictionaryCount
              */
             const QString dictionaryName(int index) const;
@@ -91,6 +97,7 @@ namespace MulaPluginStarDict
              * class
              *
              * @return The size of the dictionary list
+             *
              * @see articleCount, dictionaryName
              */
             int dictionaryCount() const;
@@ -101,7 +108,9 @@ namespace MulaPluginStarDict
              *
              * @param   keyIndex        The index of the desired word
              * @param   dictionaryIndex The index of the desired dictionary
+             *
              * @return  The word data
+             *
              * @see poWordData, poCurrentWord, poNextWord, poPreviousWord
              */
             const QByteArray poWord(long keyIndex, int dictionaryIndex) const;
@@ -112,7 +121,9 @@ namespace MulaPluginStarDict
              *
              * @param   dataIndex       The index of the desired word data
              * @param   dictionaryIndex The index of the desired dictionary
+             *
              * @return The word data
+             *
              * @see poWord, poCurrentWord, poNextWord, poPreviousWord
              */
             QString poWordData(long dataIndex, int dictionaryIndex);

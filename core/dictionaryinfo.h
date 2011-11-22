@@ -33,12 +33,13 @@ namespace MulaCore
     {
         public:
             /**
-             * Construct an empty object.
+             * Constructor
              */
             DictionaryInfo();
 
             /**
              * Construct an object from the desired data.
+             *
              * @param plugin A plugin name
              * @param name A dictionary name
              * @param author A dictionary author
@@ -49,12 +50,16 @@ namespace MulaCore
                             const QString &description = QString(), long wordsCount = -1L);
 
 
+            /**
+             * Destructor
+             */
             virtual ~DictionaryInfo();
 
             /**
              * Returns the plugin name of the Dictionary
              *
              * @return The plugin name of the Dictionary
+             * 
              * @see setPlugin
              */
             QString plugin() const;
@@ -63,6 +68,7 @@ namespace MulaCore
              * Returns the name of the Dictionary
              *
              * @return The name of the Dictionary
+             *
              * @see setName
              */
             QString name() const;
@@ -71,6 +77,7 @@ namespace MulaCore
              * Returns the author of the Dictionary
              *
              * @return The author of the Dictionary
+             *
              * @see setAuthor
              */
             QString author() const;
@@ -79,6 +86,7 @@ namespace MulaCore
              * Returns the description of the Dictionary
              *
              * @return The description of the Dictionary
+             *
              * @see setDescription
              */
             QString description() const;
@@ -87,6 +95,7 @@ namespace MulaCore
              * Returns the word count of the Dictionary
              *
              * @return The word count of the Dictionary
+             *
              * @see setWordCount
              */
             long wordCount() const;
@@ -95,6 +104,7 @@ namespace MulaCore
              * Set the plugin name of the Dictionary
              *
              * @param plugin The plugin name of the Dictionary
+             *
              * @see plugin
              */
             void setPlugin(const QString &plugin);
@@ -103,6 +113,7 @@ namespace MulaCore
              * Set the name of the Dictionary
              *
              * @param author The name of the Dictionary
+             *
              * @see name
              */
             void setName(const QString &name);
@@ -111,6 +122,7 @@ namespace MulaCore
              * Set the author of the Dictionary
              *
              * @param author The author of the Dictionary
+             *
              * @see author
              */
             void setAuthor(const QString &author);
@@ -119,6 +131,7 @@ namespace MulaCore
              * Set the description of the Dictionary
              *
              * @param description The description of the Dictionary
+             *
              * @see description
              */
             void setDescription(const QString &description);
@@ -127,6 +140,7 @@ namespace MulaCore
              * Set the word count of the Dictionary
              *
              * @param wordCount The word count of the Dictionary
+             *
              * @see wordCount
              */
             void setWordCount(long wordCount);

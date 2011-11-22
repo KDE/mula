@@ -130,12 +130,12 @@ namespace MulaPluginStarDict
     {
         public:
             /**
-             * Constructor.
+             * Constructor
              */
             StarDictDictionaryInfo();
 
             /**
-             * Destructor.
+             * Destructor
              */
             virtual ~StarDictDictionaryInfo();
 
@@ -145,8 +145,10 @@ namespace MulaPluginStarDict
              *
              * @param ifoFilePath The path of the ifo file
              * @param isTreeDict Whether or not it is a tree dictionary
+             *
              * @return True if the ifo file load was successful, otherwise
              * false.
+             *
              * @see setIfoFilePath, ifoFilePath
              */
             bool loadFromIfoFile(const QString& ifoFileName, bool isTreeDict = false);
@@ -155,6 +157,7 @@ namespace MulaPluginStarDict
              * Sets the path of the ifo file
              *
              * @param ifoFilePath The path of the ifo file
+             *
              * @see ifoFilePath, loadFromIfoFile
              */
             void setIfoFilePath(const QString& ifoFilePath);
@@ -163,6 +166,7 @@ namespace MulaPluginStarDict
              * Returns the path of the ifo file
              *
              * @return The path of the ifo file
+             *
              * @see setIfoFilePath, loadFromIfoFile
              */
             QString ifoFilePath() const;
@@ -171,6 +175,7 @@ namespace MulaPluginStarDict
              * Sets the count of the word entries in the .idx file.
              *
              * @param wordCount The count of the word entries
+             *
              * @see wordCount
              */
             void setWordCount(quint32 wordCount);
@@ -179,6 +184,7 @@ namespace MulaPluginStarDict
              * Returns the count of the word entries in the .idx file.
              *
              * @return The count of the word entries
+             *
              * @see setWordCount
              */
             quint32 wordCount() const;
@@ -187,6 +193,7 @@ namespace MulaPluginStarDict
              * Sets the name of the book
              *
              * @param bookName The name of the book
+             *
              * @see bookName
              */
             void setBookName(const QString& bookName);
@@ -195,6 +202,7 @@ namespace MulaPluginStarDict
              * Returns the name of the book
              *
              * @return The string value of the book name
+             *
              * @see setBookName
              */
             QString bookName() const;
@@ -203,6 +211,7 @@ namespace MulaPluginStarDict
              * Sets the name of the dictionary author
              *
              * @param author The name of the author
+             *
              * @see author
              */
             void setAuthor(const QString& author);
@@ -211,6 +220,7 @@ namespace MulaPluginStarDict
              * Returns the name of the dictionary author
              *
              * @return The name of the dictionary author
+             *
              * @see setAuthor
              */
             QString author() const;
@@ -219,6 +229,7 @@ namespace MulaPluginStarDict
              * Sets the email address
              *
              * @param author The email address
+             *
              * @see email
              */
             void setEmail(const QString& email);
@@ -227,6 +238,7 @@ namespace MulaPluginStarDict
              * Returns the email address
              *
              * @return The email address
+             *
              * @see setEmail
              */
             QString email() const;
@@ -235,6 +247,7 @@ namespace MulaPluginStarDict
              * Sets the website of the dictionary
              *
              * @param website The website
+             *
              * @see website
              */
             void setWebsite(const QString website);
@@ -243,6 +256,7 @@ namespace MulaPluginStarDict
              * Returns the website of the dictionary
              *
              * @return The website of the dictionary
+             *
              * @see setWebsite
              */
             QString website() const;
@@ -251,6 +265,7 @@ namespace MulaPluginStarDict
              * Sets the date and time of the dictionary
              *
              * @param dateTime The date and time
+             *
              * @see dateTime
              */
             void setDateTime(const QString& dateTime);
@@ -259,6 +274,7 @@ namespace MulaPluginStarDict
              * Returns the date and time of the dictionary
              *
              * @return The date and time  of the dictionary
+             *
              * @see setDateTime
              */
             QString dateTime() const;
@@ -268,6 +284,7 @@ namespace MulaPluginStarDict
              * new lines.
              *
              * @param description The description
+             *
              * @see description
              */
             void setDescription(const QString& description);
@@ -277,6 +294,7 @@ namespace MulaPluginStarDict
              * also contain "<br>" for new lines and time of the dictionary
              *
              * @return The description of the dictionary
+             *
              * @see setDescription
              */
             QString description() const;
@@ -285,6 +303,7 @@ namespace MulaPluginStarDict
              * Sets the value of the index file size.
              *
              * @param indexFileSize The index file size.
+             *
              * @see indexFileSize
              */
             void setIndexFileSize(quint32 indexFileSize);
@@ -293,6 +312,7 @@ namespace MulaPluginStarDict
              * Returns the value of the index file size.
              *
              * @return The index file size
+             *
              * @see setIndexFileSize
              */
             quint32 indexFileSize() const;
@@ -301,6 +321,7 @@ namespace MulaPluginStarDict
              * Sets the value of the index offset bits
              *
              * @param indexOffsetBits The index offset bits
+             *
              * @see indexOffsetBits
              */
             void setIndexOffsetBits(quint32 indexOffsetBits);
@@ -309,6 +330,7 @@ namespace MulaPluginStarDict
              * Returns the value of the index offset bits.
              *
              * @return The value of the index offset bits.
+             *
              * @see setIndexOffsetBits
              */
             quint32 indexOffsetBits() const;
@@ -317,6 +339,7 @@ namespace MulaPluginStarDict
              * Sets the value of the same type sequence
              *
              * @param sameTypeSequence The same type sequence
+             *
              * @see sameTypeSequence
              */
             void setSameTypeSequence(const QString& sameTypeSequence);
@@ -325,6 +348,7 @@ namespace MulaPluginStarDict
              * Returns the value of the same type sequence
              *
              * @return The value of the same typesequence
+             *
              * @see setSameTypeSequence
              */
             QString sameTypeSequence() const;

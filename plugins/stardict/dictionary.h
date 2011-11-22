@@ -32,12 +32,12 @@ namespace MulaPluginStarDict
     {
         public:
             /**
-             * Constructor.
+             * Constructor
              */
             Dictionary();
 
             /**
-             * Destructor.
+             * Destructor
              */
             virtual ~Dictionary();
 
@@ -45,6 +45,7 @@ namespace MulaPluginStarDict
              * Loads the ifo file
              *
              * @param ifoFilePath The path of the ifo file
+             *
              * @return True if the loading went fine, otherwise false.
              */
             bool load(const QString& ifoFilePath);
@@ -67,6 +68,7 @@ namespace MulaPluginStarDict
              * Returns the ifo file path
              *
              * @return The ifo file path
+             *
              * @see loadIfoFile
              */
             QString ifoFilePath() const;
@@ -74,13 +76,15 @@ namespace MulaPluginStarDict
             /**
              * Returns the word data according to the relevant index
              *
-             * \note Since it it an abstraction on the top of the index file,
+             * \note Since it it an abstraction on the of the index file,
              * the method does not care about the fact whether or not the word
              * is returned directly, use some caching mechanism or something
              * else.
              *
              * @param   index   The index of the desired word
+             *
              * @return  The word data
+             *
              * @see data, wordEntry
              */
             QString key(long index) const;
@@ -95,6 +99,7 @@ namespace MulaPluginStarDict
              * an empty string.
              *
              * @return The desired word data with all its fields
+             *
              * @see key, wordEntry
              */
             QString data(long index);
@@ -106,7 +111,9 @@ namespace MulaPluginStarDict
              * returns an empty string.
              *
              * @param index The desired index
+             *
              * @return The word entry according to the given index
+             *
              * @see key, data
              */
             WordEntry wordEntry(long index);
@@ -119,6 +126,7 @@ namespace MulaPluginStarDict
              * @param   word    The word data to look up
              * @param   index   The index where the desired word occurs among
              * the word entries
+             *
              * @return True if the desired word could be found, otherwise false.
              */
             bool lookup(const QString word, int &index);
@@ -132,6 +140,7 @@ namespace MulaPluginStarDict
              * @param   pattern                 The pattern to look up
              * @param   maximumIndexListSize    The maximum index list count for
              * returning
+             *
              * @return The indices where the pattern matches against the word
              * data
              */
@@ -144,7 +153,9 @@ namespace MulaPluginStarDict
              * \note This method is only for internal usage.
              *
              * @param ifoFilePath The path of the ifo file
+             *
              * @return True if the loading was successful, otherwise false.
+             *
              * @see load, ifoFilePath
              */
             bool loadIfoFile(const QString& ifoFilePath);

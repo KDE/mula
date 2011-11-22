@@ -59,12 +59,12 @@ namespace MulaCore
             Q_DECLARE_FLAGS(Features, Feature)
 
             /**
-             * Constructor.
+             * Constructor
              */
             DictionaryPlugin();
 
             /**
-             * Destructor.
+             * Destructor
              */
             virtual ~DictionaryPlugin();
 
@@ -107,6 +107,7 @@ namespace MulaCore
              * Returns the list of the available dictionaries
              *
              * @return The list of the available dictionaries
+             *
              * @see loadedDictionaryList, setLoadedDictionaryList
              */
             virtual QStringList availableDictionaryList() = 0;
@@ -124,6 +125,7 @@ namespace MulaCore
              * Sets the list of the loaded dictionaries
              *
              * @param loadedDictionaryList The list of the loaded dictionaries
+             *
              * @see loadedDictionaryList, availableDictionaryList
              */
             virtual void setLoadedDictionaryList(const QStringList &loadedDictionaryList) = 0;
@@ -169,6 +171,7 @@ namespace MulaCore
              * but available.
              *
              * @param dictionary The name of the desired dictionary
+             *
              * @return The dictionaryInfo class representing in the information
              * about the given dictionary
              */

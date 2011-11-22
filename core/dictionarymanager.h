@@ -46,12 +46,18 @@ namespace MulaCore
              * Returns translation for word. If word not found, returns
              * "Not found!"
              *
+             * @param word The word for translation
+             *
              * @see isTranslatable
              */
             QString translate(const QString &word);
 
             /**
-             * Returns a list of similar words contained in dictionaries.
+             * Returns the list of similar words contained in dictionaries.
+             *
+             * @param word The word for translation
+             *
+             * @return The list of similar words
              */
             QStringList findSimilarWords(const QString &word);
 
@@ -67,8 +73,7 @@ namespace MulaCore
              * The first item in pair is a plugin name, the second item
              * in pair is a dictionary name.
              *
-             * @return
-             * @see setLoadedDictionaryList
+             * @see setLoadedDictionaryList, availableDictionaryList
              */
             QMultiHash<QString, QString> loadedDictionaryList() const;
 
@@ -80,7 +85,8 @@ namespace MulaCore
              * availableDicts list.
              *
              * @param loadedDictionaryList The list of the loaded dictionaries
-             * @see loadedDictionaryList
+             * 
+             * @see loadedDictionaryList, availableDictionaryList
              */
             void setLoadedDictionaryList(const QMultiHash<QString, QString> &loadedDictionaryList);
 

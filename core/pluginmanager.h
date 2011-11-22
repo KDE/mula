@@ -42,6 +42,7 @@ namespace MulaCore
              * Returns the list of the available dictionary plugins
              *
              * @return The list of the available plugins
+             *
              * @see loadedPlugins, setLoadedPlugins
              */
             QStringList availablePlugins() const;
@@ -50,6 +51,7 @@ namespace MulaCore
              * Returns the list of the loaded dictionary plugins
              *
              * @return The list of the loaded plugins
+             *
              * @see availablePlugins, setLoadedPlugins
              */
             QStringList loadedPlugins() const;
@@ -60,7 +62,9 @@ namespace MulaCore
              * the list
              *
              * @param loadedPlugins The list of the loaded plugins
+             *
              * @return loadedPlugins The list of the loaded plugins
+             *
              * @see availablePlugins, loadedPlugins
              */
             void setLoadedPlugins(const QStringList &loadedPlugins);
@@ -70,6 +74,7 @@ namespace MulaCore
              * loaded
              *
              * @param plugin The identifier of the plugin instance
+             *
              * @return The dictionary plugin instance
              */
             DictionaryPlugin *plugin(const QString &plugin);

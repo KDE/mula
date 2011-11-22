@@ -65,12 +65,12 @@ namespace MulaPluginStarDict
     {
         public:
             /**
-             * Constructor.
+             * Constructor
              */
             OffsetCacheFile();
 
             /**
-             * Destructor.
+             * Destructor
              */
             virtual ~OffsetCacheFile();
 
@@ -96,7 +96,9 @@ namespace MulaPluginStarDict
              * internal usage.
              *
              * @param   pageIndex   The index of the desired page
+             *
              * @return  The number of the word entries loaded
+             *
              * @see load
              */
             int loadPage(int pageIndex);
@@ -112,8 +114,10 @@ namespace MulaPluginStarDict
              *
              * @param   word        The desired word to look up
              * @param   pageIndex   The index of the page where the word occurs
+             *
              * @return True if the desired page can be found where the word
              * occurs, otherwise false.
+             *
              * @see lookup
              */
             bool lookupPage(const QByteArray& word, int& pageIndex);
@@ -126,7 +130,9 @@ namespace MulaPluginStarDict
              * \note This method is only for internal usage.
              *
              * @param   pageIndex The index of the desired page
+             *
              * @return  The desired word data from the index file
+             *
              * @see firstWordDataOnPage
              */
             QByteArray readFirstWordDataOnPage(long pageIndex);
@@ -140,7 +146,9 @@ namespace MulaPluginStarDict
              * \note This method is only for internal usage.
              *
              * @param   pageIndex The index of the desired page
+             *
              * @return  The desired word data from the index file
+             *
              * @see readFirstWordDataOnPage
              */
             QByteArray firstWordDataOnPage(long pageIndex);
@@ -155,7 +163,9 @@ namespace MulaPluginStarDict
              * \note This method is only for internal usage.
              *
              * @param   completeFilePath The complete file path
+             *
              * @return  The list of the cache locations
+             *
              * @see saveCache, loadCache
              */
             QStringList cacheLocations(const QString& completeFilePath);
@@ -168,8 +178,10 @@ namespace MulaPluginStarDict
              * \note This method is only for internal usage.
              *
              * @param   completeFilePath The complete file path
+             *
              * @return True if the cache loading was successful, otherwise
              * false.
+             *
              * @see cacheLocations, saveCache
              */
             bool loadCache(const QString& completeFilePath);
@@ -182,8 +194,10 @@ namespace MulaPluginStarDict
              * \note This method is only for internal usage.
              *
              * @param   completeFilePath The complete file path
+             *
              * @return True if the cache saving was successful, otherwise
              * false.
+             *
              * @see cacheLocations, loadCache
              */
             bool saveCache(const QString& completeFilePath);

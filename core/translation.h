@@ -34,7 +34,7 @@ namespace MulaCore
         public:
 
             /**
-             * Construct an empty translation.
+             * Construct an empty transtion
              */
             Translation();
 
@@ -48,52 +48,61 @@ namespace MulaCore
             Translation(const QString &title, const QString &dictionaryName,
                         const QString &translation);
 
+            /**
+             * Destructor
+             */
             virtual ~Translation();
 
             /**
-             * Return the translation title
+             * Returns the translation title
              *
              * @return The translation title
+             *
              * @see setTitle
              */
             QString title() const;
 
             /**
-             * Return the dictionary name
+             * Returns the dictionary name
              *
              * @return The dictionary name
+             *
              * @see setDictionaryName
              */
             QString dictionaryName() const;
 
             /**
-             * Return the translation string
+             * Returns the translation string
              *
              * @return The translation string
+             *
              * @see setTranslation
              */
             QString translation() const;
 
             /**
-             * Set the translation title
+             * Sets the translation title
              *
              * @param title The translation title
+             *
              * @see title
              */
             void setTitle(const QString &title);
 
             /**
-             * Set the dictionary name
+             * Sets the dictionary name
              *
              * @param dictionaryName The dictionary name
+             *
              * @see dictionaryName
              */
             void setDictionaryName(const QString &dictionaryName);
 
             /**
-             * Set the translation string
+             * Sets the translation string
              *
              * @param translation The translation string
+             *
              * @see translation
              */
             void setTranslation(const QString &translation);
