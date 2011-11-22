@@ -60,19 +60,19 @@ Dictionary::articleCount() const
     return d->dictionaryInfo.wordCount();
 }
 
-const QString
+QString
 Dictionary::dictionaryName() const
 {
     return d->dictionaryInfo.bookName();
 }
 
-const QString
+QString
 Dictionary::ifoFilePath() const
 {
     return d->dictionaryInfo.ifoFilePath();
 }
 
-const QString
+QString
 Dictionary::key(long index) const
 {
     if (d->indexFile.isNull())
@@ -91,7 +91,7 @@ Dictionary::data(long index)
     return AbstractDictionary::wordData(d->indexFile->wordEntryOffset(), d->indexFile->wordEntrySize());
 }
 
-const WordEntry
+WordEntry
 Dictionary::wordEntry(long index)
 {
     if (d->indexFile.isNull())

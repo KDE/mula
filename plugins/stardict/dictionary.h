@@ -61,7 +61,7 @@ namespace MulaPluginStarDict
              *
              * @return The name of the dictionary
              */
-            const QString dictionaryName() const;
+            QString dictionaryName() const;
 
             /**
              * Returns the ifo file path
@@ -69,7 +69,7 @@ namespace MulaPluginStarDict
              * @return The ifo file path
              * @see loadIfoFile
              */
-            const QString ifoFilePath() const;
+            QString ifoFilePath() const;
 
             /**
              * Returns the word data according to the relevant index
@@ -83,7 +83,7 @@ namespace MulaPluginStarDict
              * @return  The word data
              * @see data, wordEntry
              */
-            const QString key(long index) const;
+            QString key(long index) const;
 
             /**
              * Returns the desired word data of the dictionary with all its
@@ -109,7 +109,7 @@ namespace MulaPluginStarDict
              * @return The word entry according to the given index
              * @see key, data
              */
-            const WordEntry wordEntry(long index);
+            WordEntry wordEntry(long index);
 
             /**
              * Returns the index of the word data where it has been found. The
