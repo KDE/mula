@@ -117,7 +117,7 @@ StarDictDictionaryManager::articleCount(int index) const
     return d->dictionaryList.at(index)->articleCount();
 }
 
-const QString
+QString
 StarDictDictionaryManager::dictionaryName(int index) const
 {
     return d->dictionaryList.at(index)->dictionaryName();
@@ -129,7 +129,7 @@ StarDictDictionaryManager::dictionaryCount() const
     return d->dictionaryList.size();
 }
 
-const QByteArray
+QByteArray
 StarDictDictionaryManager::poWord(long keyIndex, int dictionaryIndex) const
 {
     return d->dictionaryList.at(dictionaryIndex)->key(keyIndex).toUtf8();

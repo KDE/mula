@@ -90,7 +90,7 @@ namespace MulaPluginStarDict
              *
              * @see articleCount, dictionaryCount
              */
-            const QString dictionaryName(int index) const;
+            QString dictionaryName(int index) const;
 
             /**
              * Returns the size of the dictionary list stored in this manager
@@ -113,7 +113,7 @@ namespace MulaPluginStarDict
              *
              * @see poWordData, poCurrentWord, poNextWord, poPreviousWord
              */
-            const QByteArray poWord(long keyIndex, int dictionaryIndex) const;
+            QByteArray poWord(long keyIndex, int dictionaryIndex) const;
 
             /**
              * Returns the desired word data of the relevant dictionary
