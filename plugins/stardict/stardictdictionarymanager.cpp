@@ -73,7 +73,7 @@ class StarDictDictionaryManager::Private
         progress_func_t progressFunction;
 
         QList<Dictionary *> previous;
-        QList<Dictionary *> future;
+        QList<Dictionary *> next;
 
         bool found;
         static const int maxMatchItemPerLib = 100;
@@ -216,7 +216,7 @@ StarDictDictionaryManager::reloaderHelper(const QString &absolutePath)
 {
     Dictionary *dictionary = reloaderFind(absolutePath);
     if (dictionary)
-        d->future.append(dictionary);
+        d->next.append(dictionary);
     else
         loadDictionary(absolutePath);
 }
