@@ -80,7 +80,7 @@ namespace MulaPluginStarDict
             MulaCore::Translation translate(const QString &dict, const QString &word);
 
             /** Reimplemented from DictionaryPlugin::findSimilarWords() */
-            virtual QStringList findSimilarWords(const QString &dict, const QString &word);
+            QStringList findSimilarWords(const QString &dict, const QString &word);
 
             /** Reimplemented from DictionaryPlugin::dictionaryInfo() */
             MulaCore::DictionaryInfo dictionaryInfo(const QString &dictionaryUrl);
