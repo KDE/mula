@@ -127,7 +127,7 @@ QString
 StarDict::findAvailableDictionary(const QString& absolutePath)
 {
     StarDictDictionaryInfo info;
-    if (info.loadFromIfoFile(absolutePath, false))
+    if (info.loadFromIfoFile(absolutePath))
         return info.bookName();
 
     return QString();
@@ -137,7 +137,7 @@ QString
 StarDict::findIfoFile(const QString& absolutePath)
 {
     StarDictDictionaryInfo info;
-    if (info.loadFromIfoFile(absolutePath, false) && info.bookName() == d->ifoBookName)
+    if (info.loadFromIfoFile(absolutePath) && info.bookName() == d->ifoBookName)
         d->ifoFileName = absolutePath;
 
     return QString();
@@ -207,7 +207,7 @@ StarDict::dictionaryInfo(const QString &dictionary)
 {
     StarDictDictionaryInfo nativeInfo;
     nativeInfo.setWordCount(0);
-    if (!nativeInfo.loadFromIfoFile(findDictionary(dictionary, d->dictionaryDirectoryList), false))
+    if (!nativeInfo.loadFromIfoFile(findDictionary(dictionary, d->dictionaryDirectoryList)))
         return MulaCore::DictionaryInfo();
 
     MulaCore::DictionaryInfo result(name(), dictionary);
