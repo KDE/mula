@@ -93,7 +93,7 @@ AbstractDictionary::wordData(quint32 indexItemOffset, qint32 indexItemSize)
         int sectionSize = 0;
         int sectionPosition = 0;
 
-        //copy the head items.
+        // Copy the head items.
         foreach (const QChar& ch, d->sameTypeSequence.left(sameTypeSequenceLength - 1))
         {
             if (ch.isUpper())

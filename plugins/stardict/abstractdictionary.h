@@ -188,7 +188,7 @@ namespace MulaPluginStarDict
              *
              * @return The desired word data with all its fields
              *
-             * @see findData, wordData
+             * @see findData, containFindData
              */
             const QByteArray wordData(quint32 indexItemOffset, qint32 indexItemSize);
 
@@ -196,8 +196,8 @@ namespace MulaPluginStarDict
              * Returns whether the dictionary contains any of the given same
              * type sequence characters
              *
-             * @return True if the any of the given same type sequence
-             * characters is contained by the dictionary, otherwise false.
+             * @return True if any of the given same type sequence characters is
+             * contained by the dictionary, otherwise false.
              *
              * @see findData, wordData
              */
@@ -212,7 +212,7 @@ namespace MulaPluginStarDict
              * @param indexItemOffset   The index item offset
              * @param indexItemSize     The index item size
              *
-             * @return True if the all the desired words can be found in the
+             * @return True if all the desired words can be found in the
              * dictionary, otherwise false.
              *
              * @see containData, wordData

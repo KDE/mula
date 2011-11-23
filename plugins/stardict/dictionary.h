@@ -76,14 +76,14 @@ namespace MulaPluginStarDict
             /**
              * Returns the word data according to the relevant index
              *
-             * \note Since it it an abstraction on the of the index file,
+             * \note Since it is an abstraction on top of index file,
              * the method does not care about the fact whether or not the word
              * is returned directly, use some caching mechanism or something
              * else.
              *
              * @param   index   The index of the desired word
              *
-             * @return  The word data
+             * @return  The desired word data
              *
              * @see data, wordEntry
              */
@@ -98,6 +98,8 @@ namespace MulaPluginStarDict
              * If the indexfile is not loaded properly yet, the method returns
              * an empty string.
              *
+             * @param   index   The index of the desired word
+             *
              * @return The desired word data with all its fields
              *
              * @see key, wordEntry
@@ -107,10 +109,10 @@ namespace MulaPluginStarDict
             /**
              * Returns the word entry according to the desired index value
              *
-             * \note If the indexfile is not loaded properly yet, the method
+             * \note If the index file is not loaded properly yet, the method
              * returns an empty string.
              *
-             * @param index The desired index
+             * @param index The index of the desired word entry
              *
              * @return The word entry according to the given index
              *
@@ -120,7 +122,7 @@ namespace MulaPluginStarDict
 
             /**
              * Returns the index of the word data where it has been found. The
-             * method will also return the fact whether or not the desired word
+             * method also returns the mere fact whether or not the desired word
              * could be found in the index file.
              *
              * @param   word    The word data to look up
@@ -133,7 +135,7 @@ namespace MulaPluginStarDict
 
             /**
              * Returns the list of indices matched against the desired word data
-             * pattern in the dictionary. Note, this method will return maximum
+             * pattern in the dictionary. Note, this method  returns maximum
              * that many elements that is passed as an arguement. Alternatively,
              * if that is a big enough value, it will return all the words.
              *
