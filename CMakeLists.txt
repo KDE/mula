@@ -36,10 +36,6 @@ else()
 endif()
 
 set(MULA_BUILD_ALL TRUE
-    CACHE INTERNAL "Build all of MULA"
-)
-
-set(MULA_BUILD_ALL TRUE
     CACHE INTERNAL "Build all of Mula"
 )
 
@@ -63,11 +59,6 @@ endif(NOT KDE4_FOUND)
 
 ####### Core #######
 add_subdirectory(core)
-
-####### MULA ########
-# if(BUILD_MULA_KDE)
-# add_subdirectory(kde)
-# endif()
 
 ####### Plugins #######
 add_subdirectory(plugins)
