@@ -54,10 +54,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 find_package(KDE4)
 if(NOT KDE4_FOUND)
-	set(BUILD_MULA_PLASMA OFF)
-	set(BUILD_MULA_KDE OFF)
+    set(BUILD_MULA_PLASMA_ACTIVE OFF)
+    set(BUILD_MULA_PLASMA OFF)
     message(STATUS)
-    message(STATUS "MULA failure, KDE could not be found.")
+    message(STATUS "KDE could not be found. Hence, the relevant frontends are disabled")
     message(STATUS)
 endif(NOT KDE4_FOUND)
 
