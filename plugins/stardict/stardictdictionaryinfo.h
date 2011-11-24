@@ -143,15 +143,15 @@ namespace MulaPluginStarDict
              * Loads all the information from the relevant Ifo file considering
              * the fact whether or not it is a tree dictionary.
              *
-             * @param ifoFilePath The path of the ifo file
-             * @param isTreeDict Whether or not it is a tree dictionary
+             * @param ifoFilePath       The path of the ifo file
+             * @param isTreeDictionary  Whether or not it is a tree dictionary
              *
              * @return True if the ifo file load was successful, otherwise
              * false.
              *
              * @see setIfoFilePath, ifoFilePath
              */
-            bool loadFromIfoFile(const QString& ifoFileName, bool isTreeDict = false);
+            bool loadFromIfoFile(const QString& ifoFileName, bool isTreeDictionary = false);
 
             /**
              * Sets the path of the ifo file

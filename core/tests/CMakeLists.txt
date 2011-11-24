@@ -20,6 +20,5 @@ MULA_UNIT_TESTS(
     "mulacore"              # modulename argument
 
     # Source files without the extension
-    dictionarymanager
-    pluginmanager
+    translationtest
 )
