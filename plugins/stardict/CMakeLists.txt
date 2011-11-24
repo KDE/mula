@@ -96,5 +96,5 @@ install(
 
 if(BUILD_MULA_TESTS)
     enable_testing()
-    #add_subdirectory(tests)
+    add_subdirectory(tests)
 endif()
