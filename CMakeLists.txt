@@ -28,6 +28,7 @@ option(BUILD_MULA_HARMATTAN "Build Mula for Harmattan" ON)
 option(BUILD_MULA_PLASMA "Build Mula for Plasma Desktop" OFF)
 option(BUILD_MULA_PLASMA_ACTIVE "Build Mula for Plasma Active" OFF)
 option(BUILD_MULA_PLUGINS "Build Mula Plugins" ON)
+option(BUILD_MULA_TESTS "Build Unit Tests for the Mula libraries and applications" ON)
 
 if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
     option(INSTALL_CMAKE_FILES "Install the *.cmake files into the CMake root" ON)

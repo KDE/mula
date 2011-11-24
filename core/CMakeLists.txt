@@ -99,3 +99,8 @@ install(
     DESTINATION ${INCLUDE_INSTALL_DIR}/mula/core
     COMPONENT Devel
 )
+
+if(BUILD_MULA_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
