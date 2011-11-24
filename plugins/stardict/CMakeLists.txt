@@ -10,6 +10,11 @@ include_directories(
     ${ZLIB_INCLUDE_DIRS}
 )
 
+set(MULA_STARDICT_PLUGIN_INCLUDES
+    ${QT_INCLUDES}
+    CACHE PATHS "Includes required for Mula Stardict Plugin"
+)
+
 set(stardict_SRCS
     abstractdictionary.cpp
     abstractindexfile.cpp
@@ -56,6 +61,12 @@ if(MULA_BUILD_ALL)
     add_dependencies(mula_plugin_stardict MulaCore)
 endif()
 
+set(MULA_STARDICT_PLUGIN_LIBS
+    mula_plugin_stardict
+    ${MULA_CORE_LIBS}
+    CACHE PATHS "StarDict plugin for Mula"
+)
+
 set_target_properties(mula_plugin_stardict PROPERTIES VERSION ${MULA_VERSION_STRING} SOVERSION ${MULA_VERSION_STRING} DEFINE_SYMBOL MAKE_MULA_PLUGIN_STARDICT_LIB)
 
 if(APPLE)
@@ -81,7 +92,6 @@ install(
     LIBRARY     DESTINATION ${LIB_INSTALL_DIR} COMPONENT mulapluginstardict
     ARCHIVE     DESTINATION ${LIB_INSTALL_DIR} COMPONENT mulapluginstardict
     FRAMEWORK   DESTINATION ${LIB_INSTALL_DIR} COMPONENT mulapluginstardict
-
 )
 
 if(BUILD_MULA_TESTS)
