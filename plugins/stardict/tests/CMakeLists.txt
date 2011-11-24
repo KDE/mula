@@ -20,5 +20,6 @@ MULA_UNIT_TESTS(
     "stardictplugin"                    # modulename argument
 
     # Source files without the extension
+    stardictdictionaryinfotest
     wordentrytest
 )
