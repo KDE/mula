@@ -76,7 +76,7 @@ if(APPLE)
     )
 
     set_target_properties(mula_plugin_stardict PROPERTIES FRAMEWORK TRUE)
-    set_target_properties(mula_plugin_stardict BUILD_WITH_INSTALL_RPATH 1 INSTALL_NAME_DIR "@executable_path/../Frameworks")
+    set_target_properties(mula_plugin_stardict PROPERITES BUILD_WITH_INSTALL_RPATH 1 INSTALL_NAME_DIR "@executable_path/../Frameworks")
     set_target_properties(mula_plugin_stardict PROPERTIES PUBLIC_HEADER "${stardict_HEADERS}")
 
     set(MACOSX_FRAMEWORK_IDENTIFIER mula_plguin_stardict)
