@@ -91,6 +91,21 @@ set(MULA_CORE_LIBS
 
 set_target_properties(MulaCore PROPERTIES VERSION ${MULA_VERSION_STRING} SOVERSION ${MULA_VERSION_STRING} DEFINE_SYMBOL MAKE_MULA_CORE_LIB)
 
+if(APPLE)
+    #hack for being able to set headers as public in a osx framework
+    list(APPEND MulaCore_HEADERS
+        ${MulaCore_HEADERS}
+    )
+
+    set_target_properties(MulaCore PROPERTIES FRAMEWORK TRUE)
+    set_target_properties(MulaCore PROPERTIES BUILD_WITH_INSTALL_RPATH 1 INSTALL_NAME_DIR "@executable_path/../Frameworks")
+    set_target_properties(MulaCore PROPERTIES PUBLIC_HEADER "${GluonCore_HEADERS}")
+
+    set(MACOSX_FRAMEWORK_IDENTIFIER core)
+    set(MACOSX_FRAMEWORK_SHORT_VERSION_STRING ${MULA_VERSION_STRING})
+    set(MACOSX_FRAMEWORK_BUNDLE_VERSION ${MULA_VERSION_STRING})
+endif()
+
 install(TARGETS MulaCore RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIB_INSTALL_DIR} ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
 
 install(
