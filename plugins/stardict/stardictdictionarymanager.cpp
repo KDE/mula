@@ -183,10 +183,10 @@ StarDictDictionaryManager::load(const QStringList& dictionaryDirectoryList,
                                 const QStringList& orderList,
                                 const QStringList& disableList)
 {
-    foreach (const QString& string, orderList)
+    foreach (const QString& absoluteFilePath, orderList)
     {
-        if (qFind(disableList.begin(), disableList.end(), string) == disableList.end())
-            loadDictionary(string);
+        if (qFind(disableList.begin(), disableList.end(), absoluteFilePath) == disableList.end())
+            loadDictionary(absoluteFilePath);
     }
 
     foreach (const QString& directoryName, dictionaryDirectoryList)
@@ -231,10 +231,10 @@ StarDictDictionaryManager::reload(const QStringList& dictionaryDirectoryList,
     d->previous = d->dictionaryList;
     d->dictionaryList.clear();
 
-    foreach (const QString& string, orderList)
+    foreach (const QString& absoluteFilePath, orderList)
     {
-        if (qFind(disableList.begin(), disableList.end(), string) == disableList.end())
-            reloaderHelper(string);
+        if (qFind(disableList.begin(), disableList.end(), absoluteFilePath) == disableList.end())
+            reloaderHelper(absoluteFilePath);
     }
 
     foreach (const QString& directoryName, dictionaryDirectoryList)
