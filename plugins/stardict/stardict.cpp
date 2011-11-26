@@ -238,9 +238,9 @@ StarDict::translate(const QString &dictionary, const QString &word)
     if (!d->dictionaryManager->simpleLookupWord(word.toUtf8().data(), index, d->loadedDictionaries[dictionary]))
         return MulaCore::Translation();
 
-    return MulaCore::Translation(QString::fromUtf8(d->dictionaryManager->poWord(index, dictionaryIndex)),
+    return MulaCore::Translation(QString::fromUtf8(d->dictionaryManager->key(index, dictionaryIndex)),
             d->dictionaryManager->dictionaryName(dictionaryIndex),
-            parseData(d->dictionaryManager->poWordData(index, dictionaryIndex).toUtf8(), dictionaryIndex, true,
+            parseData(d->dictionaryManager->data(index, dictionaryIndex).toUtf8(), dictionaryIndex, true,
                 d->reformatLists, d->expandAbbreviations));
 }
 
@@ -332,7 +332,7 @@ StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces
             if (d->dictionaryManager->simpleLookupWord(result.mid(position, regExp.matchedLength()).toUtf8().data(), index, dictionaryIndex))
             {
                 QString expanded = "<font class=\"explanation\">";
-                expanded += parseData(d->dictionaryManager->poWordData(index, dictionaryIndex).toUtf8());
+                expanded += parseData(d->dictionaryManager->data(index, dictionaryIndex).toUtf8());
                 if (result[position + regExp.matchedLength() - 1] == ':')
                     expanded += ':';
 

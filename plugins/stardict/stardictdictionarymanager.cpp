@@ -133,14 +133,14 @@ StarDictDictionaryManager::dictionaryCount() const
 }
 
 QByteArray
-StarDictDictionaryManager::poWord(long keyIndex, int dictionaryIndex) const
+StarDictDictionaryManager::key(long keyIndex, int dictionaryIndex) const
 {
     Q_ASSERT_X( keyIndex >= 0 && keyIndex < dictionaryCount(), Q_FUNC_INFO, "index out of range in list of dictionaries" );
     return d->dictionaryList.at(dictionaryIndex)->key(keyIndex).toUtf8();
 }
 
 QString
-StarDictDictionaryManager::poWordData(long dataIndex, int dictionaryIndex)
+StarDictDictionaryManager::data(long dataIndex, int dictionaryIndex)
 {
     Q_ASSERT_X( dataIndex >= 0 && dataIndex < dictionaryCount(), Q_FUNC_INFO, "index out of range in list of dictionaries" );
     return d->dictionaryList.at(dictionaryIndex)->data(dataIndex);
@@ -259,11 +259,11 @@ StarDictDictionaryManager::poCurrentWord(int *iCurrent)
 
         if (poCurrentWord == NULL )
         {
-            poCurrentWord = poWord(iCurrent[iLib], iLib);
+            poCurrentWord = key(iCurrent[iLib], iLib);
         }
         else
         {
-            word = poWord(iCurrent[iLib], iLib);
+            word = key(iCurrent[iLib], iLib);
 
             if (stardictStringCompare(poCurrentWord, word) > 0 )
                 poCurrentWord = word;
@@ -295,12 +295,12 @@ StarDictDictionaryManager::poNextWord(QByteArray searchWord, int* iCurrent)
 
         if (currentWord.isNull())
         {
-            currentWord = poWord(iCurrent[iLib], iLib);
+            currentWord = key(iCurrent[iLib], iLib);
             iCurrentLib = iLib;
         }
         else
         {
-            word = poWord(iCurrent[iLib], iLib);
+            word = key(iCurrent[iLib], iLib);
 
             if (stardictStringCompare(currentWord, word) > 0 )
             {
@@ -324,7 +324,7 @@ StarDictDictionaryManager::poNextWord(QByteArray searchWord, int* iCurrent)
             if ( iCurrent[iLib] >= articleCount(iLib) || iCurrent[iLib] < 0)
                 continue;
 
-            if (strcmp(currentWord, poWord(iCurrent[iLib], iLib)) == 0 )
+            if (strcmp(currentWord, key(iCurrent[iLib], iLib)) == 0 )
                 iCurrent[iLib]++;
         }
 
@@ -353,12 +353,12 @@ StarDictDictionaryManager::poPreviousWord(long *iCurrent)
 
         if ( poCurrentWord.isNull() )
         {
-            poCurrentWord = poWord(iCurrent[iLib] - 1, iLib);
+            poCurrentWord = key(iCurrent[iLib] - 1, iLib);
             iCurrentLib = iLib;
         }
         else
         {
-            word = poWord(iCurrent[iLib] - 1, iLib);
+            word = key(iCurrent[iLib] - 1, iLib);
             if (stardictStringCompare(poCurrentWord, word) < 0 )
             {
                 poCurrentWord = word;
@@ -378,7 +378,7 @@ StarDictDictionaryManager::poPreviousWord(long *iCurrent)
             if (iCurrent[iLib] > articleCount(iLib) || iCurrent[iLib] <= 0)
                 continue;
 
-            if (poCurrentWord == poWord(iCurrent[iLib] - 1, iLib))
+            if (poCurrentWord == key(iCurrent[iLib] - 1, iLib))
             {
                 iCurrent[iLib]--;
             }
@@ -630,7 +630,7 @@ StarDictDictionaryManager::lookupWithFuzzy(QByteArray searchWord, QStringList re
         int wordNumber = articleCount(iLib);
         for (int index = 0; index < wordNumber; ++index)
         {
-            searchCheckWord = poWord(index, iLib);
+            searchCheckWord = key(index, iLib);
             // tolower and skip too long or too short words
             searchCheckWordLength = searchCheckWord.length();
             searchWordLength = searchWord.length();
@@ -720,7 +720,7 @@ StarDictDictionaryManager::lookupPattern(QByteArray patternWord, QStringList pat
             int indexListSize = indexList.size();
             for (int i = 0; i < indexListSize; ++i)
             {
-                QByteArray searchMatchWord = poWord(indexList.at(i), iLib);
+                QByteArray searchMatchWord = key(indexList.at(i), iLib);
 
                 if (!patternMatchWords.contains(searchMatchWord))
                     patternMatchWords.append(searchMatchWord);

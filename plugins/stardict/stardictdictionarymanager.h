@@ -114,9 +114,9 @@ namespace MulaPluginStarDict
              *
              * @return  The word data
              *
-             * @see poWordData, poCurrentWord, poNextWord, poPreviousWord
+             * @see data, poCurrentWord, poNextWord, poPreviousWord
              */
-            QByteArray poWord(long keyIndex, int dictionaryIndex) const;
+            QByteArray key(long keyIndex, int dictionaryIndex) const;
 
             /**
              * Returns the desired word data of the relevant dictionary
@@ -128,9 +128,9 @@ namespace MulaPluginStarDict
              *
              * @return The word data
              *
-             * @see poWord, poCurrentWord, poNextWord, poPreviousWord
+             * @see key, poCurrentWord, poNextWord, poPreviousWord
              */
-            QString poWordData(long dataIndex, int dictionaryIndex);
+            QString data(long dataIndex, int dictionaryIndex);
 
             QByteArray poCurrentWord(int *iCurrent);
             QByteArray poNextWord(QByteArray searchWord, int* iCurrent);
