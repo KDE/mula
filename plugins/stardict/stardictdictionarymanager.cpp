@@ -94,16 +94,17 @@ StarDictDictionaryManager::~StarDictDictionaryManager()
 }
 
 bool
-StarDictDictionaryManager::loadDictionary(const QString& completeFilePath)
+StarDictDictionaryManager::loadDictionary(const QString& ifoFilePath)
 {
     Dictionary *dictionary = new Dictionary;
-    if (dictionary->load(completeFilePath))
+    if (dictionary->load(ifoFilePath))
     {
         d->dictionaryList.append(dictionary);
     }
     else
     {
-        qDebug() << "Could not load the dictionary:" << completeFilePath;
+        qDebug() << "Could not load the dictionary according to the given ifo"
+            "file:" << ifoFilePath;
         delete dictionary;
         return false;
     }
