@@ -147,10 +147,10 @@ StarDictDictionaryManager::data(long dataIndex, int dictionaryIndex)
 }
 
 bool
-StarDictDictionaryManager::lookupWord(const char* searchWord, int& iWordIndex, int dictionaryIndex)
+StarDictDictionaryManager::lookupWord(const QString& searchWord, int& wordIndex, int dictionaryIndex)
 {
     Q_ASSERT_X( dictionaryIndex >= 0 && dictionaryIndex < dictionaryCount(), Q_FUNC_INFO, "index out of range in list of dictionaries" );
-    return d->dictionaryList.at(dictionaryIndex)->lookup(searchWord, iWordIndex);
+    return d->dictionaryList.at(dictionaryIndex)->lookup(searchWord, wordIndex);
 }
 
 template <typename Method>

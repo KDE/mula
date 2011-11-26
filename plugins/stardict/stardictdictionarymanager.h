@@ -137,7 +137,7 @@ namespace MulaPluginStarDict
             QByteArray poPreviousWord(long *iCurrent);
 
             bool lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int wordLength, int truncateLength, QString addition, bool check);
-            bool lookupWord(const char* sWorda, int& iWordIndex, int iLib);
+            bool lookupWord(const QString& searchWord, int& wordIndex, int iLib);
 
             Dictionary *reloaderFind(const QString& url);
             void reloaderHelper(const QString &absolutePath);
