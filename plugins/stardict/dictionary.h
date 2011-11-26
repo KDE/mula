@@ -131,7 +131,7 @@ namespace MulaPluginStarDict
              *
              * @return True if the desired word could be found, otherwise false.
              */
-            bool lookup(const QString word, int &index);
+            bool lookup(const QString& word, int &index);
 
             /**
              * Returns the list of indices matched against the desired word data

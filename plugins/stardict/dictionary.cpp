@@ -106,7 +106,7 @@ Dictionary::wordEntry(long index)
 }
 
 bool
-Dictionary::lookup(const QString word, int &index)
+Dictionary::lookup(const QString& word, int &index)
 {
     if (d->indexFile.isNull())
         return false;
