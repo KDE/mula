@@ -70,7 +70,8 @@ namespace MulaPluginStarDict
 
             /**
              * Returns the count of the word entries in the .idx file at the
-             * given index of the dictionary list
+             * given index of the dictionary list. Index must be a valid index
+             * position, i.e. between 0 and achievementsCount()-1.
              *
              * @param index The desired index in the list
              *
@@ -82,7 +83,8 @@ namespace MulaPluginStarDict
 
             /**
              * Returns the name of the dictionary at the given index of the
-             * dictionary list
+             * dictionary list. Index must be a valid index position, i.e.
+             * between 0 and achievementsCount()-1.
              *
              * @param index The desired index in the list
              *
@@ -104,7 +106,8 @@ namespace MulaPluginStarDict
 
             /**
              * Returns the word data from the desired dictionary according to
-             * the proper entry index
+             * the proper entry index. Index must be a valid index position,
+             * i.e. between 0 and achievementsCount()-1.
              *
              * @param   keyIndex        The index of the desired word
              * @param   dictionaryIndex The index of the desired dictionary
@@ -117,7 +120,8 @@ namespace MulaPluginStarDict
 
             /**
              * Returns the desired word data of the relevant dictionary
-             * according to the given index
+             * according to the given index. Index must be a valid index
+             * position, i.e. between 0 and achievementsCount()-1.
              *
              * @param   dataIndex       The index of the desired word data
              * @param   dictionaryIndex The index of the desired dictionary

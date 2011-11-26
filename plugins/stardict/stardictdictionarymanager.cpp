@@ -115,12 +115,14 @@ StarDictDictionaryManager::loadDictionary(const QString& ifoFilePath)
 long
 StarDictDictionaryManager::articleCount(int index) const
 {
+    Q_ASSERT_X( index >= 0 && index < dictionaryCount(), Q_FUNC_INFO, "index out of range in list of dictionaries" );
     return d->dictionaryList.at(index)->articleCount();
 }
 
 QString
 StarDictDictionaryManager::dictionaryName(int index) const
 {
+    Q_ASSERT_X( index >= 0 && index < dictionaryCount(), Q_FUNC_INFO, "index out of range in list of dictionaries" );
     return d->dictionaryList.at(index)->dictionaryName();
 }
 
@@ -133,21 +135,21 @@ StarDictDictionaryManager::dictionaryCount() const
 QByteArray
 StarDictDictionaryManager::poWord(long keyIndex, int dictionaryIndex) const
 {
+    Q_ASSERT_X( keyIndex >= 0 && keyIndex < dictionaryCount(), Q_FUNC_INFO, "index out of range in list of dictionaries" );
     return d->dictionaryList.at(dictionaryIndex)->key(keyIndex).toUtf8();
 }
 
 QString
 StarDictDictionaryManager::poWordData(long dataIndex, int dictionaryIndex)
 {
-    if (dictionaryIndex == invalidIndex)
-        return NULL;
-
+    Q_ASSERT_X( dataIndex >= 0 && dataIndex < dictionaryCount(), Q_FUNC_INFO, "index out of range in list of dictionaries" );
     return d->dictionaryList.at(dictionaryIndex)->data(dataIndex);
 }
 
 bool
 StarDictDictionaryManager::lookupWord(const char* searchWord, int& iWordIndex, int dictionaryIndex)
 {
+    Q_ASSERT_X( dictionaryIndex >= 0 && dictionaryIndex < dictionaryCount(), Q_FUNC_INFO, "index out of range in list of dictionaries" );
     return d->dictionaryList.at(dictionaryIndex)->lookup(searchWord, iWordIndex);
 }
 
