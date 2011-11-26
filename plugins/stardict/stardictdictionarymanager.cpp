@@ -160,21 +160,20 @@ StarDictDictionaryManager::recursiveTemplateHelper(const QString& directoryName,
 {
     QDir dir(directoryName);
 
-    // Going through the subfolders
-    foreach (const QString& entryName, dir.entryList(QDir::Dirs & QDir::NoDotAndDotDot))
+    // Going through the files
+    foreach (const QFileInfo& entryFileInfo, dir.entryInfoList(QDir::AllEntries & QDir::NoDotAndDotDot))
     {
-        QString absolutePath = dir.absoluteFilePath(entryName);
-        recursiveTemplateHelper(absolutePath, orderList, disableList, method);
-    }
+        QString absolutePath = entryFileInfo.absoluteFilePath();
 
-    foreach (const QString& entryName, dir.entryList(QDir::Files & QDir::Drives & QDir::NoDotAndDotDot))
-    {
-        QString absolutePath = dir.absoluteFilePath(entryName);
-        if (absolutePath.endsWith(QLatin1String(".ifo"))
-                && qFind(orderList.begin(), orderList.end(), absolutePath) == orderList.end()
-                && qFind(disableList.begin(), disableList.end(), absolutePath) == disableList.end())
-        {
+        if (entryFileInfo.isDir()) {
+            recursiveTemplateHelper(absolutePath, orderList, disableList, method);
+        } else {
+            if (absolutePath.endsWith(QLatin1String(".ifo"))
+                    && qFind(orderList.begin(), orderList.end(), absolutePath) == orderList.end()
+                    && qFind(disableList.begin(), disableList.end(), absolutePath) == disableList.end())
+            {
                 (this->*method)(absolutePath);
+            }
         }
     }
 }
