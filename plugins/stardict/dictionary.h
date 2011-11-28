@@ -42,16 +42,16 @@ namespace MulaPluginStarDict
             virtual ~Dictionary();
 
             /**
-             * Loads the ifo file
+             * Loads the ".ifo" file
              *
-             * @param ifoFilePath The path of the ifo file
+             * @param ifoFilePath Path of the ".ifo" file
              *
-             * @return True if the loading went fine, otherwise false.
+             * @return True if the loading was successful, otherwise false.
              */
             bool load(const QString& ifoFilePath);
 
             /**
-             * Returns the count of the word entries in the .idx file.
+             * Returns the count of the word entries in the ".idx" file.
              *
              * @return The count of the word entries
              */
@@ -65,9 +65,9 @@ namespace MulaPluginStarDict
             QString dictionaryName() const;
 
             /**
-             * Returns the ifo file path
+             * Returns the ".ifo" file path
              *
-             * @return The ifo file path
+             * @return The ".ifo" file path
              *
              * @see loadIfoFile
              */
@@ -77,8 +77,8 @@ namespace MulaPluginStarDict
              * Returns the word data according to the relevant index
              *
              * \note Since it is an abstraction on top of index file,
-             * the method does not care about the fact whether or not the word
-             * is returned directly, use some caching mechanism or something
+             * this method does not care about the fact whether or not the word
+             * is returned directly, or use some caching mechanism or something
              * else.
              *
              * @param   index   The index of the desired word
@@ -93,9 +93,9 @@ namespace MulaPluginStarDict
              * Returns the desired word data of the dictionary with all its
              * fields
              *
-             * \note The method takes care about the low-level the details of
+             * \note The method takes care about the low-level details of
              * the same type sequence settings in the index file and so forth.
-             * If the indexfile is not loaded properly yet, the method returns
+             * If the indexfile is not loaded properly yet, this method returns
              * an empty string.
              *
              * @param   index   The index of the desired word
@@ -109,7 +109,7 @@ namespace MulaPluginStarDict
             /**
              * Returns the word entry according to the desired index value
              *
-             * \note If the index file is not loaded properly yet, the method
+             * \note If the index file is not loaded properly yet, this method
              * returns an empty string.
              *
              * @param index The index of the desired word entry
@@ -137,7 +137,7 @@ namespace MulaPluginStarDict
              * Returns the list of indices matched against the desired word data
              * pattern in the dictionary. Note, this method  returns maximum
              * that many elements that is passed as an arguement. Alternatively,
-             * if that is a big enough value, it will return all the words.
+             * if it is a big enough value, it will return all the words.
              *
              * @param   pattern                 The pattern to look up
              * @param   maximumIndexListSize    The maximum index list count for
@@ -150,11 +150,11 @@ namespace MulaPluginStarDict
 
         private:
             /**
-             * Loads the ifo file while marking the dictionary non-tree one
+             * Loads the ".ifo" file while marking the dictionary non-tree one
              *
              * \note This method is only for internal usage.
              *
-             * @param ifoFilePath The path of the ifo file
+             * @param ifoFilePath Path of the ".ifo" file
              *
              * @return True if the loading was successful, otherwise false.
              *

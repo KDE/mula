@@ -28,7 +28,7 @@ namespace MulaPluginStarDict
     /**
      * \brief Collection of all the information about the dictionary
      *
-     * The .ifo file has the following format:
+     * The ".ifo" file has the following format:
      *
      * StarDict's dict ifo file
      * version=2.4.2
@@ -43,7 +43,7 @@ namespace MulaPluginStarDict
      * In the example above, [options] expands to any of the following lines
      * specifying information about the dictionary.  Each option is a keyword
      * followed by an equal sign, then the value of that option, then a
-     * newline.  The options may be appear in any order.
+     * newline. The options may appear in any order.
      *
      * Note that the dictionary must have at least a bookname, a wordcount and a
      * idxfilesize, otherwise the load will fail. All other information is
@@ -65,39 +65,39 @@ namespace MulaPluginStarDict
      *
      * wordcount is the count of the word entries in .idx file. It must be right.
      *
-     * idxfilesize is the size (in bytes) of the .idx file, even the .idx is
-     * compressed into a .idx.gz file. This entry must record the original size
-     * of the .idx file. It must also be right. The .gz file does not contain
+     * idxfilesize is the size (in bytes) of the ".idx" file, even the ".idx" is
+     * compressed into a ".idx.gz" file. This entry must record the original size
+     * of the ".idx" file. It must also be right. The ".gz" file does not contain
      * its original size information. However, knowing the original size can
      * speed up the extraction into the memory since realloc() does not need to
      * be called many times.
      *
      * The value of the idxoffsetbits can be 64 or 32. If "idxoffsetbits=64",
-     * the offset field of the .idx file will be equal to 64 bits.
+     * the offset field of the ".idx" file will be equal to 64 bits.
      *
      * The "sametypesequence" option is described in further detail below.
      *
      ****
      * sametypesequence
      *
-     * You should first familiarize yourself with the .dict file format
+     * You should first familiarize yourself with the ".dict" file format
      * described in the relevant section. After that, you can understand what
-     * effect this option has on the .dict file.
+     * effect this option has on the ".dict" file.
      *
      * If the sametypesequence option is set, it tells StarDict that each
-     * word data in the .dict file will have the same sequence of datatypes.
-     * In this case, we expect a .dict file that hass been optimized in two
+     * word data in the ".dict" file will have the same sequence of datatypes.
+     * In this case, we expect a ".dict" file that hass been optimized in two
      * ways: the type identifiers should be omitted, so should the size marker
      * be omitted for the last data entry of each word.
      *
      * Let us consider some concrete examples of the sametypesequence option.
      *
-     * Suppose that a dictionary records many .wav files, and such it sets:
+     * Suppose that a dictionary records many ".wav" files, and such it sets:
      * sametypesequence=W
      * In this case, each word entry in the .dict file consists solely of a
-     * wav file. The 'W' character would be left out in the .dict file
+     * wav file. The 'W' character would be left out in the ".dict" file
      * before each entry, and you would also omit the 32-bits integer at the
-     * front of each .wav entry that would normally give the length of the
+     * front of each ".wav" entry that would normally give the length of the
      * entry. You can do this since the length is known from the information in
      * the idx file.
      *
@@ -106,11 +106,11 @@ namespace MulaPluginStarDict
      * dictionary would be:
      * sametypesequence=tm
      * Once again, you can omit the 't' and 'm' characters before each data
-     * entry in the .dict file. In addition, you should omit the terminating
+     * entry in the ".dict" file. In addition, you should omit the terminating
      * '\0' for the 'm' entry for each word in the .dict file, as the length
      * of the meaning string can be inferred from the length of the phonetic
      * string (still indicated by a terminating '\0') and the length of the
-     * entire word entry (listed in the .idx file).
+     * entire word entry (listed in the ".idx" file).
      *
      * So for cases where the last data entry for each word normally requires
      * a terminating '\0' character. That character should be omitted in the
@@ -140,7 +140,7 @@ namespace MulaPluginStarDict
             virtual ~StarDictDictionaryInfo();
 
             /**
-             * Loads all the information from the relevant Ifo file considering
+             * Loads all the information from the relevant ifo file considering
              * the fact whether or not it is a tree dictionary.
              *
              * @param ifoFilePath       The path of the ifo file
@@ -172,7 +172,7 @@ namespace MulaPluginStarDict
             QString ifoFilePath() const;
 
             /**
-             * Sets the count of the word entries in the .idx file.
+             * Sets the count of the word entries in the ".idx" file.
              *
              * @param wordCount The count of the word entries
              *

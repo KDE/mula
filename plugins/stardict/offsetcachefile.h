@@ -27,11 +27,11 @@
 namespace MulaPluginStarDict
 {
     /**
-     * \brief The class is used for dealing the cache file related operations.
+     * \brief The class is used for dealing cache file related operations.
      *
      * StarDict-2.4.8 started to support cache files. The cache file usage can
      * speed up the loading and save memory by mapping the cache file. The
-     * cache file names are .idx.oft and .syn.oft.
+     * cache file names are ".idx.oft" and ".syn.oft".
      * The cache file contains a utf-8 string terminated by '\0', and then
      * 32-bits numbers. These numbers are the offset value of the cache pages.
      * Each cache page contains "pageEntryNumber" word entries inside the index
@@ -48,16 +48,16 @@ namespace MulaPluginStarDict
      * url=/usr/share/stardict/dic/stardict-somedict-2.4.2/somedict.idx
      * This line should end by '\n'.
      *
-     * The class will try to create the .oft offset file, if failed, in the same
-     * directory where the .ifo file can be found. The class will try to create
+     * The class will try to create the ".oft" offset file, if failed, in the same
+     * directory where the ".ifo" file can be found. The class will try to create
      * the cache file in the ${CACHE_LOCATION}/stardict/ folder where the cache
      * path is provided by QDesktopService class using the CacheLocation
      * argument.
      *
      * If two or more dictionaries have the same file name, StarDict will
-     * create somedict.idx.oft, somedict(2).idx.oft, somedict(3).idx.oft and the
-     * like, for them respectively. Each starts with different "url=" in the
-     * beginning string.
+     * create "somedict.idx.oft", "somedict(2).idx.oft", "somedict(3).idx.oft"
+     * and the like, for them respectively. Each starts with different "url=" in
+     * the beginning string.
      *
      * \see Indexfile
      */
@@ -91,7 +91,7 @@ namespace MulaPluginStarDict
              * loaded.
              *
              * \note It always loads the pageEntryNumber except the last page,
-             * if that is not completely reserved. The method will just load the
+             * if that is not completely reserved. This method will just load the
              * last few entries then in that case. This method is only for
              * internal usage.
              *
@@ -105,8 +105,8 @@ namespace MulaPluginStarDict
 
             /**
              * Looks up the word on the existing pages and then returns the
-             * relevant page index where the word can be found. The method also
-             * returns that whether or not the desired page can be found.
+             * relevant page index where the word can be found. This method also
+             * returns whether or not the desired page can be found.
              *
              * \note This method does not return the index of the word. It will
              * return the index of the page where the word occurs. This method
@@ -140,7 +140,7 @@ namespace MulaPluginStarDict
             /**
              * Returns the first word data of the desired page from the index
              * file by using a caching approach to make it faster to look the
-             * word up in certain cases. Hence it is faster to use this method
+             * word up in certain cases. Hence, it is faster to use this method
              * for reading the first word data of the cache page.
              *
              * \note This method is only for internal usage.
@@ -154,7 +154,7 @@ namespace MulaPluginStarDict
             QByteArray firstWordDataOnPage(long pageIndex);
 
             /**
-             * Returns the string list of the cache locations.
+             * Returns a string list of the cache locations.
              * The method will return the location where the index file can be
              * found and the location ${CACHE_LOCATION}/stardict/ folder where
              * the cache path is provided by QDesktopService class using the
@@ -164,7 +164,7 @@ namespace MulaPluginStarDict
              *
              * @param   completeFilePath The complete file path
              *
-             * @return  The list of the cache locations
+             * @return  List of the cache locations
              *
              * @see saveCache, loadCache
              */

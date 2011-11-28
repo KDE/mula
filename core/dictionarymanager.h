@@ -53,38 +53,38 @@ namespace MulaCore
             QString translate(const QString &word);
 
             /**
-             * Returns the list of similar words contained in dictionaries.
+             * Returns a list of similar words contained in dictionaries.
              *
              * @param word The word for translation
              *
-             * @return The list of similar words
+             * @return List of similar words
              */
             QStringList findSimilarWords(const QString &word);
 
             /**
              * Returns a list of available dictionaries.
-             * The first item in pair is a plugin name, the second item
-             * in pair is a dictionary name.
+             * The first item in pair is a plugin name and the second item
+             * is a dictionary name.
              */
             QMultiHash<QString, QString> availableDictionaryList() const;
 
             /**
              * Returns a list of loaded dictionaries.
-             * The first item in pair is a plugin name, the second item
-             * in pair is a dictionary name.
+             * The first item in pair is a plugin name and the second item
+             * is a dictionary name.
              *
              * @see setLoadedDictionaryList, availableDictionaryList
              */
             QMultiHash<QString, QString> loadedDictionaryList() const;
 
             /**
-             * Sets the list of the loaded dictionaries.
-             * The first item in pair is a plugin name, the second item
-             * in pair is a dictionary name.
+             * Sets a list of the loaded dictionaries.
+             * The first item in pair is a plugin name and the second item
+             * is a dictionary name.
              * If dictionary cannot be loaded it will not be added to
              * availableDicts list.
              *
-             * @param loadedDictionaryList The list of the loaded dictionaries
+             * @param loadedDictionaryList List of the loaded dictionaries
              * 
              * @see loadedDictionaryList, availableDictionaryList
              */

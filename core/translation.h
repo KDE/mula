@@ -34,7 +34,7 @@ namespace MulaCore
         public:
 
             /**
-             * Construct an empty transtion
+             * Construct an empty translation
              */
             Translation();
 

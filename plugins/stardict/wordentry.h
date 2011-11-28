@@ -32,7 +32,7 @@ namespace MulaPluginStarDict
     * Each member describes the relevant information related to the desired
     * ".dict" file
     *
-    * Each entry in the word list contains three fields, one after the other:
+    * Each entry in the word list contains three fields:
     * 1) The utf-8 string: It represents the string that is looked up by the
     * application. The length of the string should be less than 256. Two or more
     * entries may have the same string value with different offset and size.
@@ -48,7 +48,7 @@ namespace MulaPluginStarDict
     *
     * Note: It is possible the different strings have the same offset and size
     * value. In other words, multiple word indices point to the same definition.
-    * This is not recommended, for multiple words have the same definition,
+    * This is not recommended. For multiple words have the same definition,
     * you may create a ".syn" file for them.
     *
     * \see Indexfile

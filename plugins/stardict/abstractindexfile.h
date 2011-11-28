@@ -40,9 +40,9 @@ namespace MulaPluginStarDict
             virtual ~AbstractIndexFile();
 
             /**
-             * Loads the relevant index, cache file and so forth. Since it is
+             * Loads the relevant index, cache file and so on. Since it is
              * just an abstract base class, it is up to the successor to decide
-             * what the method actually interprets to loading.
+             * what method to use to actually interpret the loading.
              *
              * @param   filePath   The complete file path of the index file
              * @param   filesize    The file size of the index file coming from
@@ -56,9 +56,10 @@ namespace MulaPluginStarDict
             /**
              * Returns the word data according to the relevant index
              *
-             * \note Since it it an abstract base class, the real
+             * \note Since it is an abstract base class, the real
              * implementation is up to the successors whether to return the
-             * word directly, use some caching mechanism or something else.
+             * word directly, or to use some caching mechanism or something
+             * else.
              *
              * @param   index   The index of the desired word
              *
@@ -71,9 +72,9 @@ namespace MulaPluginStarDict
              * method will also return the fact whether or not the desired word
              * could be found in the index file.
              *
-             * \note Since it it an abstract base class, the real
+             * \note Since it is an abstract base class, the real
              * implementation is up to the successors whether to return the
-             * index and the found informartion directly, use some caching
+             * index and the found information directly, or to use some caching
              * mechanism or something else.
              *
              * @param   word    The word data to look up

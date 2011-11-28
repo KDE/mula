@@ -39,41 +39,39 @@ namespace MulaCore
 
         public:
             /**
-             * Returns the list of the available dictionary plugins
+             * Returns a list of the available dictionary plugins
              *
-             * @return The list of the available plugins
+             * @return List of the available plugins
              *
              * @see loadedPlugins, setLoadedPlugins
              */
             QStringList availablePlugins() const;
 
             /**
-             * Returns the list of the loaded dictionary plugins
+             * Returns a list of the loaded dictionary plugins
              *
-             * @return The list of the loaded plugins
+             * @return List of the loaded plugins
              *
              * @see availablePlugins, setLoadedPlugins
              */
             QStringList loadedPlugins() const;
 
             /**
-             * Sets the list of the loaded plugins.
+             * Sets alist of the loaded plugins.
              * If plugin cannot be loaded it will not be added to
              * the list
              *
-             * @param loadedPlugins The list of the loaded plugins
-             *
-             * @return loadedPlugins The list of the loaded plugins
+             * @param loadedPlugins List of the loaded plugins
              *
              * @see availablePlugins, loadedPlugins
              */
             void setLoadedPlugins(const QStringList &loadedPlugins);
 
             /**
-             * Returns the pointer to the dictionary plugin instance or 0 if not
+             * Returns a pointer to the dictionary plugin instance or 0 if not
              * loaded
              *
-             * @param plugin The identifier of the plugin instance
+             * @param plugin Identifier of the plugin instance
              *
              * @return The dictionary plugin instance
              */

@@ -25,7 +25,7 @@
 namespace MulaPluginStarDict
 {
     /**
-     * \brief The class can be used for compressing the .dict file
+     * \brief The class can be used for compressing the ".dict" file
      *
      * "dictzip" uses the same compression algorithm and file format as gzip,
      * but provides a table that can be used to randomly access compressed blocks

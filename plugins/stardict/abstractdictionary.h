@@ -93,8 +93,8 @@ namespace MulaPluginStarDict
      * 
      * 'l'
      * Word's pure text meaning.
-     * The data is NOT a utf-8 string, but is instead a string in locale
-     * encoding, ending with '\0'.  Sometimes using this type will save disk
+     * The data is NOT a utf-8 string, but instead a string in locale
+     * encoding, ending with '\0'. Sometimes using this type will save disk
      * space, but its use is discouraged.
      * 
      * 'g'
@@ -180,7 +180,7 @@ namespace MulaPluginStarDict
              * Returns the desired word data of the dictionary with all its
              * fields
              *
-             * \note The method takes care about the low-level the details of
+             * \note This method takes care about the low-level the details of
              * the same type sequence settings in the index file.
              *
              * @param indexItemOffset   The offset value in the dictionary file

@@ -38,9 +38,9 @@ namespace MulaCore
         public:
             /**
              * Returns a directory location which is the prefix for other
-             * installation locations, like data, library, user and the like.
-             * The method will ensure that the installation happens by cmake or
-             * other installation methods, like Windows Installer. It will
+             * installation locations, like data, library, user, et cetera.
+             * This method will ensure that the installation happens by cmake or
+             * other installation methods like Windows Installer. It will
              * pick up the proper path prefix accordingly.
              *
              * @return  The installation prefix
@@ -48,8 +48,8 @@ namespace MulaCore
             QString installPrefix() const;
 
             /**
-             * Returns the directory location where the project data is installed
-             * to, and can also be stored.
+             * Returns the directory location where the project data is
+             * installed and can also be stored.
              *
              * @return  The data directory location
              */
@@ -57,18 +57,18 @@ namespace MulaCore
 
             /**
              * Returns the directory location where the libraries are installed
-             * to.
              *
              * @return  The library directory location
              */
             QString libDirectory() const;
 
             /**
-             * Returns the desired user directory location inside the location where
-             * persistent application data can be stored. The method will ensure
-             * that the path is created properly, if it is a new location.
+             * Returns the desired user directory location inside the location
+             * where persistent application data can be stored. This method will
+             * ensure that the path is created properly, if it is a new
+             * location.
              *
-             * @param   The identifier of the desired directory location
+             * @param name Identifier of the desired directory location
              *
              * @return  The desired user directory location
              */
@@ -77,7 +77,7 @@ namespace MulaCore
             /**
              * Returns the plugin directory locations where plugins can be found.
              *
-             * @return  The list of the plugin directory locations
+             * @return List of the plugin directory locations
              */
             QStringList pluginDirectoryPaths() const;
 

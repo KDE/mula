@@ -97,10 +97,10 @@ namespace MulaPluginStarDict
             static void xdxf2html(QString &str);
 
             /**
-             * Finds the available dictionary from the desired ifo file path
+             * Finds the available dictionary from the desired ".ifo" file path
              * and then return the relevant book name
              *
-             * @param absolutePath The complete path of the ".ifo" ifo file
+             * @param absolutePath The complete path of the ".ifo" file
              *
              * @return The book name of the dictionary
              *
