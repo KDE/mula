@@ -43,7 +43,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-set(MULA_CORE_INCLUDES
+set(MULA_CORE_INCLUDE_DIRS
     ${QT_INCLUDES}
     CACHE PATHS "Includes required for Mula Core"
 )
@@ -81,7 +81,7 @@ endif()
 
 target_link_libraries(MulaCore ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSCRIPT_LIBRARY})
 
-set(MULA_CORE_LIBS
+set(MULA_CORE_LIBRARIES
     MulaCore
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}

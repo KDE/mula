@@ -10,14 +10,14 @@ include(MulaMacros)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${MULA_CORE_INCLUDES}
+    ${MULA_CORE_INCLUDE_DIRS}
 )
 
 ########### next target ###############
 
 MULA_UNIT_TESTS(
-    "${MULA_CORE_LIBS}"     # libraries arguement
-    "mulacore"              # modulename argument
+    "${MULA_CORE_LIBRARIES}"    # libraries arguement
+    "mulacore"                  # modulename argument
 
     # Source files without the extension
     dictionaryinfotest

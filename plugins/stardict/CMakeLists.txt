@@ -6,7 +6,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
 
-    ${MULA_CORE_INCLUDES}
+    ${MULA_CORE_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
 )
 
@@ -55,7 +55,7 @@ else()
     add_library(mula_plugin_stardict SHARED ${stardict_SRCS})
 endif()
 
-target_link_libraries(mula_plugin_stardict ${MULA_CORE_LIBS} ${ZLIB_LIBRARIES})
+target_link_libraries(mula_plugin_stardict ${MULA_CORE_LIBRARIES} ${ZLIB_LIBRARIES})
 
 if(MULA_BUILD_ALL)
     add_dependencies(mula_plugin_stardict MulaCore)
@@ -63,7 +63,7 @@ endif()
 
 set(MULA_STARDICT_PLUGIN_LIBS
     mula_plugin_stardict
-    ${MULA_CORE_LIBS}
+    ${MULA_CORE_LIBRARIES}
     CACHE PATHS "StarDict plugin for Mula"
 )
 

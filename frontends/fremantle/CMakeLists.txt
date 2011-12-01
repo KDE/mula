@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${MULA_CORE_INCLUDES}
+    ${MULA_CORE_INCLUDE_DIRS}
 )
 
 set(mula-fremantle_SRCS
@@ -38,11 +38,11 @@ set_target_properties(mula-fremantle PROPERTIES OUTPUT_NAME MulaFremantle)
 else()
     add_executable(mula-fremantle ${mula-fremantle_SRCS} ${MULA-FREMANTLE_RCC_SRCS})
 endif()
-target_link_libraries(mula-fremantle ${MULA_CORE_LIBS})
+target_link_libraries(mula-fremantle ${MULA_CORE_LIBRARIES})
 
 set(MULA_DECLARATIVE_LIBS
     MulaFremantle
-    ${MULA_CORE_LIBS}
+    ${MULA_CORE_LIBRARIES}
     ${QT_QTDECLARATIVE_LIBRARY}
     CACHE PATHS "Libraries required for Mula Fremantle"
 )

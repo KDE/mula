@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${MULA_CORE_INCLUDES}
+    ${MULA_CORE_INCLUDE_DIRS}
 )
 
 set(mula-desktop_SRCS
@@ -28,7 +28,7 @@ set_target_properties(mula-desktop PROPERTIES OUTPUT_NAME MulaDesktop)
 else()
     add_executable(mula-desktop ${mula-desktop_SRCS})
 endif()
-target_link_libraries(mula-desktop ${MULA_CORE_LIBS})
+target_link_libraries(mula-desktop ${MULA_CORE_LIBRARIES})
 
 if(NOT APPLE)
     install(TARGETS

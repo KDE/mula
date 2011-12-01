@@ -16,7 +16,7 @@ set(mulaplasmaapplet_SRCS
 
 kde4_add_plugin(plasma_applet_mulafrontend ${mulaplasmaapplet_SRCS})
 
-target_link_libraries(plasma_applet_mulafrontend ${MULA_CORE_LIBS})
+target_link_libraries(plasma_applet_mulafrontend ${MULA_CORE_LIBRARIES})
 
 install(TARGETS plasma_applet_mulafrontend
         DESTINATION ${PLUGIN_INSTALL_DIR}

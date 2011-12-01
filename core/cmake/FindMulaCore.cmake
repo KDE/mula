@@ -2,10 +2,12 @@
 #
 # Once done this will define
 #  MULA_CORE_FOUND - The Mula Core library was found
-#  MULA_CORE_LIBRARY - The Mula Core library location
-#  MULA_CORE_INCLUDES - All include directories required for the Mula Core library
 #  MULA_CORE_INCLUDE_DIR - The Mula include directory
+#  MULA_CORE_INCLUDE_DIRS - All include directories required for the Mula Core library
+#  MULA_CORE_LIBRARY - The Mula Core library location
+#  MULA_CORE_LIBRARIES - The libraries to link against to use Mula Core
 #
+#  Copyright (C) 2011 Laszlo Papp
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the COPYING-CMAKE-SCRIPTS file from Mula's Source tree.
@@ -66,7 +68,7 @@ find_path(MULA_CORE_INCLUDE_DIR
     mula
 )
 
-set(MULA_CORE_INCLUDES
+set(MULA_CORE_INCLUDE_DIRS
     ${MULA_CORE_INCLUDE_DIR}
     ${QT_INCLUDES}
     ${EIGEN2_INCLUDE_DIR}
@@ -79,7 +81,7 @@ find_library(MULA_CORE_LIBRARY
     ${LIB_INSTALL_DIR}
 )
 
-set(MULA_CORE_LIBS
+set(MULA_CORE_LIBRARIES
     ${MULA_CORE_LIBRARY}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}

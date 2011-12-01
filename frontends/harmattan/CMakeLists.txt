@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${MULA_CORE_INCLUDES}
+    ${MULA_CORE_INCLUDE_DIRS}
 )
 
 set(mula-harmattan_SRCS
@@ -38,11 +38,11 @@ set_target_properties(mula-harmattan PROPERTIES OUTPUT_NAME MulaHarmattan)
 else()
     add_executable(mula-harmattan ${mula-harmattan_SRCS} ${MULA-HARMATTAN_RCC_SRCS})
 endif()
-target_link_libraries(mula-harmattan ${MULA_CORE_LIBS})
+target_link_libraries(mula-harmattan ${MULA_CORE_LIBRARIES})
 
 set(MULA_DECLARATIVE_LIBS
     MulaHarmattan
-    ${MULA_CORE_LIBS}
+    ${MULA_CORE_LIBRARIES}
     ${QT_QTDECLARATIVE_LIBRARY}
     CACHE PATHS "Libraries required for Mula Harmattan"
 )
