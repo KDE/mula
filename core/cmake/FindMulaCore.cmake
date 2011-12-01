@@ -70,7 +70,6 @@ set(MULA_CORE_INCLUDES
     ${MULA_CORE_INCLUDE_DIR}
     ${QT_INCLUDES}
     ${EIGEN2_INCLUDE_DIR}
-    CACHE PATHS "Includes required for Mula Core"
 )
 
 find_library(MULA_CORE_LIBRARY
@@ -84,7 +83,6 @@ set(MULA_CORE_LIBS
     ${MULA_CORE_LIBRARY}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
-    CACHE PATHS "Libraries required for Mula Core"
 )
 
 include(FindPackageHandleStandardArgs)
