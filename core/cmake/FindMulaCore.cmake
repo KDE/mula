@@ -33,8 +33,6 @@ find_path(MULA_INSTALL_PREFIX
     include/mula
 )
 
-set(CMAKE_MODULE_PATH ${MULA_INSTALL_PREFIX}/share/mula/cmake)
-
 find_package(Qt4 ${_mulaCoreReq})
 
 if(NOT LIB_SUFFIX)
