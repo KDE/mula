@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Mula Plasmoid Frontend
 Name[es]=Interfaz del plasmoide de Mula
+Name[et]=Mula plasmoidist kasutajaliides
 Name[ga]=Comhéadan ar Phlasmóid Mula
 Name[hu]=Mula plazmoid felület
 Name[nl]=Plasmoid-schil voor Mula
@@ -12,6 +13,7 @@ Name[uk]=Оболонка плазмоїда Mula
 Name[x-test]=xxMula Plasmoid Frontendxx
 Comment=Mula Plasmoid Frontend
 Comment[es]=Interfaz del plasmoide de Mula
+Comment[et]=Mula plasmoidist kasutajaliides
 Comment[ga]=Comhéadan ar Phlasmóid Mula
 Comment[hu]=Mula plazmoid felület
 Comment[nl]=Plasmoid-schil voor Mula
