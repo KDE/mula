@@ -161,7 +161,7 @@ StarDictDictionaryManager::recursiveTemplateHelper(const QString& directoryName,
     QDir dir(directoryName);
 
     // Going through the files
-    foreach (const QFileInfo& entryFileInfo, dir.entryInfoList(QDir::AllEntries & QDir::NoDotAndDotDot))
+    foreach (const QFileInfo& entryFileInfo, dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot))
     {
         QString absolutePath = entryFileInfo.absoluteFilePath();
 
