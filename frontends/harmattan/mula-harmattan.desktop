@@ -2,6 +2,7 @@
 Name=Mula
 Name[es]=Mula
 Name[et]=Mula
+Name[fr]=Mula
 Name[ga]=Mula
 Name[gl]=Mula
 Name[hu]=Mula
@@ -17,6 +18,7 @@ Name[x-test]=xxMulaxx
 GenericName=Mula Launcher
 GenericName[es]=Lanzador de Mula
 GenericName[et]=Mula käivitaja
+GenericName[fr]=Lanceur pour Mula
 GenericName[ga]=Tosaitheoir Mula
 GenericName[gl]=Lanzador de Mula
 GenericName[hu]=Mula indító

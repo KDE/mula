@@ -2,6 +2,7 @@
 Name=Mula Plasmoid Frontend
 Name[es]=Interfaz del plasmoide de Mula
 Name[et]=Mula plasmoidist kasutajaliides
+Name[fr]=Interface du composant graphique Mula
 Name[ga]=Comhéadan ar Phlasmóid Mula
 Name[gl]=Interface plasmoide para Mula
 Name[hu]=Mula plazmoid felület
@@ -16,6 +17,7 @@ Name[x-test]=xxMula Plasmoid Frontendxx
 Comment=Mula Plasmoid Frontend
 Comment[es]=Interfaz del plasmoide de Mula
 Comment[et]=Mula plasmoidist kasutajaliides
+Comment[fr]=Interface du composant graphique Mula
 Comment[ga]=Comhéadan ar Phlasmóid Mula
 Comment[gl]=Interface plasmoide para Mula
 Comment[hu]=Mula plazmoid felület
