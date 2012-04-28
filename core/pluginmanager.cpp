@@ -134,7 +134,7 @@ PluginManager::setLoadedPlugins(const QStringList &loadedPlugins)
         QString pluginFileName = plugin;
 
 #else
-        qWarning() << Q_FUNC_INFO << "is not available on this platform"
+        qWarning() << Q_FUNC_INFO << "is not available on this platform";
 #endif
 
        QStringList pluginDirectoryPaths = MulaCore::DirectoryProvider::instance()->pluginDirectoryPaths();
