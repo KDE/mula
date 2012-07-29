@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Mula Plasmoid Frontend
+Name[de]=Oberfläche für das Plasmoid Mula
 Name[es]=Interfaz del plasmoide de Mula
 Name[et]=Mula plasmoidist kasutajaliides
 Name[fr]=Interface du composant graphique Mula
@@ -16,6 +17,7 @@ Name[sv]=Mula Plasmoid-gränssnitt
 Name[uk]=Оболонка плазмоїда Mula
 Name[x-test]=xxMula Plasmoid Frontendxx
 Comment=Mula Plasmoid Frontend
+Comment[de]=Oberfläche für das Plasmoid Mula
 Comment[es]=Interfaz del plasmoide de Mula
 Comment[et]=Mula plasmoidist kasutajaliides
 Comment[fr]=Interface du composant graphique Mula
