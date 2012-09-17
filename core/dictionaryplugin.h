@@ -176,7 +176,7 @@ namespace MulaCore
              *
              * @param dictionary The name of the desired dictionary
              *
-             * @return The dictionaryInfo class representing information
+             * @return The DictionaryInfo class representing information
              * about the given dictionary
              */
             virtual DictionaryInfo dictionaryInfo(const QString &dictionary) = 0;
