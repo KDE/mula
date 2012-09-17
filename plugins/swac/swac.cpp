@@ -23,7 +23,7 @@
 #include <QtCore/QSqlDatabase>
 #include <QtCore/QSqlQuery>
 #include <QtCore/QVariant>
-#include <QtGui/QMessageBox>
+#include <QMessageBox>
 
 using namespace MulaPluginSwac;
 

@@ -30,7 +30,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QPair>
 #include <QtCore/QtEndian>
-#include <QtGui/QDesktopServices>
+#include <QDesktopServices>
 
 using namespace MulaPluginStarDict;
 

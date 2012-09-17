@@ -20,7 +20,7 @@
 #ifndef MULA_PLUGIN_STARDICT_SETTINGSDIALOG_H
 #define MULA_PLUGIN_STARDICT_SETTINGSDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QDialog>
 
 namespace MulaPluginStarDict
 {

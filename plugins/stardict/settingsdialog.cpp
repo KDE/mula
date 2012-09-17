@@ -21,7 +21,7 @@
 
 #include "stardict.h"
 
-#include <QtGui/QFileDialog>
+#include <QFileDialog>
 
 using namespace MulaPluginStarDict;
 

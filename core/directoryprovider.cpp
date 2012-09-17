@@ -19,7 +19,7 @@
 
 #include "directoryprovider.h"
 
-#include <QtGui/QDesktopServices>
+#include <QDesktopServices>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
