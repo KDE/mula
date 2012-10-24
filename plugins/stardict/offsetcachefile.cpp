@@ -370,10 +370,13 @@ lessThanCompare(const QString string1, const QString string2)
     return stardictStringCompare(string1, string2) < 0;
 }
 
-bool
-OffsetCacheFile::lookup(const QByteArray& word, int &index)
+int
+OffsetCacheFile::lookup(const QByteArray& word)
 {
-    bool found = lookupPage(word, index);
+    // TODO: has to be refactored to the index retval from the previous boolean
+    // return value and explicit output parameter for the index
+
+    /* bool found = lookupPage(word, index);
 
     if (!found)
     {
@@ -400,5 +403,5 @@ OffsetCacheFile::lookup(const QByteArray& word, int &index)
         index *= d->pageEntryNumber;
     }
 
-    return found;
+    return found; */
 }

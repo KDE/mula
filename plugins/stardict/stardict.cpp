@@ -222,8 +222,7 @@ StarDict::isTranslatable(const QString &dictionary, const QString &word)
     if (!d->loadedDictionaries.contains(dictionary))
         return false;
 
-    int index;
-    return d->dictionaryManager->simpleLookupWord(word.toUtf8().data(), index, d->loadedDictionaries[dictionary]);
+    return d->dictionaryManager->simpleLookupWord(word.toUtf8().data(), d->loadedDictionaries[dictionary]) != -1 ? true : false;
 }
 
 MulaCore::Translation
@@ -235,7 +234,7 @@ StarDict::translate(const QString &dictionary, const QString &word)
     int dictionaryIndex = d->loadedDictionaries[dictionary];
     int index;
 
-    if (!d->dictionaryManager->simpleLookupWord(word.toUtf8().data(), index, d->loadedDictionaries[dictionary]))
+    if ((index = d->dictionaryManager->simpleLookupWord(word.toUtf8().data(), d->loadedDictionaries[dictionary])) == -1)
         return MulaCore::Translation();
 
     return MulaCore::Translation(QString::fromUtf8(d->dictionaryManager->key(index, dictionaryIndex)),
@@ -329,7 +328,7 @@ StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces
         while ((position = regExp.indexIn(result, position)) != -1)
         {
             int index;
-            if (d->dictionaryManager->simpleLookupWord(result.mid(position, regExp.matchedLength()).toUtf8().data(), index, dictionaryIndex))
+            if ((index = d->dictionaryManager->simpleLookupWord(result.mid(position, regExp.matchedLength()).toUtf8().data(), dictionaryIndex)) != -1)
             {
                 QString expanded = "<font class=\"explanation\">";
                 expanded += parseData(d->dictionaryManager->data(index, dictionaryIndex).toUtf8());

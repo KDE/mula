@@ -146,11 +146,11 @@ StarDictDictionaryManager::data(long dataIndex, int dictionaryIndex)
     return d->dictionaryList.at(dictionaryIndex)->data(dataIndex);
 }
 
-bool
-StarDictDictionaryManager::lookupWord(int dictionaryIndex, const QString& searchWord, int& wordIndex)
+int
+StarDictDictionaryManager::lookupWord(int dictionaryIndex, const QString& searchWord)
 {
     Q_ASSERT_X( dictionaryIndex >= 0 && dictionaryIndex < dictionaryCount(), Q_FUNC_INFO, "index out of range in list of dictionaries" );
-    return d->dictionaryList.at(dictionaryIndex)->lookup(searchWord, wordIndex);
+    return d->dictionaryList.at(dictionaryIndex)->lookup(searchWord);
 }
 
 template <typename Method>
@@ -285,7 +285,7 @@ StarDictDictionaryManager::poNextWord(QByteArray searchWord, int* iCurrent)
     for (QVector<Dictionary *>::size_type iLib = 0; iLib < d->dictionaryList.size(); ++iLib)
     {
         if (!searchWord.isEmpty())
-            d->dictionaryList.at(iLib)->lookup(searchWord, iCurrent[iLib]);
+            iCurrent[iLib] = d->dictionaryList.at(iLib)->lookup(searchWord);
 
         if (iCurrent[iLib] == invalidIndex)
             continue;
@@ -411,7 +411,7 @@ StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex
                         && !isVowel(searchNewWord.at(searchNewWordLength - 2)) && isVowel(searchNewWord.at(searchNewWordLength - 3)))
                 {  //doubled
                     searchNewWord.remove(searchNewWordLength - 1, 1);
-                    if (d->dictionaryList.at(dictionaryIndex)->lookup(searchNewWord, index))
+                    if ((index = d->dictionaryList.at(dictionaryIndex)->lookup(searchNewWord)) != -1)
                     {
                         d->found = true;
                     }
@@ -422,7 +422,7 @@ StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex
                             caseString = searchNewWord.toLower();
                             if (caseString.compare(searchNewWord))
                             {
-                                if (d->dictionaryList.at(dictionaryIndex)->lookup(caseString, index))
+                                if ((index = d->dictionaryList.at(dictionaryIndex)->lookup(caseString)) != -1)
                                     d->found = true;
                             }
                         }
@@ -434,7 +434,7 @@ StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex
 
                 if (!d->found)
                 {
-                    if (d->dictionaryList.at(dictionaryIndex)->lookup(searchNewWord, index))
+                    if ((index = d->dictionaryList.at(dictionaryIndex)->lookup(searchNewWord)) != -1)
                     {
                         d->found = true;
                     }
@@ -443,7 +443,7 @@ StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex
                         caseString = searchNewWord.toLower();
                         if (caseString.compare(searchNewWord))
                         {
-                            if (d->dictionaryList.at(dictionaryIndex)->lookup(caseString, index))
+                            if ((index = d->dictionaryList.at(dictionaryIndex)->lookup(caseString)) != -1)
                                 d->found = true;
                         }
                     }
@@ -456,7 +456,7 @@ StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex
                     else
                         searchNewWord.append(addition.toLower());
 
-                    if (d->dictionaryList.at(dictionaryIndex)->lookup(searchNewWord, index))
+                    if ((index = d->dictionaryList.at(dictionaryIndex)->lookup(searchNewWord)) != -1)
                     {
                         d->found = true;
                     }
@@ -465,7 +465,7 @@ StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex
                         caseString = searchNewWord.toLower();
                         if (caseString.compare(searchNewWord))
                         {
-                            if (d->dictionaryList.at(dictionaryIndex)->lookup(caseString, index))
+                            if ((index = d->dictionaryList.at(dictionaryIndex)->lookup(caseString)) != -1)
                                 d->found = true;
                         }
                     }
@@ -476,23 +476,21 @@ StarDictDictionaryManager::lookupPattern(QString searchWord, int dictionaryIndex
         return d->found;
 }
 
-bool
-StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, int& iWordIndex, int iLib)
+int
+StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, int iLib)
 {
     int iIndex;
-    bool found = false;
 
     // Upper case lookup
-    if (d->dictionaryList.at(iLib)->lookup(searchWord.toUpper(), iIndex))
-        found = true;
+    iIndex = d->dictionaryList.at(iLib)->lookup(searchWord.toUpper());
 
     // Lower case lookup
-    if (!found && d->dictionaryList.at(iLib)->lookup(searchWord.toLower(), iIndex))
-        found = true;
+    if (iIndex == -1)
+        iIndex = d->dictionaryList.at(iLib)->lookup(searchWord.toLower());
 
     // Upper the first character and lower others
-    if (!found && d->dictionaryList.at(iLib)->lookup(QString(QString(searchWord)[0].toUpper()) + searchWord.mid(1).toLower(), iIndex))
-        found = true;
+    if (!iIndex == -1)
+        iIndex = d->dictionaryList.at(iLib)->lookup(QString(QString(searchWord)[0].toUpper()) + searchWord.mid(1).toLower());
 
     if (isPureEnglish(searchWord))
     {
@@ -508,7 +506,7 @@ StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, int& iWordIn
         lookupPattern(searchWord, iLib, "ING", 3, 3, "E", true);
 
 
-        if (!found && searchWordLength > 3)
+        if (iIndex == -1 && searchWordLength > 3)
         {
             isUpperCase = (searchWord.endsWith("ES") //krazy:exclude=strings
                         && (searchWord.at(searchWordLength - 3) == 'S'
@@ -528,17 +526,13 @@ StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, int& iWordIn
                      || searchWord.at(searchWordLength - 4) == 's')))))
             {
                 searchNewWord = searchWord.left(searchWordLength - 2);
-                if (d->dictionaryList.at(iLib)->lookup(searchNewWord, iIndex))
-                {
-                    found = true;
-                }
-                else if (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper())
+                if ((iIndex = d->dictionaryList.at(iLib)->lookup(searchNewWord)) == -1
+                    && (isUpperCase || QString::fromUtf8(searchWord).at(0).isUpper()))
                 {
                     caseString = searchNewWord.toLower();
                     if (caseString.compare(searchNewWord))
                     {
-                        if (d->dictionaryList.at(iLib)->lookup(caseString, iIndex))
-                            found = true;
+                        iIndex = d->dictionaryList.at(iLib)->lookup(caseString);
                     }
                 }
             }
@@ -552,8 +546,6 @@ StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, int& iWordIn
 
     }
 
-    if (d->found)
-        iWordIndex = iIndex;
 #if 0
     else
     {
@@ -562,17 +554,19 @@ StarDictDictionaryManager::lookupSimilarWord(QByteArray searchWord, int& iWordIn
         //iWordIndex = invalidIndex;
     }
 #endif
-    return d->found;
+    return iIndex;
 }
 
-bool
-StarDictDictionaryManager::simpleLookupWord(QByteArray searchWord, int &iWordIndex, int iLib)
+int
+StarDictDictionaryManager::simpleLookupWord(QByteArray searchWord, int iLib)
 {
-    bool found = d->dictionaryList.at(iLib)->lookup(searchWord, iWordIndex);
-    if (!found)
-        found = lookupSimilarWord(searchWord, iWordIndex, iLib);
+    int retval;
 
-    return found;
+    if ((retval = d->dictionaryList.at(iLib)->lookup(searchWord)) == -1) {
+        retval = lookupSimilarWord(searchWord, iLib);
+    }
+
+    return retval;
 }
 
 struct

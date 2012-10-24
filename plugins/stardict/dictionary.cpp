@@ -105,13 +105,13 @@ Dictionary::wordEntry(long index)
     return wordEntry;
 }
 
-bool
-Dictionary::lookup(const QString& word, int &index)
+int
+Dictionary::lookup(const QString& word)
 {
     if (d->indexFile.isNull())
-        return false;
+        return -1;
 
-    return d->indexFile->lookup(word.toUtf8(), index);
+    return d->indexFile->lookup(word.toUtf8());
 }
 
 bool

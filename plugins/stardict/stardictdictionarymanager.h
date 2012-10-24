@@ -137,14 +137,14 @@ namespace MulaPluginStarDict
             QByteArray poPreviousWord(long *iCurrent);
 
             bool lookupPattern(QString searchWord, int dictionaryIndex, QString suffix, int wordLength, int truncateLength, QString addition, bool check);
-            bool lookupWord(int dictionaryIndex, const QString& searchWord, int& wordIndex);
+            int lookupWord(int dictionaryIndex, const QString& searchWord);
 
             Dictionary *reloaderFind(const QString& url);
             void reloaderHelper(const QString &absolutePath);
             template <typename Method> void recursiveTemplateHelper(const QString& directoryName, const QStringList& orderList, const QStringList& disableList, Method method);
 
-            bool lookupSimilarWord(QByteArray searchWord, int& iWordIndex, int iLib);
-            bool simpleLookupWord(QByteArray searchWord, int& iWordIndex, int iLib);
+            int lookupSimilarWord(QByteArray searchWord, int iLib);
+            int simpleLookupWord(QByteArray searchWord, int iLib);
 
             bool lookupWithFuzzy(QByteArray searchWord, QStringList resultList, int resultListSize, int iLib);
             int lookupPattern(QByteArray searchWord, QStringList resultList);

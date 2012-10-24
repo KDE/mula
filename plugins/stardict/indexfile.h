@@ -44,7 +44,7 @@ namespace MulaPluginStarDict
             QByteArray key(long index);
 
             /** Reimplemented from AbstractIndexFile::lookup() */
-            bool lookup(const QByteArray& word, int &index);
+            int lookup(const QByteArray& word);
 
         private:
             class Private;

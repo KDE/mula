@@ -75,12 +75,11 @@ namespace MulaPluginStarDict
              * mechanism or something else.
              *
              * @param   word    The word data to look up
-             * @param   index   The index where the desired word occurs among
-             * the word entries
              *
-             * @return True if the desired word could be found, otherwise false.
+             * @return The index where the desired word occurs among the word
+             * entries, or -1 if there is no such a word.
              */
-            virtual bool lookup(const QByteArray& word, int &index) = 0;
+            virtual int lookup(const QByteArray& word) = 0;
 
             virtual quint32 wordEntryOffset() const;
             virtual void setWordEntryOffset(quint32 wordEntryOffset);
