@@ -38,7 +38,7 @@ namespace MulaPluginStarDict
             virtual ~IndexFile();
 
             /** Reimplemented from AbstractIndexFile::load() */
-            bool load(const QString& filePath, qulonglong fileSize);
+            bool load(const QString& filePath);
 
             /** Reimplemented from AbstractIndexFile::key() */
             QByteArray key(long index);

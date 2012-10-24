@@ -262,7 +262,7 @@ OffsetCacheFile::key(long index)
 }
 
 bool
-OffsetCacheFile::load(const QString& completeFilePath, qulonglong fileSize)
+OffsetCacheFile::load(const QString& completeFilePath)
 {
     if (!loadCache(completeFilePath))
     { //map file will close after finish of block
@@ -281,14 +281,14 @@ OffsetCacheFile::load(const QString& completeFilePath, qulonglong fileSize)
             return false;
         }
 
-        QByteArray byteArray = QByteArray::fromRawData(reinterpret_cast<const char*>(d->mappedData), fileSize);
+        QByteArray byteArray = QByteArray::fromRawData(reinterpret_cast<const char*>(d->mappedData), d->mapFile.size());
 
         int position = 0;
         d->pageOffsetList.clear();
         int wordTerminatorOffsetSizeLength = 1 + 2 * sizeof(quint32);
         d->wordCount = 0;
 
-        while (fileSize < position)
+        while (d->mapFile.size() < position)
         {
             if (d->wordCount % d->pageEntryNumber == 0)
                 d->pageOffsetList.append(position);
