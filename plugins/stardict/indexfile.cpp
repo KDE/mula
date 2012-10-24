@@ -59,7 +59,7 @@ IndexFile::load(const QString& filePath, qulonglong fileSize, int wordCount)
     if (!file.open(QIODevice::ReadOnly))
     {
         qDebug() << Q_FUNC_INFO << "Failed to open file:" << filePath;
-        return -1;
+        return false;
     }
 
     QByteArray indexDataBuffer = file.read(fileSize);
