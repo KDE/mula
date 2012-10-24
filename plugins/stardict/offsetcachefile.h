@@ -76,7 +76,7 @@ namespace MulaPluginStarDict
 
             // Loads the cache or creates if it does not exist
             /** Reimplemented from AbstractIndexFile::load() */
-            bool load(const QString& completeFilePath, qulonglong filesize, int wordCount);
+            bool load(const QString& completeFilePath, qulonglong filesize);
 
             /** Reimplemented from AbstractIndexFile::key() */
             QByteArray key(long index);

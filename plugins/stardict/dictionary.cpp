@@ -171,7 +171,7 @@ Dictionary::load(const QString& ifoFilePath)
         d->indexFile.reset(new OffsetCacheFile);
     }
 
-    if (!d->indexFile->load(completeFilePath, d->dictionaryInfo.wordCount(), d->dictionaryInfo.indexFileSize()))
+    if (!d->indexFile->load(completeFilePath, d->dictionaryInfo.indexFileSize()))
         return false;
 
     return true;

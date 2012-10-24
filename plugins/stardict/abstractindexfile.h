@@ -47,11 +47,10 @@ namespace MulaPluginStarDict
              * @param   filePath   The complete file path of the index file
              * @param   filesize    The file size of the index file coming from
              * the ".ifo" file
-             * @param  wordCount   The number of the word entries
              *
              * @return Whether or not the loading was successful
              */
-            virtual bool load(const QString& filePath, qulonglong fileSize, int wordCount) = 0;
+            virtual bool load(const QString& filePath, qulonglong fileSize) = 0;
 
             /**
              * Returns the word data according to the relevant index
