@@ -62,26 +62,36 @@ IndexFile::load(const QString& filePath, qulonglong fileSize)
         return false;
     }
 
-    QByteArray indexDataBuffer = file.read(fileSize);
-
-    file.close();
-
-    qulonglong position = 0;
     d->wordEntryList.clear();
-    int squint32 = sizeof(quint32);
+    char ch;
+    QByteArray data;
 
-    while (fileSize > position)
-    {
+    while (!file.atEnd()) {
         WordEntry wordEntry;
-        wordEntry.setData(indexDataBuffer.mid(position));
-        ++position;
-        wordEntry.setDataOffset(qFromBigEndian(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
-        position += squint32;
-        wordEntry.setDataSize(qFromBigEndian(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
-        position += squint32;
+
+        data.clear();
+
+        forever {
+            if (file.read(&ch, 1) != -1) {
+                if (ch) {
+                    data.append(ch);
+                } else {
+                    break;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        wordEntry.setData(data);
+
+        wordEntry.setDataOffset(qFromBigEndian(*reinterpret_cast<quint32 *>(file.read(sizeof(quint32)).data())));
+        wordEntry.setDataSize(qFromBigEndian(*reinterpret_cast<quint32 *>(file.read(sizeof(quint32)).data())));
 
         d->wordEntryList.append(wordEntry);
     }
+
+    file.close();
 
     return true;
 }
