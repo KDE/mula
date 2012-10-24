@@ -68,15 +68,17 @@ IndexFile::load(const QString& filePath, qulonglong fileSize)
 
     qulonglong position = 0;
     d->wordEntryList.clear();
+    int squint32 = sizeof(quint32);
+
     while (fileSize > position)
     {
         WordEntry wordEntry;
         wordEntry.setData(indexDataBuffer.mid(position));
         ++position;
         wordEntry.setDataOffset(qFromBigEndian(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
-        position += sizeof(quint32);
+        position += squint32;
         wordEntry.setDataSize(qFromBigEndian(*reinterpret_cast<quint32 *>(indexDataBuffer.mid(position).data())));
-        position += sizeof(quint32);
+        position += squint32;
 
         d->wordEntryList.append(wordEntry);
     }
