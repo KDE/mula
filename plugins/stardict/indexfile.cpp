@@ -66,10 +66,10 @@ IndexFile::load(const QString& filePath, qulonglong fileSize, int wordCount)
 
     file.close();
 
-    int position = 0;
+    qulonglong position = 0;
     d->wordEntryList.clear();
     d->wordEntryList.reserve(wordCount);
-    for (int i = 0; i < wordCount; ++i)
+    while (fileSize > position)
     {
         WordEntry wordEntry;
         wordEntry.setData(indexDataBuffer.mid(position));
