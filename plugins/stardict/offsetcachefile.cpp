@@ -56,7 +56,7 @@ class OffsetCacheFile::Private
 
         QVector<quint32> pageOffsetList;
         QFile indexFile;
-        ulong wordCount;
+        int wordCount;
 
         // index/date based key and value pair
         QPair<int, QByteArray> first;
@@ -262,10 +262,8 @@ OffsetCacheFile::key(long index)
 }
 
 bool
-OffsetCacheFile::load(const QString& completeFilePath, qulonglong fileSize, int wordCount)
+OffsetCacheFile::load(const QString& completeFilePath, qulonglong fileSize)
 {
-    d->wordCount = wordCount;
-
     if (!loadCache(completeFilePath))
     { //map file will close after finish of block
         d->mapFile.unmap(d->mappedData);
@@ -288,12 +286,15 @@ OffsetCacheFile::load(const QString& completeFilePath, qulonglong fileSize, int 
         int position = 0;
         d->pageOffsetList.clear();
         int wordTerminatorOffsetSizeLength = 1 + 2 * sizeof(quint32);
-        for (int i = 0; i < wordCount; ++i)
+        d->wordCount = 0;
+
+        while (fileSize < position)
         {
-            if (i % d->pageEntryNumber == 0)
+            if (d->wordCount % d->pageEntryNumber == 0)
                 d->pageOffsetList.append(position);
 
             position += qstrlen(byteArray.mid(position)) + wordTerminatorOffsetSizeLength;
+            ++d->wordCount;
         }
 
         d->pageOffsetList.append(position);
@@ -313,7 +314,7 @@ OffsetCacheFile::load(const QString& completeFilePath, qulonglong fileSize, int 
     d->first = qMakePair(0, readFirstWordDataOnPage(0));
     d->last = qMakePair(d->pageOffsetList.size() - 2, readFirstWordDataOnPage(d->pageOffsetList.size() - 2));
     d->middle = qMakePair((d->pageOffsetList.size() - 2) / 2, readFirstWordDataOnPage((d->pageOffsetList.size() - 2) / 2));
-    d->realLast = qMakePair(wordCount - 1, key(wordCount - 1));
+    d->realLast = qMakePair(d->wordCount - 1, key(d->wordCount - 1));
 
     return true;
 }
