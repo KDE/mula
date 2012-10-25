@@ -67,6 +67,7 @@ namespace MulaPluginStarDict
              *
              * @return The name of the dictionary
              */
+
             QString dictionaryName() const;
 
             /**
@@ -130,13 +131,9 @@ namespace MulaPluginStarDict
             WordEntry wordEntry(long index);
 
             /**
-             * Returns the index of the word data where it has been found. The
-             * method also returns the mere fact whether or not the desired word
-             * could be found in the index file.
+             * Returns the index of the word data where it has been found.
              *
              * @param   word    The word data to look up
-             * @param   index   The index where the desired word occurs among
-             * the word entries.
              *
              * @return The index where the desired word occurs among the word
              * entries, or -1 if there is no such a word.
