@@ -22,7 +22,7 @@
 
 #include <QtCore/QString>
 
-const int invalidIndex = -100;
+const int invalidIndex = -1;
 
 static inline int stardictStringCompare(QString string1, QString string2)
 {

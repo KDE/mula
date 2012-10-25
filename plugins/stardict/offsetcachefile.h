@@ -113,14 +113,13 @@ namespace MulaPluginStarDict
              * is only for internal usage.
              *
              * @param   word        The desired word to look up
-             * @param   pageIndex   The index of the page where the word occurs
              *
-             * @return True if the desired page can be found where the word
-             * occurs, otherwise false.
+             * @return The index of the page where the word occurs, or -1 if
+             * there is no such a word.
              *
              * @see lookup
              */
-            bool lookupPage(const QByteArray& word, int& pageIndex);
+            int lookupPage(const QByteArray& word);
 
             /**
              * Returns the first word data of the desired page from the index

@@ -319,20 +319,18 @@ OffsetCacheFile::load(const QString& completeFilePath)
     return true;
 }
 
-bool
-OffsetCacheFile::lookupPage(const QByteArray& word, int& pageIndex)
+int
+OffsetCacheFile::lookupPage(const QByteArray& word)
 {
-    bool found = false;
+    int pageIndex = invalidIndex;
 
     if (stardictStringCompare(word, d->first.second) < 0)
     {
-        pageIndex = invalidIndex;
-        return false;
+        return invalidIndex;
     }
     else if (stardictStringCompare(word, d->realLast.second) > 0)
     {
-        pageIndex = invalidIndex;
-        return false;
+        return invalidIndex;
     }
     else
     {
@@ -350,18 +348,14 @@ OffsetCacheFile::lookupPage(const QByteArray& word, int& pageIndex)
                 indexTo = indexThisIndex - 1;
             else
             {
-                found = true;
-                break;
+                return indexThisIndex;
             }
         }
 
-        if (!found)
-            pageIndex = indexTo;    //prev
-        else
-            pageIndex = indexThisIndex;
+        pageIndex = indexTo;
     }
 
-    return found;
+    return pageIndex;
 }
 
 inline bool
@@ -373,12 +367,9 @@ lessThanCompare(const QString string1, const QString string2)
 int
 OffsetCacheFile::lookup(const QByteArray& word)
 {
-    // TODO: has to be refactored to the index retval from the previous boolean
-    // return value and explicit output parameter for the index
+    int index = lookupPage(word);
 
-    /* bool found = lookupPage(word, index);
-
-    if (!found)
+    if (index == -1)
     {
         QStringList wordList;
         foreach (const WordEntry &wordEntry, d->wordEntryList)
@@ -395,7 +386,6 @@ OffsetCacheFile::lookup(const QByteArray& word)
         else
         {
             index = i - wordList.begin();
-            found = true;
         }
     }
     else
@@ -403,5 +393,5 @@ OffsetCacheFile::lookup(const QByteArray& word)
         index *= d->pageEntryNumber;
     }
 
-    return found; */
+    return index;
 }
