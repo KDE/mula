@@ -61,30 +61,38 @@ namespace MulaPluginStarDict
      *
      * \see Indexfile
      */
+
     class OffsetCacheFile : public AbstractIndexFile
     {
         public:
+
             /**
              * Constructor
              */
+
             OffsetCacheFile();
 
             /**
              * Destructor
              */
+
             virtual ~OffsetCacheFile();
 
             // Loads the cache or creates if it does not exist
             /** Reimplemented from AbstractIndexFile::load() */
+
             bool load(const QString& completeFilePath);
 
             /** Reimplemented from AbstractIndexFile::key() */
+
             QByteArray key(long index);
 
             /** Reimplemented from AbstractIndexFile::lookup() */
+
             int lookup(const QByteArray& string);
 
         private:
+
             /**
              * Loads the word entries of relevant cache page into the internal
              * data storage. It will return the number of the word entries
@@ -101,6 +109,7 @@ namespace MulaPluginStarDict
              *
              * @see load
              */
+
             int loadPage(int pageIndex);
 
             /**
@@ -119,6 +128,7 @@ namespace MulaPluginStarDict
              *
              * @see lookup
              */
+
             int lookupPage(const QByteArray& word);
 
             /**
@@ -134,6 +144,7 @@ namespace MulaPluginStarDict
              *
              * @see firstWordDataOnPage
              */
+
             QByteArray readFirstWordDataOnPage(long pageIndex);
 
             /**
@@ -150,6 +161,7 @@ namespace MulaPluginStarDict
              *
              * @see readFirstWordDataOnPage
              */
+
             QByteArray firstWordDataOnPage(long pageIndex);
 
             /**
@@ -167,6 +179,7 @@ namespace MulaPluginStarDict
              *
              * @see saveCache, loadCache
              */
+
             QStringList cacheLocations(const QString& completeFilePath);
 
             /**
@@ -183,6 +196,7 @@ namespace MulaPluginStarDict
              *
              * @see cacheLocations, saveCache
              */
+
             bool loadCache(const QString& completeFilePath);
 
             /**
@@ -199,6 +213,7 @@ namespace MulaPluginStarDict
              *
              * @see cacheLocations, loadCache
              */
+
             bool saveCache(const QString& completeFilePath);
 
             class Private;

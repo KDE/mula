@@ -31,14 +31,17 @@ namespace MulaPluginStarDict
     class Dictionary : public AbstractDictionary
     {
         public:
+
             /**
              * Constructor
              */
+
             Dictionary();
 
             /**
              * Destructor
              */
+
             virtual ~Dictionary();
 
             /**
@@ -48,6 +51,7 @@ namespace MulaPluginStarDict
              *
              * @return True if the loading was successful, otherwise false.
              */
+
             bool load(const QString& ifoFilePath);
 
             /**
@@ -55,6 +59,7 @@ namespace MulaPluginStarDict
              *
              * @return The count of the word entries
              */
+
             int articleCount() const;
 
             /**
@@ -71,6 +76,7 @@ namespace MulaPluginStarDict
              *
              * @see loadIfoFile
              */
+
             QString ifoFilePath() const;
 
             /**
@@ -87,6 +93,7 @@ namespace MulaPluginStarDict
              *
              * @see data, wordEntry
              */
+
             QString key(long index) const;
 
             /**
@@ -104,13 +111,14 @@ namespace MulaPluginStarDict
              *
              * @see key, wordEntry
              */
+
             QString data(long index);
 
             /**
              * Returns the word entry according to the desired index value
              *
              * \note If the index file is not loaded properly yet, this method
-             * returns an empty string.
+             * returns an empty entry object.
              *
              * @param index The index of the desired word entry
              *
@@ -118,6 +126,7 @@ namespace MulaPluginStarDict
              *
              * @see key, data
              */
+
             WordEntry wordEntry(long index);
 
             /**
@@ -132,6 +141,7 @@ namespace MulaPluginStarDict
              * @return The index where the desired word occurs among the word
              * entries, or -1 if there is no such a word.
              */
+
             int lookup(const QString& word);
 
             /**
@@ -147,6 +157,7 @@ namespace MulaPluginStarDict
              * @return The indices where the pattern matches against the word
              * data
              */
+
             QVector<int> lookupPattern(const QString& pattern, int maximumIndexListSize);
 
         private:
@@ -161,6 +172,7 @@ namespace MulaPluginStarDict
              *
              * @see load, ifoFilePath
              */
+
             bool loadIfoFile(const QString& ifoFilePath);
 
             class Private;

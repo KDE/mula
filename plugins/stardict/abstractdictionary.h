@@ -166,14 +166,17 @@ namespace MulaPluginStarDict
     class AbstractDictionary
     {
         public:
+
             /**
              * Constructor
              */
+
             AbstractDictionary();
 
             /**
              * Destructor
              */
+
             virtual ~AbstractDictionary();
 
             /**
@@ -190,6 +193,7 @@ namespace MulaPluginStarDict
              *
              * @see findData, containFindData
              */
+
             const QByteArray wordData(quint32 indexItemOffset, qint32 indexItemSize);
 
             /**
@@ -201,6 +205,7 @@ namespace MulaPluginStarDict
              *
              * @see findData, wordData
              */
+
             bool containFindData();
 
             /**
@@ -217,6 +222,7 @@ namespace MulaPluginStarDict
              *
              * @see containData, wordData
              */
+
             bool findData(const QStringList &searchWords, qint32 indexItemOffset, qint32 indexItemSize);
 
             /**
@@ -226,6 +232,7 @@ namespace MulaPluginStarDict
              *
              * @see dictionaryFile
              */
+
             DictionaryZip* compressedDictionaryFile() const;
 
             /**
@@ -235,6 +242,7 @@ namespace MulaPluginStarDict
              *
              * @see compressedDictionaryFile
              */
+
             QFile* dictionaryFile() const;
 
             /**
@@ -244,6 +252,7 @@ namespace MulaPluginStarDict
              *
              * @see sameTypeSequence
              */
+
             void setSameTypeSequence(const QString& sameTypeSequence);
 
             /**
@@ -253,6 +262,7 @@ namespace MulaPluginStarDict
              *
              * @see setSameTypeSequence
              */
+
             QString sameTypeSequence() const;
 
         private:

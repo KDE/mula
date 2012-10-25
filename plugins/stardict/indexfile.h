@@ -27,23 +27,29 @@ namespace MulaPluginStarDict
     class IndexFile : public AbstractIndexFile
     {
         public:
+
             /**
              * Constructor
              */
+
             IndexFile();
 
             /**
              * Destructor
              */
+
             virtual ~IndexFile();
 
             /** Reimplemented from AbstractIndexFile::load() */
+
             bool load(const QString& filePath);
 
             /** Reimplemented from AbstractIndexFile::key() */
+
             QByteArray key(long index);
 
             /** Reimplemented from AbstractIndexFile::lookup() */
+
             int lookup(const QByteArray& word);
 
         private:

@@ -29,14 +29,17 @@ namespace MulaPluginStarDict
     class AbstractIndexFile
     {
         public:
+
             /**
              * Constructor
              */
+
             AbstractIndexFile();
 
             /**
              * Destructor
              */
+
             virtual ~AbstractIndexFile();
 
             /**
@@ -48,6 +51,7 @@ namespace MulaPluginStarDict
              *
              * @return Whether or not the loading was successful
              */
+
             virtual bool load(const QString& filePath) = 0;
 
             /**
@@ -62,6 +66,7 @@ namespace MulaPluginStarDict
              *
              * @return  The word data
              */
+
             virtual QByteArray key(long index) = 0;
 
             /**
@@ -79,6 +84,7 @@ namespace MulaPluginStarDict
              * @return The index where the desired word occurs among the word
              * entries, or -1 if there is no such a word.
              */
+
             virtual int lookup(const QByteArray& word) = 0;
 
             virtual quint32 wordEntryOffset() const;
