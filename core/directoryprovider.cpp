@@ -56,7 +56,7 @@ DirectoryProvider::DirectoryProvider( QObject* parent )
 
     //Create standard dirs Mula recommends
     QDir dir;
-    foreach( const QString& dirPath, d->userDirs )
+    foreach (const QString& dirPath, d->userDirs)
     {
         dir.mkpath( dirPath );
     }

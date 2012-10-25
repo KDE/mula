@@ -67,7 +67,7 @@ const QByteArray
 AbstractDictionary::wordData(quint32 indexItemOffset, qint32 indexItemSize)
 {
     // Check first whether or not the data is already available in the cache
-    foreach(const WordEntry& cacheItem, d->cacheItemList)
+    foreach (const WordEntry& cacheItem, d->cacheItemList)
     {
         if (!cacheItem.data().isEmpty() && cacheItem.dataOffset() == indexItemOffset)
             return cacheItem.data();

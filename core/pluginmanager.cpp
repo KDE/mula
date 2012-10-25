@@ -74,7 +74,7 @@ PluginManager::availablePlugins() const
     QStringList pluginDirectoryPaths = MulaCore::DirectoryProvider::instance()->pluginDirectoryPaths();
 
     DEBUG_TEXT2( "Number of plugin locations: %1", pluginDirectoryPaths.count() )
-    foreach( const QString& pluginDirectoryPath, pluginDirectoryPaths )
+    foreach (const QString& pluginDirectoryPath, pluginDirectoryPaths)
     {
         QDir pluginDirectory( pluginDirectoryPath );
         DEBUG_TEXT( QString( "Looking for pluggable components in %1" ).arg( pluginDirectory.absolutePath() ) )
@@ -87,7 +87,7 @@ PluginManager::availablePlugins() const
         pluginDirectory.setFilter( QDir::AllEntries| QDir::NoDotAndDotDot );
 
         DEBUG_TEXT2( "Found %1 potential plugins. Attempting to load...", pluginDirectory.count() )
-        foreach( const QString & fileName, pluginDirectory.entryList( QDir::Files ) )
+        foreach (const QString& fileName, pluginDirectory.entryList(QDir::Files))
         {
             // Do not attempt to load non-mula_plugin prefixed libraries
             if( !fileName.contains( "mula" ) )
@@ -139,7 +139,7 @@ PluginManager::setLoadedPlugins(const QStringList &loadedPlugins)
 
        QStringList pluginDirectoryPaths = MulaCore::DirectoryProvider::instance()->pluginDirectoryPaths();
 
-        foreach( const QString& pluginDirectoryPath, pluginDirectoryPaths )
+        foreach (const QString& pluginDirectoryPath, pluginDirectoryPaths)
         {
             // Do not attempt to load non-libraries
             if( !QLibrary::isLibrary( pluginDirectoryPath + '/' + pluginFileName ) )
