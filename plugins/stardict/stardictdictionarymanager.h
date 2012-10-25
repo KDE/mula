@@ -47,6 +47,7 @@ namespace MulaPluginStarDict
             /**
              * Destructor
              */
+
             virtual ~StarDictDictionaryManager();
 
             /**
@@ -58,6 +59,7 @@ namespace MulaPluginStarDict
              *
              * @see load, reload
              */
+
             bool loadDictionary(const QString& ifoFilePath);
 
             void load(const QStringList& dictionaryDirs,
@@ -79,6 +81,7 @@ namespace MulaPluginStarDict
              *
              * @see dictionaryName, dictionaryCount
              */
+
             long articleCount(int index) const;
 
             /**
@@ -92,6 +95,7 @@ namespace MulaPluginStarDict
              *
              * @see articleCount, dictionaryCount
              */
+
             QString dictionaryName(int index) const;
 
             /**
@@ -102,6 +106,7 @@ namespace MulaPluginStarDict
              *
              * @see articleCount, dictionaryName
              */
+
             int dictionaryCount() const;
 
             /**
@@ -116,6 +121,7 @@ namespace MulaPluginStarDict
              *
              * @see data, poCurrentWord, poNextWord, poPreviousWord
              */
+
             QByteArray key(long keyIndex, int dictionaryIndex) const;
 
             /**
@@ -130,6 +136,7 @@ namespace MulaPluginStarDict
              *
              * @see key, poCurrentWord, poNextWord, poPreviousWord
              */
+
             QString data(long dataIndex, int dictionaryIndex);
 
             QByteArray poCurrentWord(int *iCurrent);
