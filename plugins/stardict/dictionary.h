@@ -146,7 +146,7 @@ namespace MulaPluginStarDict
 
             /**
              * Returns the list of indices matched against the desired word data
-             * pattern in the dictionary. Note, this method  returns maximum
+             * pattern in the dictionary. Note, this method returns maximum
              * that many elements that is passed as an arguement. Alternatively,
              * if it is a big enough value, it will return all the words.
              *
