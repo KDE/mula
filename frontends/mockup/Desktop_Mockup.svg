@@ -23,9 +23,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.81814007"
-     inkscape:cx="213.40799"
-     inkscape:cy="225.31278"
+     inkscape:zoom="0.65152379"
+     inkscape:cx="442.04065"
+     inkscape:cy="252.10667"
      inkscape:document-units="px"
      inkscape:current-layer="layer6"
      showgrid="false"
@@ -37,7 +37,9 @@
      fit-margin-top="20"
      fit-margin-left="20"
      fit-margin-right="0"
-     fit-margin-bottom="20" />
+     fit-margin-bottom="20"
+     showguides="true"
+     inkscape:guide-bbox="true" />
   <defs
      id="defs4">
     <pattern
@@ -646,6 +648,45 @@
          in2="result2"
          id="feComposite3795-4" />
     </filter>
+    <filter
+       id="filter4112"
+       inkscape:label="Inner Shadow"
+       inkscape:menu="Shadows and Glows"
+       inkscape:menu-tooltip="Adds a colorizable drop shadow inside"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur4114"
+         stdDeviation="1"
+         result="result8" />
+      <feOffset
+         id="feOffset4116"
+         dx="1"
+         dy="1"
+         result="result11" />
+      <feComposite
+         id="feComposite4118"
+         in2="result11"
+         result="result6"
+         in="SourceGraphic"
+         operator="in" />
+      <feFlood
+         id="feFlood4120"
+         result="result10"
+         in="result6"
+         flood-opacity="0.68913857677902624"
+         flood-color="rgb(0,0,0)" />
+      <feBlend
+         id="feBlend4122"
+         in2="result10"
+         mode="normal"
+         in="result6"
+         result="result12" />
+      <feComposite
+         id="feComposite4124"
+         in2="SourceGraphic"
+         result="result2"
+         operator="in" />
+    </filter>
   </defs>
   <metadata
      id="metadata7">
@@ -663,18 +704,14 @@
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="back">
-    <rect
+    <path
        style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter3775-4);enable-background:accumulate"
+       d="m -39.541375,-11.771826 920.589325,0 c 1.65546,0 2.98818,1.525868 2.98818,3.4212289 l 0,508.5470671 c 0,1.89536 -1.33272,3.42123 -2.98818,3.42123 l -920.589325,0 c -1.655453,0 -2.988182,-1.52587 -2.988182,-3.42123 l 0,-508.5470671 c 0,-1.8953609 1.332729,-3.4212289 2.988182,-3.4212289 z"
        id="rect10712"
-       width="884.03613"
-       height="515.38953"
-       x="0"
-       y="0.22817411"
-       rx="2.8510239"
-       ry="3.4212286"
-       inkscape:export-filename="/home/qwazix/Pictures/mula dictionary mode.png"
-       inkscape:export-xdpi="162.92531"
-       inkscape:export-ydpi="162.92531" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/qwazix/mula.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
   <g
      id="layer1"
@@ -1154,18 +1191,18 @@
          style="fill:#917c6f"
          id="flowPara8241"><flowSpan
    style="font-size:16px;font-style:italic;font-weight:bold;fill:#000000;-inkscape-font-specification:FreeSerif Bold Italic"
-   id="flowSpan8479">word  </flowSpan>/wərd/ </flowPara><flowPara
+   id="flowSpan8479">word  </flowSpan>/wərd/</flowPara><flowPara
          style="fill:#483e37"
          id="flowPara8203"><flowSpan
    id="flowSpan8217"
-   style="font-weight:bold;fill:#483e37">Noun </flowSpan>A single distinct meaningful element of speech or writing, used with others (or sometimes alone) to form a sentence and typically shown...</flowPara><flowPara
+   style="font-weight:bold;fill:#483e37">Noun </flowSpan> A single distinct meaningful element of speech or writing, used with others (or sometimes alone) to form a sentence and typically shown...</flowPara><flowPara
          id="flowPara8205" /><flowPara
          id="flowPara8207" /><flowPara
          id="flowPara8209" /></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot8255"
        style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSerif;-inkscape-font-specification:FreeSerif"
-       transform="matrix(0.96748338,0,0,0.96748338,-4.6630471,-113.57705)"
+       transform="matrix(0.96748338,0,0,0.96748338,-4.6630471,-111.57705)"
        inkscape:export-filename="/home/qwazix/Pictures/mula dictionary mode.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"><flowRegion
@@ -1183,7 +1220,7 @@
          id="flowPara8281" /><flowPara
          id="flowPara8283" /><flowPara
          id="flowPara8285" /></flowRoot>    <flowRoot
-       transform="matrix(0.96748338,0,0,0.96748338,-4.6630471,-148.97052)"
+       transform="matrix(0.96748338,0,0,0.96748338,-4.6630471,-146.97052)"
        style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSerif;-inkscape-font-specification:FreeSerif"
        id="flowRoot8287"
        xml:space="preserve"
@@ -1205,7 +1242,23 @@
          id="flowPara8309" /><flowPara
          id="flowPara8313" /><flowPara
          id="flowPara8315" /><flowPara
-         id="flowPara8317" /></flowRoot>  </g>
+         id="flowPara8317" /></flowRoot>    <path
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       d="m 399.26802,313.20686 c -0.72416,0.0118 -1.45295,0.11838 -2.1875,0.28125 -5.87639,1.30295 -9.58421,7.12361 -8.28125,13 1.30295,5.87639 7.12361,9.5842 13,8.28125 1.7491,-0.38782 3.30388,-1.17943 4.59375,-2.25 -1.43496,-0.70465 -2.53328,-2.03664 -2.90625,-3.71875 -0.65147,-2.9382 1.1868,-5.84853 4.125,-6.5 0.88185,-0.19553 1.77727,-0.15488 2.59375,0.0625 -0.0328,-0.1989 -0.0808,-0.39455 -0.125,-0.59375 -1.14009,-5.14184 -5.74337,-8.645 -10.8125,-8.5625 z m 1.90625,1.375 c 1.79253,-0.0293 3.4093,1.21279 3.8125,3.03125 0.4608,2.07824 -0.85926,4.13295 -2.9375,4.59375 -2.07824,0.4608 -4.13295,-0.85926 -4.59375,-2.9375 -0.4608,-2.07824 0.85926,-4.13295 2.9375,-4.59375 0.25978,-0.0576 0.52517,-0.0896 0.78125,-0.0937 z m 0.96875,0.8125 c -0.14131,0.002 -0.29415,-5.3e-4 -0.4375,0.0312 -1.14681,0.25428 -1.87928,1.41569 -1.625,2.5625 0.25428,1.14681 1.38444,1.84803 2.53125,1.59375 1.14681,-0.25428 1.87928,-1.38444 1.625,-2.53125 -0.22249,-1.00346 -1.1046,-1.67243 -2.09375,-1.65625 z m 11.59375,9.40625 a 1.0458761,1.0458761 0 0 0 -0.875,1 c -0.16492,2.86299 -0.5352,3.80651 -2.46875,5.78125 a 1.0496698,1.0496698 0 1 0 1.5,1.46875 c 2.12767,-2.173 2.88462,-4.03699 3.0625,-7.125 a 1.0458761,1.0458761 0 0 0 -1.125,-1.125 1.0458761,1.0458761 0 0 0 -0.0937,0 z m 5.28125,0.25 a 1.1205816,1.1205816 0 0 0 -0.9375,1.0625 c -0.24985,4.33742 -0.90545,5.93659 -3.84375,8.9375 a 1.127168,1.127168 0 1 0 1.625,1.5625 c 3.1463,-3.21333 4.17377,-5.79648 4.4375,-10.375 a 1.1205816,1.1205816 0 0 0 -1.28125,-1.1875 z"
+       id="path4110"
+       inkscape:export-filename="/home/qwazix/icon.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#918a6f;fill-opacity:1;stroke:none;filter:url(#filter4112)"
+       d="m 398.62801,311.92683 c -0.72416,0.0118 -1.45295,0.11838 -2.1875,0.28125 -5.87639,1.30295 -9.58421,7.12361 -8.28125,13 1.30295,5.87639 7.12361,9.5842 13,8.28125 1.7491,-0.38782 3.30388,-1.17943 4.59375,-2.25 -1.43496,-0.70465 -2.53328,-2.03664 -2.90625,-3.71875 -0.65147,-2.9382 1.1868,-5.84853 4.125,-6.5 0.88185,-0.19553 1.77727,-0.15488 2.59375,0.0625 -0.0328,-0.1989 -0.0808,-0.39455 -0.125,-0.59375 -1.14009,-5.14184 -5.74337,-8.645 -10.8125,-8.5625 z m 1.90625,1.375 c 1.79253,-0.0293 3.4093,1.21279 3.8125,3.03125 0.4608,2.07824 -0.85926,4.13295 -2.9375,4.59375 -2.07824,0.4608 -4.13295,-0.85926 -4.59375,-2.9375 -0.4608,-2.07824 0.85926,-4.13295 2.9375,-4.59375 0.25978,-0.0576 0.52517,-0.0896 0.78125,-0.0937 z m 0.96875,0.8125 c -0.14131,0.002 -0.29415,-5.3e-4 -0.4375,0.0312 -1.14681,0.25428 -1.87928,1.41569 -1.625,2.5625 0.25428,1.14681 1.38444,1.84803 2.53125,1.59375 1.14681,-0.25428 1.87928,-1.38444 1.625,-2.53125 -0.22249,-1.00346 -1.1046,-1.67243 -2.09375,-1.65625 z m 11.59375,9.40625 a 1.0458761,1.0458761 0 0 0 -0.875,1 c -0.16492,2.86299 -0.5352,3.80651 -2.46875,5.78125 a 1.0496698,1.0496698 0 1 0 1.5,1.46875 c 2.12767,-2.173 2.88462,-4.03699 3.0625,-7.125 a 1.0458761,1.0458761 0 0 0 -1.125,-1.125 1.0458761,1.0458761 0 0 0 -0.0937,0 z m 5.28125,0.25 a 1.1205816,1.1205816 0 0 0 -0.9375,1.0625 c -0.24985,4.33742 -0.90545,5.93659 -3.84375,8.9375 a 1.127168,1.127168 0 1 0 1.625,1.5625 c 3.1463,-3.21333 4.17377,-5.79648 4.4375,-10.375 a 1.1205816,1.1205816 0 0 0 -1.28125,-1.1875 z"
+       id="path3209"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/qwazix/icon.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
   <g
      style="display:none"
      inkscape:label="annotations"
