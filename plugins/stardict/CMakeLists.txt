@@ -47,8 +47,6 @@ set(stardict_HEADERS
     wordentry.h
 )
 
-qt4_automoc(${stardict_SRCS})
-
 if(APPLE)
     add_library(mula_plugin_stardict SHARED ${stardict_SRCS} ${stardict_HEADERS})
 else()

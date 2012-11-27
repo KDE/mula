@@ -6,12 +6,9 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-set(QT_MIN_VERSION "4.7.0")
-find_package(Qt5Transitional REQUIRED
-    Core
-    Widgets
-    Network
-)
+set(CMAKE_AUTOMOC ON)
+
+find_package(Qt5Core REQUIRED)
 
 set(_Init_LIB_SUFFIX "")
 if ("${QT_QTCORE_LIBRARY}" MATCHES lib64)
@@ -75,8 +72,6 @@ set(MulaCore_HEADERS
     translation.h
 	${CMAKE_CURRENT_BINARY_DIR}/mula_global.h
 )
-
-qt4_automoc(${MulaCore_SRCS})
 
 if(APPLE)
 	add_library(MulaCore SHARED ${MulaCore_SRCS} ${MulaCore_HEADERS})
