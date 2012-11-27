@@ -6,7 +6,12 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-find_package(Qt4 4.7 REQUIRED)
+set(QT_MIN_VERSION "4.7.0")
+find_package(Qt5Transitional REQUIRED
+    Core
+    Widgets
+    Network
+)
 
 set(_Init_LIB_SUFFIX "")
 if ("${QT_QTCORE_LIBRARY}" MATCHES lib64)
