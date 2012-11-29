@@ -19,7 +19,7 @@
 
 #include "directoryprovider.h"
 
-#include <QDesktopServices>
+#include <QtCore/QStandardPaths>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
@@ -47,7 +47,7 @@ DirectoryProvider::DirectoryProvider( QObject* parent )
     : MulaCore::Singleton< MulaCore::DirectoryProvider >( parent )
     , d(new Private)
 {
-    d->userDataPath = QDesktopServices::storageLocation( QDesktopServices::DataLocation );
+    d->userDataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     d->userDataPath.chop( QString(QCoreApplication::organizationName() + '/' + QCoreApplication::applicationName()).size() );
     d->userDataPath.append( "mula" );
 

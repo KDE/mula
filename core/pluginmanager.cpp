@@ -79,7 +79,7 @@ PluginManager::availablePlugins() const
         QDir pluginDirectory( pluginDirectoryPath );
         DEBUG_TEXT( QString( "Looking for pluggable components in %1" ).arg( pluginDirectory.absolutePath() ) )
 
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
         //Only attempt to load our current version. This makes it possible to have different versions
         //of the plugins in the plugin dir.
         pluginDirectory.setNameFilters( QStringList() << QString( "*.so.%1.%2.%3" ).arg( MULA_VERSION_MAJOR ).arg( MULA_VERSION_MINOR ).arg( MULA_VERSION_PATCH ) );
@@ -123,13 +123,13 @@ PluginManager::setLoadedPlugins(const QStringList &loadedPlugins)
 
     foreach (const QString& plugin, loadedPlugins)
     {
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
         QString pluginFileName = "lib" + plugin + ".so";
 
-#elif defined Q_WS_WIN
+#elif defined Q_OS_WIN
         QString pluginFileName = plugin + "0.dll";
 
-#elif defined Q_WS_MAC
+#elif defined Q_OS_MAC
         // Follow Mac's bundle tree.
         QString pluginFileName = plugin;
 
