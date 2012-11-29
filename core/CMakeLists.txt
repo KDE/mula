@@ -7,16 +7,17 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Qt5Core REQUIRED)
 
 set(_Init_LIB_SUFFIX "")
-if ("${QT_QTCORE_LIBRARY}" MATCHES lib64)
+if ("${Qt5Core_LIBRARIES}" MATCHES lib64)
    set(_Init_LIB_SUFFIX 64)
-endif ("${QT_QTCORE_LIBRARY}" MATCHES lib64)
-if ("${QT_QTCORE_LIBRARY}" MATCHES lib32)
+endif ("${Qt5Core_LIBRARIES}" MATCHES lib64)
+if ("${Qt5Core_LIBRARIES}" MATCHES lib32)
    set(_Init_LIB_SUFFIX 32)
-endif ("${QT_QTCORE_LIBRARY}" MATCHES lib32)
+endif ("${Qt5Core_LIBRARIES}" MATCHES lib32)
 
 set(LIB_SUFFIX		    ${_Init_LIB_SUFFIX} CACHE STRING "The suffix of the system-wide library path")
 
@@ -40,7 +41,7 @@ endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/mula_global.h.in ${CMAKE_CURRENT_BINARY_DIR}/mula_global.h)
 
 include_directories(
-    ${QT_INCLUDES}
+    ${Qt5Core_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
@@ -79,13 +80,13 @@ else()
 	add_library(MulaCore SHARED ${MulaCore_SRCS})
 endif()
 
-target_link_libraries(MulaCore ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSCRIPT_LIBRARY})
+target_link_libraries(MulaCore ${Qt5Core_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${Qt5Script_LIBRARIES})
 
 set(MULA_CORE_LIBRARIES
     MulaCore
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTSCRIPT_LIBRARY}
+    ${Qt5Core_LIBRARIES}
+    ${Qt5Widgets_LIBRARIES}
+    ${Qt5Script_LIBRARIES}
     CACHE PATHS "Libraries required for Mula Core"
 )
 
