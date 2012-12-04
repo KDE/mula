@@ -1,16 +1,24 @@
 cmake_minimum_required(VERSION 2.8.9)
 
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
+
+# Find the QtWidgets library
+find_package(Qt5Widgets)
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${Qt5Widgets_INCLUDE_DIRS}
     ${MULA_CORE_INCLUDE_DIRS}
 )
 
 set(mula-desktop_SRCS
     main.cpp
 )
-
-qt4_automoc(${mula-desktop_SRCS})
 
 if(APPLE)
     add_executable(mula-desktop MACOSX_BUNDLE ${mula-desktop_SRCS})
@@ -29,6 +37,9 @@ else()
     add_executable(mula-desktop ${mula-desktop_SRCS})
 endif()
 target_link_libraries(mula-desktop ${MULA_CORE_LIBRARIES})
+
+# Use the Widgets module from Qt 5.
+qt5_use_modules(mula-desktop Widgets)
 
 if(NOT APPLE)
     install(TARGETS
