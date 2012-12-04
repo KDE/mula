@@ -19,7 +19,7 @@
 
 #include "stardict.h"
 
-#include "settingsdialog.h"
+//#include "settingsdialog.h"
 #include "file.h"
 
 #include <core/dictionaryplugin.h>
