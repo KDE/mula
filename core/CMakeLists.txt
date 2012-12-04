@@ -89,7 +89,6 @@ qt5_use_modules(MulaCore Core)
 set(MULA_CORE_LIBRARIES
     MulaCore
     ${Qt5Core_LIBRARIES}
-    ${Qt5Test_LIBRARIES}
     CACHE PATHS "Libraries required for Mula Core"
 )
 

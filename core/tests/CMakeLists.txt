@@ -13,11 +13,13 @@ include_directories(
     ${MULA_CORE_INCLUDE_DIRS}
 )
 
+set(MULA_CORE_TEST_LIBRARIES ${MULA_CORE_LIBRARIES} ${Qt5Test_LIBRARIES})
+
 ########### next target ###############
 
 MULA_UNIT_TESTS(
-    "${MULA_CORE_LIBRARIES}"    # libraries argument
-    "mulacore"                  # modulename argument
+    "${MULA_CORE_TEST_LIBRARIES}"   # libraries argument
+    "mulacore"                      # modulename argument
 
     # Source files without the extension
     dictionaryinfotest
