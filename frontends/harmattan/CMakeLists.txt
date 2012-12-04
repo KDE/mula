@@ -1,8 +1,18 @@
 cmake_minimum_required(VERSION 2.8.9)
 
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
+
+# Find the QtWidgets library
+find_package(Qt5Widgets)
+
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${Qt5Widgets_INCLUDE_DIRS}
     ${MULA_CORE_INCLUDE_DIRS}
 )
 
@@ -18,8 +28,6 @@ SET(MULA-HARMATTAN_RCCS
 QT4_ADD_RESOURCES(MULA-HARMATTAN_RCC_SRCS
     mula-harmattan.qrc
 )
-
-qt4_automoc(${mula-harmattan_SRCS})
 
 if(APPLE)
     add_executable(mula-harmattan MACOSX_BUNDLE ${mula-harmattan_SRCS})
@@ -40,10 +48,13 @@ else()
 endif()
 target_link_libraries(mula-harmattan ${MULA_CORE_LIBRARIES})
 
+# Use the Widgets module from Qt 5.
+qt5_use_modules(mula-harmattan Widgets)
+
 set(MULA_DECLARATIVE_LIBS
     MulaHarmattan
     ${MULA_CORE_LIBRARIES}
-    ${QT_QTDECLARATIVE_LIBRARY}
+    ${Qt5Widgets_LIBRARIES}
     CACHE PATHS "Libraries required for Mula Harmattan"
 )
 
