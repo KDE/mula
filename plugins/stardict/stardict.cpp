@@ -428,7 +428,7 @@ StarDict::parseData(const QByteArray &data, int dictionaryIndex, bool htmlSpaces
 
         for (int position = 0; position < result.length();)
         {
-            switch (result[position].toAscii())
+            switch (result[position].toLatin1())
             {
                 case '[':
                     result.insert(position, "<font class=\"transcription\">");
