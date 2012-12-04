@@ -16,7 +16,7 @@ include_directories(
 ########### next target ###############
 
 MULA_UNIT_TESTS(
-    "${MULA_CORE_LIBRARIES}"    # libraries arguement
+    "${MULA_CORE_LIBRARIES}"    # libraries argument
     "mulacore"                  # modulename argument
 
     # Source files without the extension
