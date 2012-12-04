@@ -36,6 +36,7 @@ namespace MulaPluginStarDict
     class StarDict : public QObject, public MulaCore::DictionaryPlugin
     {
         Q_OBJECT
+        Q_PLUGIN_METADATA(IID "org.kde.DictionaryPluginInterface")
         Q_INTERFACES(MulaCore::DictionaryPlugin)
 
         public:

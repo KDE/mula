@@ -489,6 +489,4 @@ StarDict::xdxf2html(QString &string)
     string.replace(QRegExp("(<\\/abr>)|(<\\ex>)"), "</font");
 }
 
-Q_EXPORT_PLUGIN2(stardict, StarDict)
-
 #include "stardict.moc"
