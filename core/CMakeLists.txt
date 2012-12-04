@@ -51,7 +51,7 @@ include_directories(
 )
 
 set(MULA_CORE_INCLUDE_DIRS
-    ${QT_INCLUDES}
+    ${Qt5Core_INCLUDE_DIRS}
     CACHE PATHS "Includes required for Mula Core"
 )
 
