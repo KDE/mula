@@ -30,7 +30,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QPair>
 #include <QtCore/QtEndian>
-#include <QDesktopServices>
+#include <QtCore/QStandardPaths>
 
 using namespace MulaPluginStarDict;
 
@@ -120,7 +120,7 @@ OffsetCacheFile::cacheLocations(const QString& completeFilePath)
     QStringList result;
     result.append(completeFilePath + ".oft");
 
-    QString cacheLocation = QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
+    QString cacheLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     QFileInfo cacheLocationFileInfo(cacheLocation);
     QDir cacheLocationDir;
 
