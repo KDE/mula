@@ -188,7 +188,7 @@ AbstractDictionary::findData(const QStringList &searchWords, qint32 indexItemOff
         int sameTypeSequenceLength = d->sameTypeSequence.length();
         foreach (const QChar& ch, d->sameTypeSequence.left(sameTypeSequenceLength - 1))
         {
-            switch (ch.toAscii())
+            switch (ch.toLatin1())
             {
             case 'm':
             case 'l':
@@ -229,7 +229,7 @@ AbstractDictionary::findData(const QStringList &searchWords, qint32 indexItemOff
             }
         }
 
-        switch (d->sameTypeSequence.at(sameTypeSequenceLength - 1).toAscii())
+        switch (d->sameTypeSequence.at(sameTypeSequenceLength - 1).toLatin1())
         {
         case 'm':
         case 'l':
