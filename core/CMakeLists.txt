@@ -13,6 +13,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5Core REQUIRED)
+find_package(Qt5Test REQUIRED)
 
 set(_Init_LIB_SUFFIX "")
 if ("${Qt5Core_LIBRARIES}" MATCHES lib64)
@@ -83,13 +84,12 @@ else()
 	add_library(MulaCore SHARED ${MulaCore_SRCS})
 endif()
 
-target_link_libraries(MulaCore ${Qt5Core_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${Qt5Script_LIBRARIES})
+qt5_use_modules(MulaCore Core)
 
 set(MULA_CORE_LIBRARIES
     MulaCore
     ${Qt5Core_LIBRARIES}
-    ${Qt5Widgets_LIBRARIES}
-    ${Qt5Script_LIBRARIES}
+    ${Qt5Test_LIBRARIES}
     CACHE PATHS "Libraries required for Mula Core"
 )
 
