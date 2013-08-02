@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Mula
+Name[bs]=Mula
 Name[cs]=Mula
 Name[de]=Mula
 Name[es]=Mula
@@ -22,6 +23,7 @@ Name[tr]=Mula
 Name[uk]=Mula
 Name[x-test]=xxMulaxx
 GenericName=Mula Launcher
+GenericName[bs]=Mula pokretač
 GenericName[cs]=Spouštěč Mula
 GenericName[de]=Mula-Starter
 GenericName[es]=Lanzador de Mula
